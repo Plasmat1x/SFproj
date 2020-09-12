@@ -38,6 +38,8 @@ void SceneOne::resume()
 
 void SceneOne::processInput(Engine* engine)
 {
+    updatePrevInputs();
+
     for (auto* e : objects)
     {
         if (engine->mouseInput(sf::Mouse::Left) && e->AABB(engine->getMousePosition()))
@@ -48,11 +50,6 @@ void SceneOne::processInput(Engine* engine)
         {
             e->deaction();
         }
-    }
-
-    if (engine->keyboardInput(sf::Keyboard::Right))
-    {
-        engine->changeScene(SceneTwo::instance());
     }
 }
 
@@ -70,6 +67,11 @@ void SceneOne::update(Engine* engine)
         engine->changeScene(SceneTwo::instance());
     }
 
+    if (entity1->signal)
+    {
+        //engine->shutDown();
+    }
+
 }
 
 void SceneOne::render(Engine* engine)
@@ -80,5 +82,29 @@ void SceneOne::render(Engine* engine)
     {
         engine->window.draw(e->sprite);
         engine->window.draw(e->text);
+    }
+}
+
+bool SceneOne::Released(mouseInput key)
+{
+    return (!mInputs[(int)key] && mPrevInputs[(int)key]);
+}
+
+bool SceneOne::KeyState(mouseInput key)
+{
+    return mInputs[(int)key];
+}
+
+bool SceneOne::Pressed(mouseInput key)
+{
+    return (mInputs[(int)key] && !mPrevInputs[(int)key]);
+}
+
+void SceneOne::updatePrevInputs()
+{
+    int count = sizeof(Count);
+    for (int i = 0; i < count; i++)
+    {
+        mPrevInputs[i] = mInputs[i];
     }
 }

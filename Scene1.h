@@ -28,5 +28,22 @@ protected:
 private:
     std::vector<Button*> objects;
     static SceneOne m_SceneOne;
+
+    //mouse test
+    enum mouseInput
+    {
+        Left,
+        Right,
+        Count
+    };
+
+    bool mInputs[2] = {false, false};
+    bool mPrevInputs[2] = { false, false };
+
+    bool Released(mouseInput key);
+    bool KeyState(mouseInput key);
+    bool Pressed(mouseInput key);
+
+    void updatePrevInputs();
 };
 
