@@ -1,0 +1,8 @@
+﻿  tinyxmlparser.cpp
+  tinyxmlerror.cpp
+  tinyxml.cpp
+c:\users\1nerv\desktop\ogl\include\tinyxml\tinyxml.cpp(670): warning C4458: declaration of 'value' hides class member
+  c:\users\1nerv\desktop\ogl\include\tinyxml\tinyxml.h(761): note: see declaration of 'TiXmlNode::value'
+  tinystr.cpp
+  Generating Code...
+  tinyxml_lib.vcxproj -> C:\Users\1nerv\Desktop\ogl\include\tinyxml\Debugtinyxml\tinyxml.lib

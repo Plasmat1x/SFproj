@@ -1,0 +1,10 @@
+﻿C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\MSBuild\Microsoft\VC\v160\Microsoft.CppBuild.targets(411,5): warning MSB8028: The intermediate directory (x64\Debug\) contains files shared from another project (tinyxml.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  tinystr.cpp
+C:\Users\1nerv\Desktop\ogl\include\tinyxml\tinystr.cpp : fatal error C1041: cannot open program database 'C:\Users\1nerv\Desktop\ogl\include\tinyxml\x64\Debug\vc142.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+  tinyxml.cpp
+C:\Users\1nerv\Desktop\ogl\include\tinyxml\tinyxml.cpp : fatal error C1041: cannot open program database 'C:\Users\1nerv\Desktop\ogl\include\tinyxml\x64\Debug\vc142.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+  tinyxmlerror.cpp
+C:\Users\1nerv\Desktop\ogl\include\tinyxml\tinyxmlerror.cpp : fatal error C1041: cannot open program database 'C:\Users\1nerv\Desktop\ogl\include\tinyxml\x64\Debug\vc142.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+  tinyxmlparser.cpp
+C:\Users\1nerv\Desktop\ogl\include\tinyxml\tinyxmlparser.cpp : fatal error C1041: cannot open program database 'C:\Users\1nerv\Desktop\ogl\include\tinyxml\x64\Debug\vc142.pdb'; if multiple CL.EXE write to the same .PDB file, please use /FS
+  Generating Code...
