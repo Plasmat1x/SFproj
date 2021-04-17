@@ -38,7 +38,8 @@ void Gui::setDimensions(sf::Vector2f dimension)
     for (auto& entry : entries)
     {
         entry.shape.setSize(dimension);
-        entry.text.setCharacterSize(dimension.y - style.borderSize - padding);
+        //entry.text.setCharacterSize(dimension.y - style.borderSize - padding);
+        entry.text.setCharacterSize(charSize);
     }
     return;
 }
@@ -50,6 +51,10 @@ void Gui::draw(sf::RenderTarget& target, sf::RenderStates states) const
     for (auto entry : this->entries)
     {
         target.draw(entry.shape);
+        if (mto_enable)
+        {
+            target.draw(entry.mto);
+        }
         target.draw(entry.text);
     }
 
@@ -62,6 +67,15 @@ void Gui::_setTexture(sf::Texture* texture)
     {
         entry.shape.setTexture(texture);
     }
+}
+
+void Gui::_setMTO(MultiTileObject mto)
+{
+    this->mto = mto;
+    this->mto_enable = true;
+
+    this->mto.setPosition(sf::Vector2i(this->getPosition().x, this->getPosition().y));
+
 }
 
 void Gui::show()
@@ -82,15 +96,13 @@ void Gui::show()
             Убический костыль центровки текста на обьекте
             */
             entry.text.setOrigin(
-                entry.text.getGlobalBounds().width * 0.5f + origin.x,
-                //entry.text.getGlobalBounds().height * 0.1f + 
-                origin.y
+                (int)(entry.text.getLocalBounds().width * 0.5f + origin.x),
+                (int)(entry.text.getLocalBounds().height * 0.5f + origin.y)
             );
 
             entry.text.setPosition(
-                this->getPosition().x + dimension.x * 0.5f,
-                this->getPosition().y - entry.text.getCharacterSize() * 0.1f
-                //+ dimension.y * 0.5f
+                (int)(this->getPosition().x + dimension.x * 0.5f),
+                (int)(this->getPosition().y + dimension.y * 0.5f)
             );
         }
 

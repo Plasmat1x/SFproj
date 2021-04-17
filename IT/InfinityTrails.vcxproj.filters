@@ -63,6 +63,12 @@
     <ClInclude Include="ResourceManager.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="MetaSprite.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiTileObject.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -98,12 +104,15 @@
     <ClCompile Include="ResourceManager.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="MetaSprite.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTileObject.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="..\.gitignore" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\builder\CMakeLists.txt" />
   </ItemGroup>
 </Project>

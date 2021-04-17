@@ -4,6 +4,7 @@
 #include <string>
 
 #include <SFML/Graphics.hpp>
+#include "MultiTileObject.h"
 
 struct GuiStyle
 {
@@ -53,6 +54,7 @@ struct GuiStyle
 struct GuiEntry
 {
     sf::RectangleShape shape;
+    MultiTileObject mto;
     std::string message;
     sf::Text text;
 
@@ -71,6 +73,17 @@ struct GuiEntry
         this->text = text;
     }
 
+    GuiEntry(const std::string& message,
+        sf::RectangleShape shape,
+        sf::Text text,
+        MultiTileObject mto)
+    {
+        this->message = message;
+        this->shape = shape;
+        this->text = text;
+        this->mto = mto;
+    }
+
     GuiEntry() {}
 };
 
@@ -82,6 +95,10 @@ private:
     sf::Vector2f dimension;
     int padding;
     float offset;
+    unsigned int charSize;
+    
+    bool mto_enable = false;
+    MultiTileObject mto;
 
 public:
     std::vector<GuiEntry> entries;
@@ -92,6 +109,7 @@ public:
     /// Create GUI
     /// </summary>
     /// <param name="dimension">size</param>
+    /// <param name="charSize"></param>
     /// <param name="padding">between elements</param>
     /// <param name="offset"></param>
     /// <param name="horizontal"></param>
@@ -99,6 +117,7 @@ public:
     /// <param name="style"></param>
     /// <param name="entries">elements</param>
     Gui(sf::Vector2f dimension,
+        unsigned int charSize,
         int padding,
         float offset,
         bool horizontal,
@@ -110,6 +129,7 @@ public:
         this->horizontal = horizontal;
         this->style = style;
         this->dimension = dimension;
+        this->charSize = charSize;
         this->padding = padding;
         this->offset = offset;
         this->text_centred = text_centred;
@@ -126,15 +146,48 @@ public:
             text.setString(entry.first);
             text.setFont(*style.font);
             text.setFillColor(style.textColor);
-            text.setCharacterSize(dimension.y - style.borderSize - padding);
-            this->entries.push_back(GuiEntry(entry.second, shape, text));
+            //text.setCharacterSize(dimension.y - style.borderSize - padding);
+            text.setCharacterSize(charSize);
+            if (mto_enable)
+            {
+                this->entries.push_back(GuiEntry(entry.second, shape, text, mto));
+            }
+            else
+            {
+                this->entries.push_back(GuiEntry(entry.second, shape, text));
+            }
+
         }
 
+    }
+    Gui(sf::Vector2f dimension,
+        unsigned int charSize,
+        int padding,
+        float offset,
+        bool horizontal,
+        bool text_centred,
+        GuiStyle& style,
+        std::vector<std::pair<std::string, std::string>> entries,
+        bool mto_enable,
+        MultiTileObject mto)
+    {
+        this->mto_enable = mto_enable;
+        this->mto = mto;
+        
+        Gui(dimension,
+            charSize,
+            padding, 
+            offset,
+            horizontal, 
+            text_centred, 
+            style, 
+            entries);
     }
 
     sf::Vector2f getSize();
     
     void _setTexture(sf::Texture* texture);
+    void _setMTO(MultiTileObject mto);
 
     int getEntry(const sf::Vector2f mousePos);
 

@@ -4,6 +4,7 @@
 #include "Engine.h"
 #include "Scene.h"
 #include "Gui.h"
+#include "MultiTileObject.h"
 
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
@@ -29,6 +30,8 @@ private:
     sf::Texture tex;
     sf::Texture tex_ico;
     sf::Texture tex_button;
+
+    MultiTileObject mto;
 
 };
 

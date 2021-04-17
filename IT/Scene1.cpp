@@ -21,46 +21,58 @@ void SceneOne::init(Engine* engine)
     this->view->setSize(pos);
     pos *= 0.5f;
     this->view->setCenter(pos);
-
-    //view->setViewport(sf::FloatRect(0, 0, 800, 600));
    
-    ResourceManager::loadFont("main_font", "MorrisRomanBlackAlt.ttf");
+    ResourceManager::loadFont("exotic_font", "MorrisRomanBlackAlt.ttf");
+    ResourceManager::loadFontFromOS("mono_font", "CONSOLA");
+    ResourceManager::loadFontFromOS("sans_font", "TIMES");
+    ResourceManager::loadFontFromOS("serif_font", "ARIAL");
+
+    ResourceManager::loadTexture("meta_button", "button_meta.png");
 
     ResourceManager::loadGuiStyle("button", GuiStyle(
-        ResourceManager::getFont("main_font"),
+        ResourceManager::getFont("serif_font"),
         1,
         sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0x00, 0x00, 0x00, 0xff),
         sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff)));
     
     ResourceManager::loadGuiStyle("text", GuiStyle(
-        ResourceManager::getFont("main_font"),
+        ResourceManager::getFont("sans_font"),
         0,
         sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff),
         sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff)));
     
-    ResourceManager::loadGuiStyle("button_textured", GuiStyle(
-        ResourceManager::getFont("main_font"),
-        1,
-        sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0x00, 0x00, 0x00, 0xff),
-        sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff)));
+    ResourceManager::loadGuiStyle("header", GuiStyle(
+        ResourceManager::getFont("exotic_font"),
+        0,
+        sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff),
+        sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff), sf::Color(0xff, 0xff, 0xff, 0xff)));
 
+    ResourceManager::loadGuiStyle("button_textured", GuiStyle(
+        ResourceManager::getFont("mono_font"),
+        1,
+        sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0xff, 0xff, 0xff, 0xff),
+        sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff)));
+
+    //gui setup
     this->guiSys.emplace("menu", Gui(
-        sf::Vector2f(192, 37),
-        4, 5, false, true, *ResourceManager::getGuiStyle("button_textured"),
+        sf::Vector2f(128, 37), 14,
+        1, 5, false, true, *ResourceManager::getGuiStyle("button_textured"),
         { std::make_pair("New game", "game_state"),
         std::make_pair("Options", "options_state"),
         std::make_pair("Exit","exit_state")}));
-
     //this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.2f);
-    this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.2f);
-    this->guiSys.at("menu").setOrigin(192 * 0.5f, 32 * 0.5f);
+    this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.5f);
+    //this->guiSys.at("menu").setOrigin(192 * 0.5f, 37 * 0.5f);
+    this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").getSize() * 0.5f);
+    this->guiSys.at("menu")._setMTO(MultiTileObject(ResourceManager::getTexture("meta_button"),
+        sf::Vector2i(4, 8),
+        sf::Vector2i(3, 3)));
     this->guiSys.at("menu").show();
 
     this->guiSys.emplace("text", Gui(
-        sf::Vector2f(192 * 3, 32 * 3),
-        4, 5, false, true, *ResourceManager::getGuiStyle("text"),
+        sf::Vector2f(192 * 3, 32 * 3), 100,
+        1, 5, false, true, *ResourceManager::getGuiStyle("header"),
         { std::make_pair("Main menu", "text") }));
-
     //this->guiSys.at("text").setPosition(pos.x, pos.y * 0.5f + 80);
     this->guiSys.at("text").setPosition(view->getCenter().x, view->getCenter().y * 0.5f + 80);
     this->guiSys.at("text").setOrigin(192 * 3 * 0.5f, 32 * 3 * 0.5f);
@@ -104,6 +116,7 @@ void SceneOne::processInput()
             sf::Vector2f pos = sf::Vector2f(event->size.width, event->size.height);
             pos *= 0.5f;
             pos = this->engine->window.mapPixelToCoords(sf::Vector2i(pos), *this->view);
+            this->guiSys.at("menu").setPosition(pos);
             break;
         }
         case sf::Event::KeyPressed:

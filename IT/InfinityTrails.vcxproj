@@ -30,6 +30,8 @@
     <ClInclude Include="..\include\imgui\imstb_truetype.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="Gui.h" />
+    <ClInclude Include="MetaSprite.h" />
+    <ClInclude Include="MultiTileObject.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
@@ -43,6 +45,8 @@
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MetaSprite.cpp" />
+    <ClCompile Include="MultiTileObject.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Scene1.cpp" />
@@ -50,9 +54,6 @@
   <ItemGroup>
     <None Include="..\.gitignore" />
     <None Include="ClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\builder\CMakeLists.txt" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
