@@ -37,6 +37,7 @@ void SceneOne::init(Engine* engine)
     ResourceManager::loadFontFromOS("serif_font", "ARIAL");
 
     ResourceManager::loadTexture("meta_button", "button_meta.png");
+    ResourceManager::loadTexture("meta_window", "meta_window.png");
 
     ResourceManager::loadGuiStyle("button", GuiStyle(
         ResourceManager::getFont("serif_font"),
@@ -71,19 +72,17 @@ void SceneOne::init(Engine* engine)
     //gui setup
     this->guiSys.emplace("menu", Gui(
         sf::Vector2f(128, 32), 14,
-        1, 5, false, true, *ResourceManager::getGuiStyle("button_mto"),
+        1, 32, false, true, *ResourceManager::getGuiStyle("button_mto"),
         { std::make_pair("New game", "game_state"),
         std::make_pair("Options", "options_state"),
         std::make_pair("Exit","exit_state") },
         true,
         MultiTileObject(ResourceManager::getTexture("meta_button"),
-           sf::Vector2i(4,8), sf::Vector2i(3,3))));
-    //this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.2f);
+           sf::Vector2i(8,8), sf::Vector2i(3,3))));
     this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.3f);
-    //this->guiSys.at("menu").setOrigin(192 * 0.5f, 37 * 0.5f);
     this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").getSize() * 0.5f);
     this->guiSys.at("menu")._setMTO(MultiTileObject(ResourceManager::getTexture("meta_button"),
-        sf::Vector2i(4, 8),
+        sf::Vector2i(8, 8),
         sf::Vector2i(3, 3)));
     this->guiSys.at("menu").show();
 
@@ -91,15 +90,12 @@ void SceneOne::init(Engine* engine)
         sf::Vector2f(192 * 3, 32 * 3), 100,
         1, 5, false, true, *ResourceManager::getGuiStyle("header"),
         { std::make_pair("Main menu", "text") }));
-    //this->guiSys.at("text").setPosition(pos.x, pos.y * 0.5f + 80);
     this->guiSys.at("text").setPosition(view->getCenter().x, view->getCenter().y * 0.5f + 80);
     this->guiSys.at("text").setOrigin(192 * 3 * 0.5f, 32 * 3 * 0.5f);
     this->guiSys.at("text").show();
 
     tex.loadFromFile("../res/img/t1.png");
     tex_ico.loadFromFile("../res/img/icon.png");
-    tex_button.loadFromFile("../res/img/button.png", sf::IntRect(40, 0, 37, 37));
-    tex_button.setRepeated(true);
     tex.setRepeated(true);
 
     sprite.setTexture(tex);
@@ -113,6 +109,16 @@ void SceneOne::init(Engine* engine)
     ico.setScale(4, 4);
 
     //this->guiSys.at("menu")._setTexture(&tex_button);
+
+    mto = MultiTileObject(
+        ResourceManager::getTexture("meta_window"),
+        sf::Vector2f(pos.x,pos.y * 1.4f),
+        sf::Vector2f(1.0f, 1.0f),
+        sf::Vector2f(25.0f, 25.0f),
+        sf::Vector2i(8, 8),
+        sf::Vector2i(3, 3));
+   
+    mto.setOrigin(sf::Vector2f(mto.getGloablBounds().width * 0.5f, mto.getGloablBounds().height * 0.5f));
 }
 
 void SceneOne::processInput()
@@ -204,6 +210,7 @@ void SceneOne::render(const float dt)
     //render scene obj
     this->engine->window.draw(sprite);
     this->engine->window.draw(ico);
+    this->engine->window.draw(mto);
     //render gui
     for (auto gui : this->guiSys)
     {

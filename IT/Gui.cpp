@@ -118,7 +118,7 @@ void Gui::_setMTO(MultiTileObject mto)
     this->mto = mto;
     this->mto_enable = true;
 
-    this->mto.setPosition(sf::Vector2i(this->getPosition().x, this->getPosition().y));
+    this->mto.setPosition(sf::Vector2f(this->getPosition().x, this->getPosition().y));
 
 }
 
@@ -158,7 +158,7 @@ void Gui::show()
                 (this->dimension.x - (entry.mto.get_in_size().x * 2)) / (entry.mto.get_in_size().x),
                 (this->dimension.y - (entry.mto.get_in_size().y * 2)) / (entry.mto.get_in_size().y)
             ));
-            entry.mto.setPosition(sf::Vector2i(
+            entry.mto.setPosition(sf::Vector2f(
                 this->getPosition().x,
                 this->getPosition().y));
         }

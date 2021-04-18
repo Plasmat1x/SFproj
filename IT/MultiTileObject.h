@@ -11,7 +11,7 @@ class MultiTileObject : public sf::Drawable, public sf::Transformable
 {
 private:
     std::vector<sf::Sprite> sprites;
-    sf::Vector2i position;
+    sf::Vector2f position;
     sf::Vector2f scale;
     sf::Vector2f addscale;
     sf::Vector2i size;
@@ -28,22 +28,6 @@ private:
 public:
 
     MultiTileObject() {}
-    MultiTileObject(sf::Texture* texture, sf::Vector2i size, sf::Vector2i arr_size) 
-    {
-        this->texture = texture;
-        this->size = size;
-        this->arr_size = arr_size;
-
-        this->origin = sf::Vector2f(0, 0);
-        this->position = sf::Vector2i(0,0);
-        this->scale = sf::Vector2f(1.0f, 1.0f);
-        this->addscale = sf::Vector2f(1.0f, 1.0f);
-
-        shater();
-        buildDepends();
-
-        calcBounds();
-    }
     /// <summary>
     /// 
     /// </summary>
@@ -54,7 +38,7 @@ public:
     /// <param name="in_size"> f</param>
     /// <param name="arr_size"></param>
     MultiTileObject(sf::Texture* texture,
-        sf::Vector2i position,
+        sf::Vector2f position,
         sf::Vector2f scale,
         sf::Vector2f addscale,
         sf::Vector2i size,
@@ -72,6 +56,21 @@ public:
 
         shater();
         buildDepends();
+        calcBounds();
+    }
+    MultiTileObject(sf::Texture* texture, sf::Vector2i size, sf::Vector2i arr_size)
+    {
+        this->texture = texture;
+        this->size = size;
+        this->arr_size = arr_size;
+
+        this->origin = sf::Vector2f(0, 0);
+        this->position = sf::Vector2f(0, 0);
+        this->scale = sf::Vector2f(1.0f, 1.0f);
+        this->addscale = sf::Vector2f(1.0f, 1.0f);
+
+        shater();
+        buildDepends();
 
         calcBounds();
     }
@@ -80,7 +79,7 @@ public:
     sf::IntRect getGloablBounds();
     sf::Vector2i get_in_size();
 
-    void setPosition(sf::Vector2i position);
+    void setPosition(sf::Vector2f position);
     void setCenter(sf::Vector2i center);
     void setOrigin(sf::Vector2f origin);
     void setScale(sf::Vector2f scale);
