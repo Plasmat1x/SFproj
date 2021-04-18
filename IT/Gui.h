@@ -100,6 +100,15 @@ private:
     bool mto_enable = false;
     MultiTileObject mto;
 
+    void init(sf::Vector2f dimension,
+        unsigned int charSize,
+        int padding,
+        float offset,
+        bool horizontal,
+        bool text_centred,
+        GuiStyle& style,
+        std::vector<std::pair<std::string, std::string>> entries);
+
 public:
     std::vector<GuiEntry> entries;
     bool visible;
@@ -125,40 +134,7 @@ public:
         GuiStyle& style,
         std::vector<std::pair<std::string, std::string>> entries)
     {
-        visible = false;
-        this->horizontal = horizontal;
-        this->style = style;
-        this->dimension = dimension;
-        this->charSize = charSize;
-        this->padding = padding;
-        this->offset = offset;
-        this->text_centred = text_centred;
-
-        sf::RectangleShape shape;
-        shape.setSize(dimension);
-        shape.setFillColor(style.bodyColor);
-        shape.setOutlineThickness(-style.borderSize);
-        shape.setOutlineColor(style.borderColor);
-
-        for (auto entry : entries)
-        {
-            sf::Text text;
-            text.setString(entry.first);
-            text.setFont(*style.font);
-            text.setFillColor(style.textColor);
-            //text.setCharacterSize(dimension.y - style.borderSize - padding);
-            text.setCharacterSize(charSize);
-            if (mto_enable)
-            {
-                this->entries.push_back(GuiEntry(entry.second, shape, text, mto));
-            }
-            else
-            {
-                this->entries.push_back(GuiEntry(entry.second, shape, text));
-            }
-
-        }
-
+        init(dimension, charSize, padding, offset, horizontal, text_centred, style, entries);
     }
     Gui(sf::Vector2f dimension,
         unsigned int charSize,
@@ -174,14 +150,7 @@ public:
         this->mto_enable = mto_enable;
         this->mto = mto;
         
-        Gui(dimension,
-            charSize,
-            padding, 
-            offset,
-            horizontal, 
-            text_centred, 
-            style, 
-            entries);
+        init(dimension, charSize, padding, offset, horizontal, text_centred, style, entries);
     }
 
     sf::Vector2f getSize();

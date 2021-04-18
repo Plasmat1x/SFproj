@@ -20,8 +20,11 @@ private:
     sf::IntRect globalbounds;
     int count;
 
+    sf::Vector2f origin;
+
     void shater();
     void buildDepends();
+    void calcBounds();
 public:
 
     MultiTileObject() {}
@@ -31,6 +34,7 @@ public:
         this->size = size;
         this->arr_size = arr_size;
 
+        this->origin = sf::Vector2f(0, 0);
         this->position = sf::Vector2i(0,0);
         this->scale = sf::Vector2f(1.0f, 1.0f);
         this->addscale = sf::Vector2f(1.0f, 1.0f);
@@ -38,19 +42,7 @@ public:
         shater();
         buildDepends();
 
-        int x = this->position.x;
-
-        int y = this->position.y;
-
-        int w = (this->sprites[0].getLocalBounds().width * this->scale.x) +
-            (this->sprites[2].getLocalBounds().width * this->scale.x) +
-            (this->sprites[1].getLocalBounds().width * (this->scale.x * addscale.x));
-
-        int h = (this->sprites[0].getLocalBounds().height * this->scale.y) +
-            (this->sprites[3].getLocalBounds().height * this->scale.y) +
-            (this->sprites[6].getLocalBounds().height * (this->scale.y * addscale.y));
-
-        this->globalbounds = sf::IntRect(x, y, w, h);
+        calcBounds();
     }
     /// <summary>
     /// 
@@ -76,30 +68,21 @@ public:
         this->arr_size = arr_size;
         count = 0;
 
+        this->origin = sf::Vector2f(0, 0);
+
         shater();
         buildDepends();
 
-        int x = this->position.x;
-
-        int y = this->position.y;
-
-        int w = (this->sprites[0].getLocalBounds().width * this->scale.x) +
-            (this->sprites[2].getLocalBounds().width * this->scale.x) +
-            (this->sprites[1].getLocalBounds().width * (this->scale.x * addscale.x));
-
-        int h = (this->sprites[0].getLocalBounds().height * this->scale.y) +
-            (this->sprites[3].getLocalBounds().height * this->scale.y) +
-            (this->sprites[6].getLocalBounds().height * (this->scale.y * addscale.y));
-
-        this->globalbounds = sf::IntRect(x, y, w, h);
+        calcBounds();
     }
 
     sf::Sprite* getSprite(int index);
     sf::IntRect getGloablBounds();
+    sf::Vector2i get_in_size();
 
     void setPosition(sf::Vector2i position);
     void setCenter(sf::Vector2i center);
-    void setOrigin(sf::Vector2i origin);
+    void setOrigin(sf::Vector2f origin);
     void setScale(sf::Vector2f scale);
     void setAddscale(sf::Vector2f addscale);
 

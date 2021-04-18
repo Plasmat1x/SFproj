@@ -4,6 +4,15 @@
 
 #include "ResourceManager.h"
 
+/*
+        std::cout << std::endl <<
+            entry.mto.getGloablBounds().left << " " <<
+            entry.mto.getGloablBounds().top << " " <<
+            entry.mto.getGloablBounds().width << " " <<
+            entry.mto.getGloablBounds().height << " " << std::endl;
+            
+*/
+
 SceneOne::SceneOne(Engine* engine)
 {
     init(engine);
@@ -53,15 +62,24 @@ void SceneOne::init(Engine* engine)
         sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0xff, 0xff, 0xff, 0xff),
         sf::Color(0xff, 0xff, 0xff, 0xff), sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff)));
 
+    ResourceManager::loadGuiStyle("button_mto", GuiStyle(
+        ResourceManager::getFont("mono_font"),
+        1,
+        sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0xff, 0xff, 0xff, 0xff),
+        sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff)));
+
     //gui setup
     this->guiSys.emplace("menu", Gui(
-        sf::Vector2f(128, 37), 14,
-        1, 5, false, true, *ResourceManager::getGuiStyle("button_textured"),
+        sf::Vector2f(128, 32), 14,
+        1, 5, false, true, *ResourceManager::getGuiStyle("button_mto"),
         { std::make_pair("New game", "game_state"),
         std::make_pair("Options", "options_state"),
-        std::make_pair("Exit","exit_state")}));
+        std::make_pair("Exit","exit_state") },
+        true,
+        MultiTileObject(ResourceManager::getTexture("meta_button"),
+           sf::Vector2i(4,8), sf::Vector2i(3,3))));
     //this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.2f);
-    this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.5f);
+    this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.3f);
     //this->guiSys.at("menu").setOrigin(192 * 0.5f, 37 * 0.5f);
     this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").getSize() * 0.5f);
     this->guiSys.at("menu")._setMTO(MultiTileObject(ResourceManager::getTexture("meta_button"),
@@ -94,7 +112,7 @@ void SceneOne::init(Engine* engine)
     ico.setPosition(400, 128);
     ico.setScale(4, 4);
 
-    this->guiSys.at("menu")._setTexture(&tex_button);
+    //this->guiSys.at("menu")._setTexture(&tex_button);
 }
 
 void SceneOne::processInput()

@@ -1,6 +1,50 @@
 #include "Gui.h"
 #include <iostream>
 
+void Gui::init(sf::Vector2f dimension,
+    unsigned int charSize,
+    int padding,
+    float offset,
+    bool horizontal,
+    bool text_centred,
+    GuiStyle& style,
+    std::vector<std::pair<std::string, std::string>> entries)
+{
+    visible = false;
+    this->horizontal = horizontal;
+    this->style = style;
+    this->dimension = dimension;
+    this->charSize = charSize;
+    this->padding = padding;
+    this->offset = offset;
+    this->text_centred = text_centred;
+
+    sf::RectangleShape shape;
+    shape.setSize(dimension);
+    shape.setFillColor(style.bodyColor);
+    shape.setOutlineThickness(-style.borderSize);
+    shape.setOutlineColor(style.borderColor);
+
+    for (auto entry : entries)
+    {
+        sf::Text text;
+        text.setString(entry.first);
+        text.setFont(*style.font);
+        text.setFillColor(style.textColor);
+        //text.setCharacterSize(dimension.y - style.borderSize - padding);
+        text.setCharacterSize(charSize);
+        if (mto_enable)
+        {
+            this->entries.push_back(GuiEntry(entry.second, shape, text, mto));
+        }
+        else
+        {
+            this->entries.push_back(GuiEntry(entry.second, shape, text));
+        }
+
+    }
+}
+
 sf::Vector2f Gui::getSize()
 {
     return sf::Vector2f(this->dimension.x, this->dimension.y * this->entries.size());
@@ -106,12 +150,23 @@ void Gui::show()
             );
         }
 
+
+        if (mto_enable)
+        {
+            entry.mto.setOrigin(origin);
+            entry.mto.setAddscale(sf::Vector2f(
+                (this->dimension.x - (entry.mto.get_in_size().x * 2)) / (entry.mto.get_in_size().x),
+                (this->dimension.y - (entry.mto.get_in_size().y * 2)) / (entry.mto.get_in_size().y)
+            ));
+            entry.mto.setPosition(sf::Vector2i(
+                this->getPosition().x,
+                this->getPosition().y));
+        }
         entry.shape.setPosition(this->getPosition());
 
         if (this->horizontal) _offset.x += this->dimension.x + offset;
         else _offset.y += this->dimension.y + offset;
     }
-
     return;
 }
 

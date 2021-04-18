@@ -76,6 +76,22 @@
     }
 */
 
+void MultiTileObject::calcBounds()
+{
+    int x = this->position.x - origin.y;
+    int y = this->position.y - origin.y;
+
+    int w = (this->sprites[0].getLocalBounds().width * this->scale.x) +
+        (this->sprites[2].getLocalBounds().width * this->scale.x) +
+        (this->sprites[1].getLocalBounds().width * (this->scale.x * addscale.x));
+
+    int h = (this->sprites[0].getLocalBounds().height * this->scale.y) +
+        (this->sprites[3].getLocalBounds().height * this->scale.y) +
+        (this->sprites[6].getLocalBounds().height * (this->scale.y * addscale.y));
+
+    this->globalbounds = sf::IntRect(x, y, w, h);
+}
+
 void MultiTileObject::shater()
 {
     for (int i = 0; i < 3; ++i)
@@ -96,6 +112,9 @@ void MultiTileObject::shater()
 void MultiTileObject::buildDepends()
 {
     int index = 0;
+
+    sf::Vector2i position = sf::Vector2i(this->position.x - origin.x,
+        this->position.y - origin.y);
 
     for (int i = 0; i < this->arr_size.y; ++i)
     {
@@ -153,6 +172,11 @@ sf::Sprite* MultiTileObject::getSprite(int index)
     return &this->sprites[index];
 }
 
+sf::Vector2i MultiTileObject::get_in_size()
+{
+    return this->size;
+}
+
 sf::IntRect MultiTileObject::getGloablBounds()
 {
     return globalbounds;
@@ -162,25 +186,30 @@ void MultiTileObject::setPosition(sf::Vector2i position)
 {
     this->position = position;
     buildDepends();
+    calcBounds();
 }
 
 void MultiTileObject::setCenter(sf::Vector2i center)
 {
     
 }
-void MultiTileObject::setOrigin(sf::Vector2i origin)
+void MultiTileObject::setOrigin(sf::Vector2f origin)
 {
-
+    this->origin = origin;
+    buildDepends();
+    calcBounds();
 }
 void MultiTileObject::setScale(sf::Vector2f scale)
 {
     this->scale = scale;
     buildDepends();
+    calcBounds();
 }
 void MultiTileObject::setAddscale(sf::Vector2f addscale)
 {
     this->addscale = addscale;
     buildDepends();
+    calcBounds();
 }
 
 void MultiTileObject::draw(sf::RenderTarget& target, sf::RenderStates states) const
