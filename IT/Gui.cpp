@@ -146,7 +146,7 @@ void Gui::show()
 
             entry.text.setPosition(
                 (int)(this->getPosition().x + dimension.x * 0.5f),
-                (int)(this->getPosition().y + dimension.y * 0.5f)
+                (int)((this->getPosition().y + dimension.y * 0.45f))
             );
         }
 
