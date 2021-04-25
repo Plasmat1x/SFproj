@@ -4,6 +4,9 @@ inter/
 SFML-2.5.0/
 SFML-Callbacks/
 .vs/
+res/.wip/
+res/ref/
+res/map/
 
 #tinyxml/
 tinyxml/*.txt

@@ -35,6 +35,9 @@
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
+    <ClInclude Include="Scene2.h" />
+    <ClInclude Include="Scene3.h" />
+    <ClInclude Include="_GUI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui-sfml\imgui-SFML.cpp" />
@@ -50,6 +53,9 @@
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Scene1.cpp" />
+    <ClCompile Include="Scene2.cpp" />
+    <ClCompile Include="Scene3.cpp" />
+    <ClCompile Include="_GUI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />

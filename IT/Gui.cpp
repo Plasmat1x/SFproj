@@ -42,6 +42,16 @@ void Gui::init(sf::Vector2f dimension,
             this->entries.push_back(GuiEntry(entry.second, shape, text));
         }
 
+        if (horizontal)
+        {
+            gui_size.x += dimension.x + offset;
+            gui_size.y = dimension.y;
+        }
+        else
+        {
+            gui_size.x = dimension.x;
+            gui_size.y += dimension.y + offset;
+        }
     }
 }
 

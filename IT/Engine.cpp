@@ -9,8 +9,9 @@
 
 void Engine::init()
 {
+    //window.create(sf::VideoMode(1920, 1080), "SFproj");
     window.create(sf::VideoMode(800, 600), "SFproj");
-
+    ImGui::SFML::Init(window);
 }
 
 void Engine::update(const float dt)
@@ -86,6 +87,8 @@ void Engine::core()
         update(dt);
         render(dt);
     }
+
+    ImGui::SFML::Shutdown();
 }
 
 sf::Vector2i Engine::getMousePosition()

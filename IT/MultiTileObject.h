@@ -19,6 +19,7 @@ private:
     sf::Vector2i arr_size;
     sf::IntRect globalbounds;
     int count;
+    float padding;
 
     sf::Vector2f origin;
 
@@ -42,7 +43,8 @@ public:
         sf::Vector2f scale,
         sf::Vector2f addscale,
         sf::Vector2i size,
-        sf::Vector2i arr_size)
+        sf::Vector2i arr_size,
+        float padding)
     {
         this->texture = texture;
         this->position = position;
@@ -50,6 +52,7 @@ public:
         this->addscale = addscale;
         this->size = size;
         this->arr_size = arr_size;
+        this->padding = padding;
         count = 0;
 
         this->origin = sf::Vector2f(0, 0);
@@ -58,7 +61,7 @@ public:
         buildDepends();
         calcBounds();
     }
-    MultiTileObject(sf::Texture* texture, sf::Vector2i size, sf::Vector2i arr_size)
+    MultiTileObject(sf::Texture* texture, sf::Vector2i size, sf::Vector2i arr_size, float padding)
     {
         this->texture = texture;
         this->size = size;
@@ -68,6 +71,7 @@ public:
         this->position = sf::Vector2f(0, 0);
         this->scale = sf::Vector2f(1.0f, 1.0f);
         this->addscale = sf::Vector2f(1.0f, 1.0f);
+        this->padding = padding;
 
         shater();
         buildDepends();
@@ -76,14 +80,18 @@ public:
     }
 
     sf::Sprite* getSprite(int index);
+    sf::Sprite* getSprite(sf::Vector2f mousePos);
+    int getSpriteAt(sf::Vector2f mousePos);
     sf::IntRect getGloablBounds();
     sf::Vector2i get_in_size();
+    sf::Vector2f getaddscale();
 
     void setPosition(sf::Vector2f position);
     void setCenter(sf::Vector2i center);
     void setOrigin(sf::Vector2f origin);
     void setScale(sf::Vector2f scale);
     void setAddscale(sf::Vector2f addscale);
+    void setSize(sf::Vector2f size);
 
     virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
     

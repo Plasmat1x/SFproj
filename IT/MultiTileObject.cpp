@@ -101,8 +101,8 @@ void MultiTileObject::shater()
             this->sprites.push_back(
                 sf::Sprite(*this->texture,
                     sf::IntRect(
-                        int(size.x * j), 
-                        int(size.y * i),
+                        int((padding + size.x) * j), 
+                        int((padding + size.y) * i),
                         int(size.x),
                         int(size.y))));
                     
@@ -167,11 +167,39 @@ void MultiTileObject::buildDepends()
     }
 }
 
+int MultiTileObject::getSpriteAt(sf::Vector2f mousePos)
+{
+    if (sprites.size() == 0) return -1;
+    //if (!this->visible) return -1;
+
+    for (int i = 0; i < this->sprites.size(); ++i)
+    {
+        sf::Vector2f point = mousePos;
+        point += this->sprites[i].getOrigin();
+        point -= this->sprites[i].getPosition();
+
+        if (point.x < 0 || point.x > this->sprites[i].getScale().x * this->get_in_size().x) continue;
+        if (point.y < 0 || point.y > this->sprites[i].getScale().y * this->get_in_size().y) continue;
+        return i;
+    }
+
+    return -1;
+}
+
 sf::Sprite* MultiTileObject::getSprite(int index)
 {
     return &this->sprites[index];
 }
 
+sf::Sprite* MultiTileObject::getSprite(sf::Vector2f mousePos)
+{
+    return &sprites[getSpriteAt(mousePos)];
+}
+
+sf::Vector2f MultiTileObject::getaddscale()
+{
+    return this->addscale;
+}
 sf::Vector2i MultiTileObject::get_in_size()
 {
     return this->size;
@@ -193,6 +221,20 @@ void MultiTileObject::setCenter(sf::Vector2i center)
 {
     
 }
+
+void MultiTileObject::setSize(sf::Vector2f size)
+{
+    /*
+    sf::Vector2f(
+    (this->dimension.x - (entry.mto.get_in_size().x * 2)) / (entry.mto.get_in_size().x),
+    (this->dimension.y - (entry.mto.get_in_size().y * 2)) / (entry.mto.get_in_size().y)
+                */
+    setAddscale(sf::Vector2f(
+        ((size.x - (this->size.x * 2)) / this->size.x),
+        ((size.y - (this->size.y * 2)) / this->size.y)
+    ));
+}
+
 void MultiTileObject::setOrigin(sf::Vector2f origin)
 {
     this->origin = origin;

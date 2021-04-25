@@ -1,4 +1,6 @@
 #include "Scene1.h"
+#include "Scene2.h"
+#include "Scene3.h"
 
 #include <iostream>
 
@@ -72,18 +74,16 @@ void SceneOne::init(Engine* engine)
     //gui setup
     this->guiSys.emplace("menu", Gui(
         sf::Vector2f(128, 32), 14,
-        1, 32, false, true, *ResourceManager::getGuiStyle("button_mto"),
+        1, 8, false, true, *ResourceManager::getGuiStyle("button_mto"),
         { std::make_pair("New game", "game_state"),
         std::make_pair("Options", "options_state"),
         std::make_pair("Exit","exit_state") },
         true,
         MultiTileObject(ResourceManager::getTexture("meta_button"),
-           sf::Vector2i(8,8), sf::Vector2i(3,3))));
-    this->guiSys.at("menu").setPosition(view->getCenter().x, view->getCenter().y * 1.3f);
-    this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").getSize() * 0.5f);
-    this->guiSys.at("menu")._setMTO(MultiTileObject(ResourceManager::getTexture("meta_button"),
-        sf::Vector2i(8, 8),
-        sf::Vector2i(3, 3)));
+           sf::Vector2i(8,8), sf::Vector2i(3,3), 1)));
+    this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").gui_size.x * 0.5f,
+                                        this->guiSys.at("menu").gui_size.y * 0.5f);
+    this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.3f);
     this->guiSys.at("menu").show();
 
     this->guiSys.emplace("text", Gui(
@@ -100,23 +100,24 @@ void SceneOne::init(Engine* engine)
 
     sprite.setTexture(tex);
     sprite.setTextureRect(sf::IntRect(0, 0, 200, 32));
-    sprite.setPosition(0, 64);
+    sprite.setPosition(pos.x, pos.y * 0.4f);
     sprite.setScale(4, 4);
+    sprite.setOrigin(sprite.getLocalBounds().width * 0.5f, sprite.getLocalBounds().height * 0.5f);
 
     ico.setTexture(tex_ico);
     ico.setOrigin(16,16);
-    ico.setPosition(400, 128);
+    ico.setPosition(pos.x, pos.y * 0.4f);
     ico.setScale(4, 4);
-
-    //this->guiSys.at("menu")._setTexture(&tex_button);
+    ico.setOrigin(ico.getLocalBounds().width * 0.5f, ico.getLocalBounds().height * 0.5f);
 
     mto = MultiTileObject(
         ResourceManager::getTexture("meta_window"),
-        sf::Vector2f(pos.x,pos.y * 1.4f),
+        sf::Vector2f(pos.x,pos.y * 1.3f),
         sf::Vector2f(1.0f, 1.0f),
         sf::Vector2f(25.0f, 25.0f),
         sf::Vector2i(8, 8),
-        sf::Vector2i(3, 3));
+        sf::Vector2i(3, 3),
+        1);
    
     mto.setOrigin(sf::Vector2f(mto.getGloablBounds().width * 0.5f, mto.getGloablBounds().height * 0.5f));
 }
@@ -139,6 +140,7 @@ void SceneOne::processInput()
             this->view->setSize(event->size.width, event->size.height);
             sf::Vector2f pos = sf::Vector2f(event->size.width, event->size.height);
             pos *= 0.5f;
+            //this->view->setCenter(pos);
             pos = this->engine->window.mapPixelToCoords(sf::Vector2i(pos), *this->view);
             this->guiSys.at("menu").setPosition(pos);
             break;
@@ -162,11 +164,13 @@ void SceneOne::processInput()
                     if (msg == "game_state")
                     {
                         std::cout << "next state start" << std::endl;
+                        this->engine->_push(new SceneThree(this->engine));
                     }
 
                     if (msg == "options_state")
                     {
                         std::cout << "next state options" << std::endl;
+                        this->engine->_push(new SceneTwo(this->engine));
                     }
 
                     if (msg == "exit_state")
@@ -187,6 +191,8 @@ void SceneOne::processInput()
         }
         case sf::Event::MouseMoved:
         {
+            std::cout <<"x = " << (int)mousePos.x << " | y = " << (int)mousePos.y << "    \r";
+
             for (auto const& [key, val] : guiSys)
             {
                 this->guiSys.at(key).highlight(mousePos);

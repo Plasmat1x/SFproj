@@ -112,8 +112,8 @@ private:
 public:
     std::vector<GuiEntry> entries;
     bool visible;
-    bool text_centred;
-
+    bool text_centred; 
+    sf::Vector2f gui_size;
     /// <summary>
     /// Create GUI
     /// </summary>

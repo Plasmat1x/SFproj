@@ -17,6 +17,9 @@
 #include <Windows.h>
 #include <stack>
 
+#include "imgui/imgui.h"
+#include "imgui-sfml/imgui-SFML.h"
+
 class Scene;
 
 class Engine
