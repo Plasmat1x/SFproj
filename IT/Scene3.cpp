@@ -2,8 +2,6 @@
 #include "ResourceManager.h"
 #include "Scene3.h"
 
-using namespace ImGui;
-
 SceneThree::SceneThree(Engine* engine)
 {
     init(engine);
@@ -16,8 +14,7 @@ void SceneThree::init(Engine* engine)
     this->event = &engine->events;
     this->view = &engine->view;
     this->game_view = sf::View(sf::FloatRect(0, 0, 200, 150));
-    this->hud_view = sf::View(sf::FloatRect(0, 0, 400, 300));
-    this->player_view = sf::View(sf::FloatRect(0, 0, 400, 300));
+    this->hud_view = sf::View(sf::FloatRect(0, 0, 800, 600));
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
@@ -127,6 +124,22 @@ void SceneThree::update(const float dt)
 
     game_view.setCenter(sprite.getPosition());
     sprite.setPosition(position);
+
+    //imgui creation
+
+    ImGui::Begin("Text Test");
+
+    ImGui::Text("Text");
+    ImGui::TextWrapped("text wrapped");
+    ImGui::LabelText("Label","text lable");
+    ImGui::BulletText("bullet text");
+    ImGui::Bullet();
+    ImGui::Separator();
+    ImGui::NewLine();
+    ImGui::SmallButton("B");
+    ImGui::End();
+
+    ImGui::ShowDemoWindow();
 }
 
 void SceneThree::render(const float dt)
@@ -141,7 +154,6 @@ void SceneThree::render(const float dt)
     }
 
     //render scene obj
-    //this->engine->window.setView(this->player_view);
     this->engine->window.draw(sprite);
 
 

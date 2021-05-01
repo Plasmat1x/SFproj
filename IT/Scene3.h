@@ -30,7 +30,6 @@ private:
     sf::Color bgColor;
 
     sf::View game_view;
-    sf::View player_view;
     sf::View hud_view;
 
     sf::Sprite sprite;

@@ -7,6 +7,13 @@ SFML-Callbacks/
 res/.wip/
 res/ref/
 res/map/
+COP/
+cloc-1.86.exe
+COP.sln
+res/img/Wood and Paper UI
+res/img/free
+res/img/reserv
+x64/
 
 #tinyxml/
 tinyxml/*.txt

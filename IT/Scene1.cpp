@@ -90,7 +90,7 @@ void SceneOne::init(Engine* engine)
         sf::Vector2f(192 * 3, 32 * 3), 100,
         1, 5, false, true, *ResourceManager::getGuiStyle("header"),
         { std::make_pair("Main menu", "text") }));
-    this->guiSys.at("text").setPosition(view->getCenter().x, view->getCenter().y * 0.5f + 80);
+    this->guiSys.at("text").setPosition(view->getCenter().x, view->getCenter().y * 0.7f);
     this->guiSys.at("text").setOrigin(192 * 3 * 0.5f, 32 * 3 * 0.5f);
     this->guiSys.at("text").show();
 
