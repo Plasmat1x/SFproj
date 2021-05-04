@@ -10,7 +10,7 @@
 void Engine::init()
 {
     //window.create(sf::VideoMode(1920, 1080), "SFproj");
-    window.create(sf::VideoMode(800, 600), "SFproj");
+    window.create(sf::VideoMode(1366, 768), "SFproj", sf::Style::Titlebar | sf::Style::Close);
     ImGui::SFML::Init(window);
 }
 
@@ -84,6 +84,8 @@ void Engine::core()
         if (_peek() == nullptr) continue;
 
         processInput();
+        //ImGui::SFML::ProcessEvent(this->events);
+        //ImGui::SFML::Update(this->window, this->clock.restart());
         update(dt);
         render(dt);
     }

@@ -10,11 +10,12 @@ SceneThree::SceneThree(Engine* engine)
 void SceneThree::init(Engine* engine)
 {
     //core setup
+    //res 1366 x 768 -> half 683 x 384 -> quad imposiible
     this->engine = engine;
     this->event = &engine->events;
     this->view = &engine->view;
-    this->game_view = sf::View(sf::FloatRect(0, 0, 200, 150));
-    this->hud_view = sf::View(sf::FloatRect(0, 0, 800, 600));
+    this->game_view = sf::View(sf::FloatRect(0, 0, 683, 384));
+    this->hud_view = sf::View(sf::FloatRect(0, 0, 1366, 768));
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
@@ -39,8 +40,8 @@ void SceneThree::init(Engine* engine)
             sf::Sprite sprite;
             sprite.setTexture(texture_bg);
             sprite.setTextureRect(sf::IntRect(
-                (1 + size_bg.x) * j,
-                (1 + size_bg.y) * i,
+                1 + (1 + size_bg.x) * j,
+                1 + (1 + size_bg.y) * i,
                 size_bg.x,
                 size_bg.y));
             sprite.setPosition(size_bg.x * j, size_bg.y * i);
@@ -54,6 +55,10 @@ void SceneThree::processInput()
 {
     sf::Vector2f mousePos = this->engine->window.mapPixelToCoords(sf::Mouse::getPosition(this->engine->window), *this->view);
     
+    mouse_p = mousePos;
+
+    //ImGui::SFML::ProcessEvent(*event);
+
     while (this->engine->window.pollEvent(*event))
     {
         ImGui::SFML::ProcessEvent(*event);
@@ -107,8 +112,6 @@ void SceneThree::processInput()
 
         case sf::Event::MouseMoved:
         {
-            std::cout << "x = " << (int)mousePos.x << " | y = " << (int)mousePos.y << "    \r";
-
             break;
         }
         default: break;
@@ -126,17 +129,8 @@ void SceneThree::update(const float dt)
     sprite.setPosition(position);
 
     //imgui creation
-
-    ImGui::Begin("Text Test");
-
-    ImGui::Text("Text");
-    ImGui::TextWrapped("text wrapped");
-    ImGui::LabelText("Label","text lable");
-    ImGui::BulletText("bullet text");
-    ImGui::Bullet();
-    ImGui::Separator();
-    ImGui::NewLine();
-    ImGui::SmallButton("B");
+    ImGui::Begin("info win");
+    ImGui::Text("pos: (%g, %g)", mouse_p.x, mouse_p.y);
     ImGui::End();
 
     ImGui::ShowDemoWindow();

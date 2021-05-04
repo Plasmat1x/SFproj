@@ -27,12 +27,24 @@ public:
 private:
     std::map<std::string, Gui> guiSys;
 
-    MultiTileObject mto;
     MultiTileObject mto_;
+
+    _MTO_sprite_info spr_info;
+    _MTO_sprite_info spr_info_two;
+    _MTO_texture_indexes mto_index;
+    _MTO_texture_indexes mto_index_two;
+    _MTO_texture_info tex_info;
+
+    MultiTileObject mto_sprite;
+    MultiTileObject mto_sprite_two;
+
     bool mto_pos;
     sf::Vector2f buf;
 
     GUI_container container;
     GUI_container container_child;
+
+    std::ostringstream oss;
+    bool VSync;
 };
 

@@ -164,10 +164,7 @@ void Gui::show()
         if (mto_enable)
         {
             entry.mto.setOrigin(origin);
-            entry.mto.setAddscale(sf::Vector2f(
-                (this->dimension.x - (entry.mto.get_in_size().x * 2)) / (entry.mto.get_in_size().x),
-                (this->dimension.y - (entry.mto.get_in_size().y * 2)) / (entry.mto.get_in_size().y)
-            ));
+            entry.mto.setSize(dimension);
             entry.mto.setPosition(sf::Vector2f(
                 this->getPosition().x,
                 this->getPosition().y));

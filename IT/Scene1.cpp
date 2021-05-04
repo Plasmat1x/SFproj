@@ -40,6 +40,7 @@ void SceneOne::init(Engine* engine)
 
     ResourceManager::loadTexture("meta_button", "button_meta.png");
     ResourceManager::loadTexture("meta_window", "meta_window.png");
+    ResourceManager::loadTexture("test_ui", "ui_test.png");
 
     ResourceManager::loadGuiStyle("button", GuiStyle(
         ResourceManager::getFont("serif_font"),
@@ -71,6 +72,64 @@ void SceneOne::init(Engine* engine)
         sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0x00), sf::Color(0xff, 0xff, 0xff, 0xff),
         sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0xff, 0xff, 0xff, 0x00), sf::Color(0x00, 0x00, 0x00, 0xff)));
 
+    mto_index = _MTO_texture_indexes({
+        sf::Vector2i(3,0),
+        sf::Vector2i(4,0),
+        sf::Vector2i(5,0),
+        sf::Vector2i(3,1),
+        sf::Vector2i(4,1),
+        sf::Vector2i(5,1),
+        sf::Vector2i(3,2),
+        sf::Vector2i(4,2),
+        sf::Vector2i(5,2) });
+
+    mto_index_two = _MTO_texture_indexes({
+        sf::Vector2i(0,0),
+        sf::Vector2i(1,0),
+        sf::Vector2i(2,0),
+        sf::Vector2i(0,1),
+        sf::Vector2i(1,1),
+        sf::Vector2i(2,1),
+        sf::Vector2i(0,2),
+        sf::Vector2i(1,2),
+        sf::Vector2i(2,2) });
+
+    tex_info = {
+        ResourceManager::getTexture("test_ui"),                     // texture
+        sf::Vector2f(8.0f,8.0f),                                    // element size
+        sf::Vector2f(1.0f,1.0f),                                    // padding
+        sf::Vector2f(1.0f,1.0f),                                    // offset
+        sf::Vector2i(6,3)                                           // texture array size
+    };
+
+    spr_info = {
+        sf::Vector2f(pos.x, pos.y * 1.3f),                          // position
+        sf::Vector2f(200.0f, 200),                                  // size
+        sf::Vector2f(1.0f, 1.0f),                                   // scale
+        sf::Vector2f(100.0f, 100.0f),                               // origin
+        sf::Vector2f(1.0f, 1.0f),                                   // add_scale
+    };
+
+    spr_info_two = {
+        sf::Vector2f(400, 300.0f),                                  // position
+        sf::Vector2f(128.0f, 32.0f),                                // size
+        sf::Vector2f(1.0f, 1.0f),                                   // scale
+        sf::Vector2f(64.0f, 16.0f),                                 // origin
+        sf::Vector2f(1.0f, 1.0f),                                   // add_scale
+    };
+
+    mto_sprite = MultiTileObject(
+        &tex_info,
+        &spr_info,
+        &mto_index
+    );
+
+    mto_sprite_two = MultiTileObject(
+        &tex_info,
+        &spr_info_two,
+        &mto_index_two
+    );
+
     //gui setup
     this->guiSys.emplace("menu", Gui(
         sf::Vector2f(128, 32), 14,
@@ -79,8 +138,7 @@ void SceneOne::init(Engine* engine)
         std::make_pair("Options", "options_state"),
         std::make_pair("Exit","exit_state") },
         true,
-        MultiTileObject(ResourceManager::getTexture("meta_button"),
-           sf::Vector2i(8,8), sf::Vector2i(3,3), 1)));
+        mto_sprite_two));
     this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").gui_size.x * 0.5f,
                                         this->guiSys.at("menu").gui_size.y * 0.5f);
     this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.3f);
@@ -99,7 +157,7 @@ void SceneOne::init(Engine* engine)
     tex.setRepeated(true);
 
     sprite.setTexture(tex);
-    sprite.setTextureRect(sf::IntRect(0, 0, 200, 32));
+    sprite.setTextureRect(sf::IntRect(0, 0, 800, 32));
     sprite.setPosition(pos.x, pos.y * 0.4f);
     sprite.setScale(4, 4);
     sprite.setOrigin(sprite.getLocalBounds().width * 0.5f, sprite.getLocalBounds().height * 0.5f);
@@ -110,16 +168,6 @@ void SceneOne::init(Engine* engine)
     ico.setScale(4, 4);
     ico.setOrigin(ico.getLocalBounds().width * 0.5f, ico.getLocalBounds().height * 0.5f);
 
-    mto = MultiTileObject(
-        ResourceManager::getTexture("meta_window"),
-        sf::Vector2f(pos.x,pos.y * 1.3f),
-        sf::Vector2f(1.0f, 1.0f),
-        sf::Vector2f(25.0f, 25.0f),
-        sf::Vector2i(8, 8),
-        sf::Vector2i(3, 3),
-        1);
-   
-    mto.setOrigin(sf::Vector2f(mto.getGloablBounds().width * 0.5f, mto.getGloablBounds().height * 0.5f));
 }
 
 void SceneOne::processInput()
@@ -140,7 +188,7 @@ void SceneOne::processInput()
             this->view->setSize(event->size.width, event->size.height);
             sf::Vector2f pos = sf::Vector2f(event->size.width, event->size.height);
             pos *= 0.5f;
-            //this->view->setCenter(pos);
+            this->view->setCenter(pos);
             pos = this->engine->window.mapPixelToCoords(sf::Vector2i(pos), *this->view);
             this->guiSys.at("menu").setPosition(pos);
             break;
@@ -191,8 +239,6 @@ void SceneOne::processInput()
         }
         case sf::Event::MouseMoved:
         {
-            std::cout <<"x = " << (int)mousePos.x << " | y = " << (int)mousePos.y << "    \r";
-
             for (auto const& [key, val] : guiSys)
             {
                 this->guiSys.at(key).highlight(mousePos);
@@ -216,7 +262,7 @@ void SceneOne::render(const float dt)
     //render scene obj
     this->engine->window.draw(sprite);
     this->engine->window.draw(ico);
-    this->engine->window.draw(mto);
+    this->engine->window.draw(mto_sprite);
     //render gui
     for (auto gui : this->guiSys)
     {

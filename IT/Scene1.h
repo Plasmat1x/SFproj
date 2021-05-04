@@ -31,7 +31,14 @@ private:
     sf::Texture tex_ico;
     sf::Texture tex_button;
 
-    MultiTileObject mto;
+    _MTO_sprite_info spr_info;
+    _MTO_sprite_info spr_info_two;
+    _MTO_texture_indexes mto_index;
+    _MTO_texture_indexes mto_index_two;
+    _MTO_texture_info tex_info;
+
+    MultiTileObject mto_sprite;
+    MultiTileObject mto_sprite_two;
 
 };
 

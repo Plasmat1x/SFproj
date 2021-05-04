@@ -41,5 +41,7 @@ private:
     sf::Vector2f position;
 
     sf::Vector2f size_bg;
+
+    sf::Vector2f mouse_p;
 };
 
