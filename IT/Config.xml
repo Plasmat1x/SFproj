@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<config app="SF">
+    <param width="1366" />
+    <param height="768" />
+    <param v_sync="0" />
+    <param frame_limit="30" />
+    <param full_screen="0" />
+</config>

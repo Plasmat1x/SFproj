@@ -39,12 +39,13 @@ private:
     MultiTileObject mto_sprite_two;
 
     bool mto_pos;
-    sf::Vector2f buf;
+    //sf::Vector2f buf;
 
     GUI_container container;
     GUI_container container_child;
 
     std::ostringstream oss;
-    bool VSync;
+
+    CORE_Config buf;
 };
 

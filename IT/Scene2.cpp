@@ -3,6 +3,8 @@
 #include "ResourceManager.h"
 #include "Scene2.h"
 
+#include<tinyxml/tinyxml.h>
+
 SceneTwo::SceneTwo(Engine* engine)
 {
     init(engine);
@@ -14,15 +16,14 @@ void SceneTwo::init(Engine* engine)
     this->engine = engine;
     this->event = &engine->events;
     this->view = &engine->view;
-    this->VSync = false;
-
-    this->engine->window.setVerticalSyncEnabled(VSync);
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
     this->view->setSize(pos);
     pos *= 0.5f;
     this->view->setCenter(pos);
+
+    this->buf = *this->engine->config;
 
     mto_index = _MTO_texture_indexes({
     sf::Vector2i(3,0),
@@ -112,7 +113,7 @@ void SceneTwo::init(Engine* engine)
         { 
             std::make_pair("Resolution", ""),
             std::make_pair("VSync", ""),
-            std::make_pair("txt param", ""),
+            std::make_pair("Full screen", ""),
             std::make_pair("txt param", ""),
             std::make_pair("txt param", ""),
             std::make_pair("txt param", "")
@@ -126,9 +127,9 @@ void SceneTwo::init(Engine* engine)
         sf::Vector2f(128, 32), 14,
         1, 5, false, true, *ResourceManager::getGuiStyle("button_mto"),
         { 
-            std::make_pair("bt param", ""),
-            std::make_pair("bt param", "vsync"),
-            std::make_pair("bt param", ""),
+            std::make_pair("bt param", "rs_bt"),
+            std::make_pair("bt param", "vs_bt"),
+            std::make_pair("bt param", "fs_bt"),
             std::make_pair("bt param", ""),
             std::make_pair("bt param", ""),
             std::make_pair("bt param", "")
@@ -174,6 +175,18 @@ void SceneTwo::processInput()
         {
             if (event->key.code == sf::Keyboard::Escape)
             {
+                this->engine->window.setVerticalSyncEnabled(this->engine->config->v_sync);
+                if (this->engine->config->full_screen)
+                {
+                    this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
+                        sf::Style::Fullscreen);
+                }
+                else
+                {
+                    this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
+                        sf::Style::Titlebar | sf::Style::Close);
+                }
+
                 this->engine->_pop();
                 return;
             }
@@ -191,22 +204,68 @@ void SceneTwo::processInput()
 
                     if (msg == "save_state")
                     {
+                        TiXmlDocument doc;
+                        doc.LoadFile("Config.xml");
+
+                        TiXmlElement* root = doc.FirstChildElement("config");;
+                        root->SetAttribute("app", buf.app_name.c_str());
+
+                        TiXmlElement* param = root->FirstChildElement("param");
+                        param->SetAttribute("width", buf.width);
+                        param = param->NextSiblingElement("param");
+                        param->SetAttribute("height", buf.height);
+                        param = param->NextSiblingElement("param");
+                        param->SetAttribute("v_sync", buf.v_sync);
+                        param = param->NextSiblingElement("param");
+                        param->SetAttribute("frame_limit", buf.frame_limit);
+                        param = param->NextSiblingElement("param");
+                        param->SetAttribute("full_screen", buf.full_screen);
+
+                        doc.SaveFile("Config.xml");
                         this->engine->_pop();
                         return;
                     }
                     if (msg == "back_state")
                     {
+                        this->engine->window.setVerticalSyncEnabled(this->engine->config->v_sync);
+                        if (this->engine->config->full_screen)
+                        {
+                            this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
+                                sf::Style::Fullscreen);
+                        }
+                        else
+                        {
+                            this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
+                                sf::Style::Titlebar | sf::Style::Close);
+                        }
+
                         this->engine->_pop();
                         return;
                     }
-                    if (msg == "res_bt")
+                    if (msg == "rs_bt")
                     {
-                        this->engine->window.setSize(sf::Vector2u(1920, 1080));
+                        this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name);
                     }
-                    if (msg == "vsync")
+                    if (msg == "vs_bt")
                     {
-                        VSync = !VSync;
-                        this->engine->window.setVerticalSyncEnabled(VSync);
+                        buf.v_sync = !buf.v_sync;
+                        this->engine->window.setVerticalSyncEnabled(buf.v_sync);
+                    }
+                    if (msg == "fs_bt")
+                    {
+                        if (!buf.full_screen)
+                        {
+                            this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
+                                sf::Style::Fullscreen);
+                            buf.full_screen = !buf.full_screen;
+                        }
+                        else
+                        {
+                            this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
+                                sf::Style::Titlebar | sf::Style::Close);
+                            buf.full_screen = !buf.full_screen;
+                        }
+
                     }
 
                 }
@@ -241,12 +300,16 @@ void SceneTwo::update(const float dt)
 {
     //std::ostringstream oss;
     oss.seekp(0);
-    oss << this->engine->window.getSize().x << " x " << this->engine->window.getSize().y << "  ";
+    oss << this->buf.width << " x " << this->buf.height << "  ";
     this->guiSys.at("conf_bt").setEntryText(0, oss.str());
 
     oss.seekp(0);
-    oss << VSync << "          ";
+    oss << this->buf.v_sync << "          ";
     this->guiSys.at("conf_bt").setEntryText(1, oss.str());
+
+    oss.seekp(0);
+    oss << this->buf.full_screen << "          ";
+    this->guiSys.at("conf_bt").setEntryText(2, oss.str());
 }
 
 void SceneTwo::render(const float dt)

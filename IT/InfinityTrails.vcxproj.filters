@@ -78,6 +78,9 @@
     <ClInclude Include="Scene3.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Level.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -128,9 +131,17 @@
     <ClCompile Include="Scene3.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="..\.gitignore" />
+  </ItemGroup>
+  <ItemGroup>
+    <Xml Include="Config.xml">
+      <Filter>Файлы ресурсов</Filter>
+    </Xml>
   </ItemGroup>
 </Project>

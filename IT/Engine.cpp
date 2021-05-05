@@ -7,10 +7,21 @@
 
 #include <sstream>
 
-void Engine::init()
+void Engine::init(CORE_Config* config)
 {
-    //window.create(sf::VideoMode(1920, 1080), "SFproj");
-    window.create(sf::VideoMode(1366, 768), "SFproj", sf::Style::Titlebar | sf::Style::Close);
+    this->config = config;
+    if (this->config->full_screen)
+    {
+        window.create(sf::VideoMode(this->config->width,this->config->height), this->config->app_name, sf::Style::Fullscreen);
+    }
+    else
+    {
+        window.create(sf::VideoMode(this->config->width, this->config->height), this->config->app_name, sf::Style::Titlebar | sf::Style::Close);
+    }
+
+    window.setVerticalSyncEnabled(this->config->v_sync);
+    window.setFramerateLimit(this->config->frame_limit);
+    
     ImGui::SFML::Init(window);
 }
 

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<config>
+  <param window_width = "1366"></param>
+  <param window_height = "768"></param>
+  <param v_sync = "0"></param>
+  <param max_frame_limit = "60"></param>
+  <param full_screen = "0"></param>
+</config>

@@ -20,6 +20,16 @@
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
+struct CORE_Config
+{
+    std::string app_name;
+    unsigned int width;
+    unsigned int height;
+    bool v_sync;
+    unsigned int frame_limit;
+    bool full_screen;
+};
+
 class Scene;
 
 class Engine
@@ -32,8 +42,10 @@ public:
     std::stack<Scene*> scenes;
     sf::View view;
 
+    CORE_Config* config;
+
     //core
-    void init();
+    void init(CORE_Config* config);
     void cleanup();
     void core();
     
