@@ -25,6 +25,15 @@ void SceneTwo::init(Engine* engine)
 
     this->buf = *this->engine->config;
 
+    resolution =
+    {
+        {1366,768},
+        {1600,900},
+        {1920,1080}
+    };
+
+    res_flag = 0;
+
     mto_index = _MTO_texture_indexes({
     sf::Vector2i(3,0),
     sf::Vector2i(4,0),
@@ -244,7 +253,24 @@ void SceneTwo::processInput()
                     }
                     if (msg == "rs_bt")
                     {
-                        this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name);
+                        res_flag++;
+                        if (res_flag >= resolution.size()) res_flag = 0;
+                        if (this->buf.full_screen)
+                        {
+                            buf.width = resolution[res_flag].first;
+                            buf.height = resolution[res_flag].second;
+
+                            this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
+                                sf::Style::Fullscreen);
+                        }
+                        else
+                        {
+                            buf.width = resolution[res_flag].first;
+                            buf.height = resolution[res_flag].second;
+
+                            this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
+                                sf::Style::Titlebar | sf::Style::Close);
+                        }
                     }
                     if (msg == "vs_bt")
                     {

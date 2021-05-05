@@ -2,7 +2,7 @@
 <config app="SF">
     <param width="1366" />
     <param height="768" />
-    <param v_sync="0" />
-    <param frame_limit="30" />
+    <param v_sync="1" />
+    <param frame_limit="60" />
     <param full_screen="0" />
 </config>

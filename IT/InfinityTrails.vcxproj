@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.gitignore" />
+    <None Include="..\res\map\test_level.tmx" />
     <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <ItemGroup>

@@ -9,8 +9,6 @@ SceneThree::SceneThree(Engine* engine)
 
 void SceneThree::init(Engine* engine)
 {
-    //core setup
-    //res 1366 x 768 -> half 683 x 384 -> quad imposiible
     this->engine = engine;
     this->event = &engine->events;
     this->view = &engine->view;
@@ -49,6 +47,8 @@ void SceneThree::init(Engine* engine)
             sprite_bg.push_back(sprite);
         }
     }
+
+    level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(2, 3));
 }
 
 void SceneThree::processInput()
@@ -146,6 +146,8 @@ void SceneThree::render(const float dt)
     {
         this->engine->window.draw(i);
     }
+
+    this->engine->window.draw(level);
 
     //render scene obj
     this->engine->window.draw(sprite);

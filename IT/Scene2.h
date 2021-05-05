@@ -47,5 +47,8 @@ private:
     std::ostringstream oss;
 
     CORE_Config buf;
+
+    std::vector<std::pair<int, int>> resolution;
+    int res_flag;
 };
 

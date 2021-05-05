@@ -138,6 +138,9 @@
   <ItemGroup>
     <None Include="ClassDiagram.cd" />
     <None Include="..\.gitignore" />
+    <None Include="..\res\map\test_level.tmx">
+      <Filter>Файлы ресурсов</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Config.xml">
