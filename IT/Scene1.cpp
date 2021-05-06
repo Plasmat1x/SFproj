@@ -2,6 +2,8 @@
 #include "Scene2.h"
 #include "Scene3.h"
 
+#include "dGrid.h"
+
 #include <iostream>
 
 #include "ResourceManager.h"
@@ -211,13 +213,11 @@ void SceneOne::processInput()
 
                     if (msg == "game_state")
                     {
-                        std::cout << "next state start" << std::endl;
                         this->engine->_push(new SceneThree(this->engine));
                     }
 
                     if (msg == "options_state")
                     {
-                        std::cout << "next state options" << std::endl;
                         this->engine->_push(new SceneTwo(this->engine));
                     }
 
@@ -236,6 +236,13 @@ void SceneOne::processInput()
 
             }
             break;
+        }
+        case sf::Event::KeyReleased:
+        {
+            if (event->key.code == sf::Keyboard::Tilde)
+            {
+                this->engine->_debug_ = !this->engine->_debug_;
+            }
         }
         case sf::Event::MouseMoved:
         {
@@ -268,6 +275,11 @@ void SceneOne::render(const float dt)
     {
         this->engine->window.draw(gui.second);
     }
+
+    //debug
+    if (this->engine->_debug_) 
+        sfd::drawGrid(this->engine->window, 16, 9, sf::Color(0xff, 0xff, 0xaa, 0x33));
+
     return;
 }
 

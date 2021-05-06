@@ -1,5 +1,6 @@
 #include "Engine.h"
 #include "Scene1.h"
+#include "Scene3.h"
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
@@ -73,6 +74,7 @@ int main()
 
     //load scene
     game._push(new SceneOne(&game));
+    //game._push(new SceneThree(&game));
 
     //core
     game.core();

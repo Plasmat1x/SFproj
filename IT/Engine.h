@@ -35,6 +35,7 @@ class Scene;
 class Engine
 {
 public:
+    bool _debug_ = false;
 
     sf::Event events;
     sf::RenderWindow window;

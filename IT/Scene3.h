@@ -24,6 +24,12 @@ public:
     void cleanup();
 
 private:
+    bool _debugtile_ = false;
+    bool _debugui_ = false;
+    bool check_im = false;
+    bool check_inf = false;
+    bool check_ttp = false;
+
     sf::View game_view;
     sf::View hud_view;
 
@@ -32,9 +38,21 @@ private:
     sf::Texture texture;
     sf::Texture texture_bg;
     sf::Vector2f position;
-    sf::Vector2f size_bg;
     sf::Vector2f mouse_p;
+    sf::Vector2f view_zeropos;
+    sf::Vector2f view_pos;
 
     Level level;
+
+    MultiTileObject mtocell1;
+    MultiTileObject mtocell2;
+    MultiTileObject mtocell3;
+    MultiTileObject mtocell4;
+
+    _MTO_sprite_info spr_info;
+    _MTO_texture_indexes mto_index;
+    _MTO_texture_info tex_info;
+
+    void updateUi(sf::Vector2f pos);
 };
 

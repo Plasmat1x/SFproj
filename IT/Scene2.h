@@ -50,5 +50,7 @@ private:
 
     std::vector<std::pair<int, int>> resolution;
     int res_flag;
+
+    void updateUi(sf::Vector2f pos);
 };
 

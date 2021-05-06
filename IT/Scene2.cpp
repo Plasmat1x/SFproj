@@ -2,6 +2,8 @@
 #include <iomanip>
 #include "ResourceManager.h"
 #include "Scene2.h"
+#include "Scene3.h"
+#include "dGrid.h"
 
 #include<tinyxml/tinyxml.h>
 
@@ -189,11 +191,26 @@ void SceneTwo::processInput()
                 {
                     this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
                         sf::Style::Fullscreen);
+
+                    //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                    //sf::Vector2f pos = this->engine->view.getSize();
+                    //pos *= 0.5f;
+                    //this->engine->view.setCenter(pos);
+
+                    //updateUi(pos);
+
                 }
                 else
                 {
                     this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
                         sf::Style::Titlebar | sf::Style::Close);
+
+                    //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                    //sf::Vector2f pos = this->engine->view.getSize();
+                    //pos *= 0.5f;
+                    //this->engine->view.setCenter(pos);
+
+                    //updateUi(pos);
                 }
 
                 this->engine->_pop();
@@ -201,6 +218,13 @@ void SceneTwo::processInput()
             }
 
             break;
+        }
+        case sf::Event::KeyReleased:
+        {
+            if (event->key.code == sf::Keyboard::Tilde)
+            {
+                this->engine->_debug_ = !this->engine->_debug_;
+            }
         }
         case sf::Event::MouseButtonReleased:
         {
@@ -231,6 +255,21 @@ void SceneTwo::processInput()
                         param->SetAttribute("full_screen", buf.full_screen);
 
                         doc.SaveFile("Config.xml");
+
+                        this->engine->config->app_name = buf.app_name;
+                        this->engine->config->width = buf.width;
+                        this->engine->config->height = buf.height;
+                        this->engine->config->v_sync = buf.v_sync;
+                        this->engine->config->frame_limit = buf.frame_limit;
+                        this->engine->config->full_screen = buf.full_screen;
+
+                        this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                        sf::Vector2f pos = this->engine->view.getSize();
+                        pos *= 0.5f;
+                        this->engine->view.setCenter(pos);
+
+                        //updateUi(pos);
+
                         this->engine->_pop();
                         return;
                     }
@@ -241,11 +280,25 @@ void SceneTwo::processInput()
                         {
                             this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
                                 sf::Style::Fullscreen);
+
+                            //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                            //sf::Vector2f pos = this->engine->view.getSize();
+                            //pos *= 0.5f;
+                            //this->engine->view.setCenter(pos);
+
+                            //updateUi(pos);
                         }
                         else
                         {
                             this->engine->window.create(sf::VideoMode(this->engine->config->width, this->engine->config->height), buf.app_name,
                                 sf::Style::Titlebar | sf::Style::Close);
+
+                            //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                            //sf::Vector2f pos = this->engine->view.getSize();
+                            //pos *= 0.5f;
+                            //this->engine->view.setCenter(pos);
+
+                            //updateUi(pos);
                         }
 
                         this->engine->_pop();
@@ -262,6 +315,13 @@ void SceneTwo::processInput()
 
                             this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
                                 sf::Style::Fullscreen);
+
+                            //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                            //sf::Vector2f pos = this->engine->view.getSize();
+                            //pos *= 0.5f;
+                            //this->engine->view.setCenter(pos);
+
+                            //updateUi(pos);
                         }
                         else
                         {
@@ -270,6 +330,13 @@ void SceneTwo::processInput()
 
                             this->engine->window.create(sf::VideoMode(buf.width, buf.height), buf.app_name,
                                 sf::Style::Titlebar | sf::Style::Close);
+
+                            //this->engine->view.setSize(this->engine->window.getSize().x, this->engine->window.getSize().y);
+                            //sf::Vector2f pos = this->engine->view.getSize();
+                            //pos *= 0.5f;
+                            //this->engine->view.setCenter(pos);
+
+                            //updateUi(pos);
                         }
                     }
                     if (msg == "vs_bt")
@@ -349,10 +416,26 @@ void SceneTwo::render(const float dt)
     {
         this->engine->window.draw(gui.second);
     }
+
+    //debug 
+    if(this->engine->_debug_) 
+        sfd::drawGrid(this->engine->window, 16, 9, sf::Color(0xff, 0xff, 0xaa, 0x33));
+
     return;
 }
 
 void SceneTwo::cleanup()
 {
+}
+
+void SceneTwo::updateUi(sf::Vector2f pos)
+{
+    this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.8f);
+    this->guiSys.at("text").setPosition(pos.x, pos.y * 0.2f);
+    this->guiSys.at("conf_txt").setPosition(pos.x * 0.8f, pos.y);
+    this->guiSys.at("conf_bt").setPosition(pos.x * 1.2f, pos.y);
+
+    mto_sprite_two.setPosition(sf::Vector2f(pos.x, pos.y));
+    mto_sprite.setPosition(sf::Vector2f(pos.x, pos.y));
 }
 
