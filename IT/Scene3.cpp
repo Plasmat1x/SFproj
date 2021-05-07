@@ -137,9 +137,6 @@ void SceneThree::init(Engine* engine)
     signature.set(gCoordinator.GetComponentType<COM::Velocity>());
     gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
 
-
-    eop = false;
-
     player = gCoordinator.CreateEntity();
     gCoordinator.AddComponent<COM::Position>(player, { 1.0f, 1.0f });
     gCoordinator.AddComponent<COM::Velocity>(player, { 0.0f, 0.0f, 100.0f });
@@ -205,24 +202,6 @@ void SceneThree::processInput()
 
             if ((event->key.code == sf::Keyboard::Num1))
             {
-                eop = !eop;
-
-                if (eop)
-                {
-                    gCoordinator.AddComponent<COM::View>(enemy, { &game_view });
-                    gCoordinator.AddComponent<COM::InputComponent>(enemy, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
-
-                    gCoordinator.RemoveComponent<COM::View>(player);
-                    gCoordinator.RemoveComponent<COM::InputComponent>(player);
-                }
-                else
-                {
-                    gCoordinator.AddComponent<COM::View>(player, { &game_view });
-                    gCoordinator.AddComponent<COM::InputComponent>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
-
-                    gCoordinator.RemoveComponent<COM::View>(enemy);
-                    gCoordinator.RemoveComponent<COM::InputComponent>(enemy);
-                }
                 break;
             }
         case sf::Event::MouseButtonReleased:
@@ -273,6 +252,29 @@ void SceneThree::update(const float dt)
         ImGui::Checkbox("Tolltip", &check_ttp);
         ImGui::Checkbox("Ui grid", &_debugui_);
         ImGui::Checkbox("Tile grid", &_debugtile_);
+
+        if(ImGui::Button("Change entity"))
+        {
+            eop = !eop;
+            if (eop)
+            {
+                gCoordinator.AddComponent<COM::View>(enemy, { &game_view });
+                gCoordinator.AddComponent<COM::InputComponent>(enemy, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::View>(player);
+                gCoordinator.RemoveComponent<COM::InputComponent>(player);
+            }
+            else
+            {
+                gCoordinator.AddComponent<COM::View>(player, { &game_view });
+                gCoordinator.AddComponent<COM::InputComponent>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::View>(enemy);
+                gCoordinator.RemoveComponent<COM::InputComponent>(enemy);
+            }
+        }ImGui::SameLine();
+        ImGui::LabelText("Enemy control:", "%d", eop);
+
         ImGui::End();
     }
 
@@ -347,4 +349,3 @@ void SceneThree::updateUi(sf::Vector2f pos)
 {
     
 }
-

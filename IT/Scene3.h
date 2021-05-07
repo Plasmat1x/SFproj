@@ -26,11 +26,14 @@ public:
     void cleanup();
 
 private:
+    //imgui flags
     bool _debugtile_ = false;
     bool _debugui_ = false;
     bool check_im = false;
     bool check_inf = false;
     bool check_ttp = false;
+    bool eop = false;
+    //
 
     sf::View game_view;
     sf::View hud_view;
@@ -56,7 +59,6 @@ private:
 
     ECS::Entity player;
     ECS::Entity enemy;
-    bool eop;
 
     void updateUi(sf::Vector2f pos);
 };
