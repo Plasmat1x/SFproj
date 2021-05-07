@@ -10,6 +10,8 @@
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
+#include "ECS.h"
+
 class SceneThree :
     public Scene
 {
@@ -39,7 +41,6 @@ private:
     sf::Texture texture_bg;
     sf::Vector2f position;
     sf::Vector2f mouse_p;
-    sf::Vector2f view_zeropos;
     sf::Vector2f view_pos;
 
     Level level;
@@ -52,6 +53,10 @@ private:
     _MTO_sprite_info spr_info;
     _MTO_texture_indexes mto_index;
     _MTO_texture_info tex_info;
+
+    ECS::Entity player;
+    ECS::Entity enemy;
+    bool eop;
 
     void updateUi(sf::Vector2f pos);
 };

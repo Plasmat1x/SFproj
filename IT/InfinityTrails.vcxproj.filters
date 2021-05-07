@@ -19,6 +19,12 @@
     <Filter Include="imgui-sfml">
       <UniqueIdentifier>{16b7618a-28a8-4967-9bbb-1de81e69dd4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ECS">
+      <UniqueIdentifier>{93bd5529-57e2-441b-b142-e5c2d7602f19}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SCENES">
+      <UniqueIdentifier>{9c6f90ae-5a5e-429f-aa6a-42c2b15833f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\imgui\imconfig.h">
@@ -51,12 +57,6 @@
     <ClInclude Include="Engine.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Scene.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene1.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="Gui.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
@@ -69,13 +69,7 @@
     <ClInclude Include="MultiTileObject.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="Scene2.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
     <ClInclude Include="_GUI.h">
-      <Filter>Файлы заголовков</Filter>
-    </ClInclude>
-    <ClInclude Include="Scene3.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
@@ -83,6 +77,27 @@
     </ClInclude>
     <ClInclude Include="dGrid.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="SYS_LIB.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ECS.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_LIB.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene.h">
+      <Filter>SCENES</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene1.h">
+      <Filter>SCENES</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene2.h">
+      <Filter>SCENES</Filter>
+    </ClInclude>
+    <ClInclude Include="Scene3.h">
+      <Filter>SCENES</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -107,9 +122,6 @@
     <ClCompile Include="main.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Scene.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="Gui.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -122,16 +134,7 @@
     <ClCompile Include="MultiTileObject.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="Scene2.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="_GUI.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene1.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="Scene3.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
@@ -139,6 +142,21 @@
     </ClCompile>
     <ClCompile Include="dGrid.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="ECS.cpp">
+      <Filter>ECS</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene.cpp">
+      <Filter>SCENES</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene1.cpp">
+      <Filter>SCENES</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene2.cpp">
+      <Filter>SCENES</Filter>
+    </ClCompile>
+    <ClCompile Include="Scene3.cpp">
+      <Filter>SCENES</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

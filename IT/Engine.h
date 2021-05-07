@@ -20,6 +20,10 @@
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
+#include "ECS.h"
+
+static ECS::Coordinator gCoordinator;
+
 struct CORE_Config
 {
     std::string app_name;
