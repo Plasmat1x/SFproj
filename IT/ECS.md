@@ -1,5 +1,3 @@
-#include "ECS.h"
-
 /*
 https://austinmorlan.com/posts/entity_component_system/
 
@@ -68,7 +66,7 @@ int main()
     gCoordinator.RegisterComponent<RigidBody>();
     gCoordinator.RegisterComponent<Transform>();
 
-    auto physicsSystem = gCoordinator.RegisterSystem<PhysicsSystem>(); // also can make shared_ptr as global for use in different func;
+    auto physicsSystem = gCoordinator.RegisterSystem<PhysicsSystem>();
 
     Signature signature;
     signature.set(gCoordinator.GetComponentType<Gravity>());
@@ -141,6 +139,7 @@ init()
     gCoordinator.RegisterComponent<COM::Position>();
     gCoordinator.RegisterComponent<COM::Velocity>();
 
+    // also can make shared_ptr<T> as global for use in different func;
     auto physicsSystem = gCoordinator.RegisterSystem<SYS::PhysicSystem>();
 
     ECS::Signature signature;

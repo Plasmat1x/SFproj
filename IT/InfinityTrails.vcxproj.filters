@@ -99,6 +99,9 @@
     <ClInclude Include="Scene3.h">
       <Filter>SCENES</Filter>
     </ClInclude>
+    <ClInclude Include="Animation.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -143,7 +146,7 @@
     <ClCompile Include="dGrid.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="ECS.cpp">
+    <ClCompile Include="ECS.md">
       <Filter>ECS</Filter>
     </ClCompile>
     <ClCompile Include="Scene.cpp">
@@ -157,6 +160,9 @@
     </ClCompile>
     <ClCompile Include="Scene3.cpp">
       <Filter>SCENES</Filter>
+    </ClCompile>
+    <ClCompile Include="Animation.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

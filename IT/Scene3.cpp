@@ -35,10 +35,10 @@ void SceneThree::init(Engine* engine)
 
     this->hud_view.setCenter(pos);
 
-    texture.loadFromFile("../res/img/icon.png");
+    texture.loadFromFile("../res/img/elf.png");
     sprite.setTexture(texture);
-    sprite.setPosition(position);
-    sprite.setOrigin(32 * 0.5f, 32 * 0.5f);
+    sprite.setTextureRect(sf::IntRect(0, 0, 43, 60));
+    sprite.setOrigin(44 * 0.5f, 60 * 0.5f);
 
     texture_bg.loadFromFile("../res/img/map.png");
 
@@ -148,6 +148,21 @@ void SceneThree::init(Engine* engine)
     gCoordinator.AddComponent<COM::Position>(enemy, { 64.0f, 64.0f });
     gCoordinator.AddComponent<COM::Velocity>(enemy, { 0.0f, 0.0f, 100.0f });
     gCoordinator.AddComponent<COM::Sprite>(enemy, { sprite });
+    gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
+
+    //Animation load
+    anim_manager.load_animation("idle", sf::Vector2f(43, 60), 0, 6);
+    anim_manager.load_animation("idlef", sf::Vector2f(43, 60), 0, 6, 1);
+    anim_manager.load_animation("run", sf::Vector2f(43, 60), 1, 6);
+    anim_manager.load_animation("runf", sf::Vector2f(43, 60), 1, 6, 1);
+    anim_manager.load_animation("jump", sf::Vector2f(43, 60), 2, 4);
+    anim_manager.load_animation("jumpf", sf::Vector2f(43, 60), 2, 4, 1);
+    anim_manager.load_animation("fall", sf::Vector2f(43, 60), 3, 4);
+    anim_manager.load_animation("fallf", sf::Vector2f(43, 60), 3, 4, 1);
+    anim_manager.load_animation("clim", sf::Vector2f(43, 60), 4, 6);
+    anim_manager.load_animation("climf", sf::Vector2f(43, 60), 4, 6, 1);
+
+    anim.init(0.25f);
 }
 
 void SceneThree::processInput()
@@ -185,12 +200,37 @@ void SceneThree::processInput()
         }
         case sf::Event::KeyPressed:
         {
-            if ((event->type == sf::Event::KeyPressed) && (event->key.code == sf::Keyboard::Escape))
+            if (event->key.code == sf::Keyboard::Escape)
             {
                 this->engine->_pop();
                 return;
             }
 
+            if (event->key.code == sf::Keyboard::Numpad0) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("idle")); }
+            if (event->key.code == sf::Keyboard::Numpad1) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("idlef")); }
+            if (event->key.code == sf::Keyboard::Numpad2) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
+            if (event->key.code == sf::Keyboard::Numpad3) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("runf")); }
+            if (event->key.code == sf::Keyboard::Numpad4) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("jump")); }
+            if (event->key.code == sf::Keyboard::Numpad5) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("jumpf")); }
+            if (event->key.code == sf::Keyboard::Numpad6) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("fall")); }
+            if (event->key.code == sf::Keyboard::Numpad7) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("fallf")); }
+            if (event->key.code == sf::Keyboard::Numpad8) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("clim")); }
+            if (event->key.code == sf::Keyboard::Numpad9) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("climf")); }
+
+            if ((event->type == sf::Event::KeyPressed) && (event->key.code == sf::Keyboard::W)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
+            if ((event->type == sf::Event::KeyPressed) && (event->key.code == sf::Keyboard::A)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("runf")); }
+            if ((event->type == sf::Event::KeyPressed) && (event->key.code == sf::Keyboard::S)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("runf")); }
+            if ((event->type == sf::Event::KeyPressed) && (event->key.code == sf::Keyboard::D)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
+
+            
+            if ((event->key.code != sf::Keyboard::W) &&
+                (event->key.code != sf::Keyboard::A) &&
+                (event->key.code != sf::Keyboard::S) &&
+                (event->key.code != sf::Keyboard::D))
+            {
+                anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("idle"));
+            }
+            
             break;
         }
         case sf::Event::KeyReleased:
@@ -204,6 +244,9 @@ void SceneThree::processInput()
             {
                 break;
             }
+
+            break;
+        }
         case sf::Event::MouseButtonReleased:
         {
             if (event->mouseButton.button == sf::Mouse::Left)
@@ -219,16 +262,15 @@ void SceneThree::processInput()
 
             }
             break;
-
+        }
         case sf::Event::MouseMoved:
         {
             break;
         }
         default: break;
         }
-        }
-        }
     }
+    // out poll event loop
 }
 
 void SceneThree::update(const float dt)
@@ -283,8 +325,8 @@ void SceneThree::update(const float dt)
         ImGui::Begin("info win");
         ImGui::Text("mouse pos: (%g, %g)", mouse_p.x, mouse_p.y);
         ImGui::Text("world mouse pos: (%g, %g)",
-            mouse_p.x + game_view.getCenter().x - game_view.getSize().x * 0.5f,
-            mouse_p.y + game_view.getCenter().y - game_view.getSize().y * 0.5f);
+            mouse_p.x + int(game_view.getCenter().x) - game_view.getSize().x * 0.5f,
+            mouse_p.y + int(game_view.getCenter().y) - game_view.getSize().y * 0.5f);
         ImGui::Text("view pos: (%g, %g)", view_pos.x, view_pos.y);
         ImGui::End();
     }

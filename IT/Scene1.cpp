@@ -199,7 +199,7 @@ void SceneOne::processInput()
         {
             if (event->key.code == sf::Keyboard::Escape)
             {
-                this->engine->window.close();
+                //this->engine->window.close();
             }
             break;
         }

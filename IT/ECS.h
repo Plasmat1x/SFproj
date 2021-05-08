@@ -22,14 +22,6 @@ namespace ECS
 
     using Signature = std::bitset<MAX_COMS>;
 
-    /*
-    class EntityManager;
-    class ComponentManager;
-    class IComponentArray;
-    class System;
-    class Coordinator;
-    */
-
     class EntityManager
     {
     private:

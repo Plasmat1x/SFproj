@@ -9,12 +9,6 @@ namespace COM
         float y;
     };
 
-    struct Size
-    {
-        float x;
-        float y;
-    };
-
     struct Velocity
     {
         float x;
@@ -36,5 +30,11 @@ namespace COM
     struct InputComponent 
     {
         std::vector<sf::Keyboard::Key> KeyList{};
+    };
+
+    struct Size
+    {
+        float x;
+        float y;
     };
 }

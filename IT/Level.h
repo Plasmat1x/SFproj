@@ -3,6 +3,8 @@
 #include <SFML/Graphics.hpp>
 #include <tinyxml/tinyxml.h>
 
+//https://github.com/Izaron/Platformer
+
 struct Layer
 {
     int opacity;

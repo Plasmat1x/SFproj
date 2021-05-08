@@ -28,6 +28,7 @@
     <ClInclude Include="..\include\imgui\imstb_rectpack.h" />
     <ClInclude Include="..\include\imgui\imstb_textedit.h" />
     <ClInclude Include="..\include\imgui\imstb_truetype.h" />
+    <ClInclude Include="Animation.h" />
     <ClInclude Include="COM_LIB.h" />
     <ClInclude Include="dGrid.h" />
     <ClInclude Include="ECS.h" />
@@ -50,8 +51,9 @@
     <ClCompile Include="..\include\imgui\imgui_demo.cpp" />
     <ClCompile Include="..\include\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Animation.cpp" />
     <ClCompile Include="dGrid.cpp" />
-    <ClCompile Include="ECS.cpp" />
+    <ClCompile Include="ECS.md" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="Level.cpp" />

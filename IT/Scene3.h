@@ -11,6 +11,7 @@
 #include "imgui-sfml/imgui-SFML.h"
 
 #include "ECS.h"
+#include "Animation.h"
 
 class SceneThree :
     public Scene
@@ -42,7 +43,6 @@ private:
     std::vector<sf::Sprite> sprite_bg;
     sf::Texture texture;
     sf::Texture texture_bg;
-    sf::Vector2f position;
     sf::Vector2f mouse_p;
     sf::Vector2f view_pos;
 
@@ -59,6 +59,9 @@ private:
 
     ECS::Entity player;
     ECS::Entity enemy;
+
+    AnimationManager anim_manager;
+    Animation anim;
 
     void updateUi(sf::Vector2f pos);
 };
