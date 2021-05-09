@@ -31,9 +31,11 @@ private:
     bool _debugtile_ = false;
     bool _debugui_ = false;
     bool check_im = false;
-    bool check_inf = false;
+    bool check_inf = true;
     bool check_ttp = false;
     bool eop = false;
+    bool check_comt = true;
+    bool check_hitb = true;
     //
 
     sf::View game_view;
@@ -62,6 +64,10 @@ private:
 
     AnimationManager anim_manager;
     Animation anim;
+
+    float x;
+    float x_vel;
+    float x_acs;
 
     void updateUi(sf::Vector2f pos);
 };
