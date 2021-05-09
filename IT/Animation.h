@@ -38,16 +38,17 @@ private:
     sprite.setTextureRect(sf::IntRect(0, 0, 400, 240));
     sprite.setPosition(0, 0);
 
-    anim_manager.load_animation("run", sf::Vector2f(400, 240), 1, 6);
-    anim_manager.load_animation("runf", sf::Vector2f(400, 240), 1, 6, 1);
-    anim_manager.load_animation("idle", sf::Vector2f(400, 240), 0, 6);
-    anim_manager.load_animation("idlef", sf::Vector2f(400, 240), 0, 6, 1);
-    anim_manager.load_animation("jump", sf::Vector2f(400, 240), 2, 4);
-    anim_manager.load_animation("jumpf", sf::Vector2f(400, 240), 2, 4, 1);
-    anim_manager.load_animation("fall", sf::Vector2f(400, 240), 3, 4);
-    anim_manager.load_animation("fallf", sf::Vector2f(400, 240), 3, 4, 1);
-    anim_manager.load_animation("clim", sf::Vector2f(400, 240), 4, 6);
-    anim_manager.load_animation("climf", sf::Vector2f(400, 240), 4, 6, 1);
+    //--------------------------/name/-----------size---------------/line/frames/flipped----
+    anim_manager.load_animation("run",      sf::Vector2f(400, 240),     1,  6);
+    anim_manager.load_animation("runf",     sf::Vector2f(400, 240),     1,  6,  1);
+    anim_manager.load_animation("idle",     sf::Vector2f(400, 240),     0,  6);
+    anim_manager.load_animation("idlef",    sf::Vector2f(400, 240),     0,  6,  1);
+    anim_manager.load_animation("jump",     sf::Vector2f(400, 240),     2,  4);
+    anim_manager.load_animation("jumpf",    sf::Vector2f(400, 240),     2,  4,  1);
+    anim_manager.load_animation("fall",     sf::Vector2f(400, 240),     3,  4);
+    anim_manager.load_animation("fallf",    sf::Vector2f(400, 240),     3,  4,  1);
+    anim_manager.load_animation("clim",     sf::Vector2f(400, 240),     4,  6);
+    anim_manager.load_animation("climf",    sf::Vector2f(400, 240),     4,  6,  1);
 
     anim.init(0.25f);
 

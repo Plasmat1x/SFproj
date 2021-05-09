@@ -1,5 +1,7 @@
 #pragma once
 #include <SFML/Graphics.hpp>
+#include <cmath>
+#include <iostream>
 
 #include "COM_LIB.h"
 
@@ -22,10 +24,32 @@ namespace SYS
             {
                 auto& Position = gCoordinator.GetComponent<COM::Position>(entity);
                 auto& Velocity = gCoordinator.GetComponent<COM::Velocity>(entity);
-
+                auto& Rect = gCoordinator.GetComponent<COM::Hitbox>(entity);
                 
+                float mass = 3.0f;
+
+                if (Velocity.y > 0.0f)
+                {
+                    Velocity.y = int(std::fmax(Velocity.y - std::abs(Velocity.y * dt * mass), 0.0f));
+                }
+                else if (Velocity.y < 0.0f)
+                {
+                    Velocity.y = int(std::fmin(Velocity.y + std::abs(Velocity.y * dt * mass), 0.0f));
+                }
+
+                if (Velocity.x > 0.0f)
+                {
+                    Velocity.x = int(std::fmax(Velocity.x - std::abs(Velocity.x * dt * mass), 0.0f));
+                }
+                else if (Velocity.x < 0.0f)
+                {
+                    Velocity.x = int(std::fmin(Velocity.x + std::abs(Velocity.x * dt * mass), 0.0f));
+                }
+
                 Position.x += Velocity.x * dt;
                 Position.y += Velocity.y * dt;
+
+                Rect.update(Position.x, Position.y);
             }
         }
     };
@@ -39,9 +63,17 @@ namespace SYS
             {
                 auto& Sprite = gCoordinator.GetComponent<COM::Sprite>(entity);
                 auto& Position = gCoordinator.GetComponent<COM::Position>(entity);
+                auto& Rect = gCoordinator.GetComponent<COM::Hitbox>(entity);
 
                 Sprite.sprite.setPosition(Position.x, Position.y);
+             
                 window.draw(Sprite.sprite);
+
+                if (Rect.draw)
+                {
+                    window.draw(Rect.shape);
+                }
+
             }
         }
     };
@@ -73,23 +105,27 @@ namespace SYS
 
                 for (auto& key : Input.KeyList)
                 {
+                    
                     if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::W)
                     {
-                        Velocity.y += -Velocity._ACCELERATION * dt;
+                        if(Velocity.y > 0.0f) { Velocity.y = std::fmin(Velocity.y - Velocity._ACCELERATION * dt, 0.0f); }
+                        else { Velocity.y = std::fmax(Velocity.y - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
                     }
-                    else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::A)
+                    if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::A)
                     {
-                        Velocity.x += -Velocity._ACCELERATION * dt;
+                        if(Velocity.x > 0.0f) { Velocity.x = std::fmin(Velocity.x - Velocity._ACCELERATION * dt, 0.0f); }
+                        else { Velocity.x = std::fmax(Velocity.x - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
                     }
-                    else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::S)
+                    if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::S)
                     {
-                        Velocity.y += Velocity._ACCELERATION * dt;
+                        if(Velocity.y < 0.0f) { Velocity.y = std::fmax(Velocity.y + Velocity._ACCELERATION * dt, 0.0f); }
+                        else { Velocity.y = std::fmin(Velocity.y + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
                     }
-                    else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::D)
+                    if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::D)
                     {
-                        Velocity.x += Velocity._ACCELERATION * dt;
+                        if (Velocity.x < 0.0f) { Velocity.x = std::fmax(Velocity.x + Velocity._ACCELERATION * dt, 0.0f); }
+                        else { Velocity.x = std::fmin(Velocity.x + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
                     }
-
                 }
             }
         }
