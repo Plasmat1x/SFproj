@@ -25,6 +25,12 @@
     <Filter Include="SCENES">
       <UniqueIdentifier>{9c6f90ae-5a5e-429f-aa6a-42c2b15833f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SYSTEMS">
+      <UniqueIdentifier>{8ddb6469-c61b-47f1-925f-ab715c5be1d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="COMPONENTS">
+      <UniqueIdentifier>{651847b1-a905-409b-a510-93e7d4381eb9}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\imgui\imconfig.h">
@@ -78,15 +84,6 @@
     <ClInclude Include="dGrid.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
-    <ClInclude Include="SYS_LIB.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="ECS.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
-    <ClInclude Include="COM_LIB.h">
-      <Filter>ECS</Filter>
-    </ClInclude>
     <ClInclude Include="Scene.h">
       <Filter>SCENES</Filter>
     </ClInclude>
@@ -104,6 +101,63 @@
     </ClInclude>
     <ClInclude Include="Player.h">
       <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Coordinator.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentArray.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="ComponentManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="System.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="SystemManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="Types.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="SYS_LIB.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_LIB.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="InputSystem.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderSystem.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSystem.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraSystem.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_Hitbox.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_Input.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_RigidBody.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_Sprite.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_Transform.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_View.h">
+      <Filter>COMPONENTS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -137,9 +191,6 @@
     <ClCompile Include="MetaSprite.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
-    <ClCompile Include="MultiTileObject.cpp">
-      <Filter>Исходные файлы</Filter>
-    </ClCompile>
     <ClCompile Include="_GUI.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
@@ -169,6 +220,39 @@
     </ClCompile>
     <ClCompile Include="Player.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="CameraSystem.cpp">
+      <Filter>SYSTEMS</Filter>
+    </ClCompile>
+    <ClCompile Include="InputSystem.cpp">
+      <Filter>SYSTEMS</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSystem.cpp">
+      <Filter>SYSTEMS</Filter>
+    </ClCompile>
+    <ClCompile Include="RenderSystem.cpp">
+      <Filter>SYSTEMS</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_Hitbox.cpp">
+      <Filter>COMPONENTS</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_Input.cpp">
+      <Filter>COMPONENTS</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_RigidBody.cpp">
+      <Filter>COMPONENTS</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_Sprite.cpp">
+      <Filter>COMPONENTS</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_Transform.cpp">
+      <Filter>COMPONENTS</Filter>
+    </ClCompile>
+    <ClCompile Include="MultiTileObject.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="COM_View.cpp">
+      <Filter>COMPONENTS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

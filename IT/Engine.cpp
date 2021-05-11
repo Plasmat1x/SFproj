@@ -7,6 +7,8 @@
 
 #include <sstream>
 
+ECS::Coordinator gCoordinator;
+
 void Engine::init(CORE_Config* config)
 {
     this->config = config;

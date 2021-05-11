@@ -10,8 +10,9 @@
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
-#include "ECS.h"
+#include "Types.h"
 #include "Animation.h"
+#include "Player.h"
 
 class SceneThree :
     public Scene
@@ -59,7 +60,7 @@ private:
     _MTO_texture_indexes mto_index;
     _MTO_texture_info tex_info;
 
-    ECS::Entity player;
+    //ECS::Entity player;
     ECS::Entity enemy;
     ECS::Entity cur_ent;
 
@@ -69,6 +70,8 @@ private:
     float x;
     float x_vel;
     float x_acs;
+
+    Player player;
 
     void updateUi(sf::Vector2f pos);
 };

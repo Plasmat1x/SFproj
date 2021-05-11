@@ -20,9 +20,7 @@
 #include "imgui/imgui.h"
 #include "imgui-sfml/imgui-SFML.h"
 
-#include "ECS.h"
-
-static ECS::Coordinator gCoordinator;
+#include "Coordinator.h"
 
 struct CORE_Config
 {

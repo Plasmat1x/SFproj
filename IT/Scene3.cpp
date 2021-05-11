@@ -7,6 +7,8 @@
 #include "COM_LIB.h"
 #include "SYS_LIB.h"
 
+extern ECS::Coordinator gCoordinator;
+
 std::shared_ptr<SYS::PhysicsSystem> physicsSystem;
 std::shared_ptr<SYS::RenderSystem> renderSystem;
 std::shared_ptr<SYS::CameraSystem> cameraSystem;
@@ -109,11 +111,11 @@ void SceneThree::init(Engine* engine)
     //ECS
     gCoordinator.Init();
 
-    gCoordinator.RegisterComponent<COM::Position>();
-    gCoordinator.RegisterComponent<COM::Velocity>();
+    gCoordinator.RegisterComponent<COM::Transform>();
+    gCoordinator.RegisterComponent<COM::RigidBody>();
     gCoordinator.RegisterComponent<COM::Sprite>();
     gCoordinator.RegisterComponent<COM::View>();
-    gCoordinator.RegisterComponent<COM::InputComponent>();
+    gCoordinator.RegisterComponent<COM::Input>();
     gCoordinator.RegisterComponent<COM::Hitbox>();
 
     physicsSystem = gCoordinator.RegisterSystem<SYS::PhysicsSystem>();
@@ -124,28 +126,28 @@ void SceneThree::init(Engine* engine)
 
     //Physic
     ECS::Signature signature;
-    signature.set(gCoordinator.GetComponentType<COM::Position>());
-    signature.set(gCoordinator.GetComponentType<COM::Velocity>());
+    signature.set(gCoordinator.GetComponentType<COM::Transform>());
+    signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
     signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
     gCoordinator.SetSystemSignature<SYS::PhysicsSystem>(signature);
 
     //Render
     signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::Position>());
+    signature.set(gCoordinator.GetComponentType<COM::Transform>());
     signature.set(gCoordinator.GetComponentType<COM::Sprite>());
     signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
     gCoordinator.SetSystemSignature<SYS::RenderSystem>(signature);
 
     //View
     signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::Position>());
+    signature.set(gCoordinator.GetComponentType<COM::Transform>());
     signature.set(gCoordinator.GetComponentType<COM::View>());
     gCoordinator.SetSystemSignature<SYS::CameraSystem>(signature);
 
     //Control
     signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::InputComponent>());
-    signature.set(gCoordinator.GetComponentType<COM::Velocity>());
+    signature.set(gCoordinator.GetComponentType<COM::Input>());
+    signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
     gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
 
     sf::RectangleShape rect;
@@ -153,23 +155,13 @@ void SceneThree::init(Engine* engine)
     rect.setOutlineColor(sf::Color(0xff, 0xff, 0x88, 0xff));
     rect.setOutlineThickness(1.0f);
 
-    player = gCoordinator.CreateEntity();
-    gCoordinator.AddComponent<COM::Position>(player, { 0.0f, 0.0f });
-    gCoordinator.AddComponent<COM::Velocity>(player, { 0.0f, 0.0f, 500.0f, 200.0f });
-    gCoordinator.AddComponent<COM::Sprite>(player, { sprite });
-    gCoordinator.AddComponent<COM::InputComponent>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
-    gCoordinator.AddComponent<COM::View>(player, { &game_view });
-    gCoordinator.AddComponent<COM::Hitbox>(player, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
-    gCoordinator.GetComponent<COM::Hitbox>(player).initHitbox();
-
     enemy = gCoordinator.CreateEntity();
-    gCoordinator.AddComponent<COM::Position>(enemy, { 64.0f, 64.0f });
-    gCoordinator.AddComponent<COM::Velocity>(enemy, { 0.0f, 0.0f, 250.0f, 100.0f });
+    gCoordinator.AddComponent<COM::Transform>(enemy, { sf::Vector2f(64,64), sf::Vector2f(1,1), 0 });
+    gCoordinator.AddComponent<COM::RigidBody>(enemy, { sf::Vector2f(0,0), 250.0f, 100.0f });
     gCoordinator.AddComponent<COM::Sprite>(enemy, { sprite });
     gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
     gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
-
 
     //Animation load
     anim_manager.load_animation("idle", sf::Vector2f(43, 60), 0, 6);
@@ -185,7 +177,14 @@ void SceneThree::init(Engine* engine)
 
     anim.init(0.1f);
 
-    cur_ent = player;
+
+    player.SetView(&game_view);
+    player.SetRect(rect);
+    player.SetTexture(texture);
+    player.Init(sf::Vector2f(0, 0));
+
+
+    cur_ent = player.getEntity();
 }
 
 void SceneThree::processInput()
@@ -313,7 +312,7 @@ void SceneThree::update(const float dt)
         ImGui::Checkbox("COM test", &check_comt);
         if (ImGui::Checkbox("Hitbox view", &check_hitb)) 
         {
-            gCoordinator.GetComponent<COM::Hitbox>(player).draw = check_hitb;
+            gCoordinator.GetComponent<COM::Hitbox>(player.getEntity()).draw = check_hitb;
             gCoordinator.GetComponent<COM::Hitbox>(enemy).draw = check_hitb;
         }
 
@@ -324,25 +323,25 @@ void SceneThree::update(const float dt)
             {
                 cur_ent = enemy;
                 gCoordinator.AddComponent<COM::View>(cur_ent, { &game_view });
-                gCoordinator.AddComponent<COM::InputComponent>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+                gCoordinator.AddComponent<COM::Input>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
 
-                cur_ent = player;
+                cur_ent = player.getEntity();
 
                 gCoordinator.RemoveComponent<COM::View>(cur_ent);
-                gCoordinator.RemoveComponent<COM::InputComponent>(cur_ent);
+                gCoordinator.RemoveComponent<COM::Input>(cur_ent);
 
                 cur_ent = enemy;
             }
             else
             {
-                cur_ent = player;
+                cur_ent = player.getEntity();
                 gCoordinator.AddComponent<COM::View>(cur_ent, { &game_view });
-                gCoordinator.AddComponent<COM::InputComponent>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+                gCoordinator.AddComponent<COM::Input>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
 
                 cur_ent = enemy;
                 gCoordinator.RemoveComponent<COM::View>(cur_ent);
-                gCoordinator.RemoveComponent<COM::InputComponent>(cur_ent);
-                cur_ent = player;
+                gCoordinator.RemoveComponent<COM::Input>(cur_ent);
+                cur_ent = player.getEntity();
             }
         }ImGui::SameLine();
         ImGui::LabelText("Enemy control:", "%d", eop);
@@ -376,33 +375,33 @@ void SceneThree::update(const float dt)
     if (check_comt)
     {
         ImGui::Begin("com test");
-        if (ImGui::CollapsingHeader("COM velocity"))
+        if (ImGui::CollapsingHeader("COM RigidBody"))
         {
-            ImGui::Text("COM Velocity:  \n  x = %g \n  y = %g \n  ACCELERATION = %g \n  MAX SPEED = %g ",
-                gCoordinator.GetComponent<COM::Velocity>(cur_ent).x,
-                gCoordinator.GetComponent<COM::Velocity>(cur_ent).y,
-                gCoordinator.GetComponent<COM::Velocity>(cur_ent)._ACCELERATION,
-                gCoordinator.GetComponent<COM::Velocity>(cur_ent)._MAXSPEED);
+            ImGui::Text("COM RigidBody:  \n  x = %g \n  y = %g \n  ACCELERATION = %g \n  MAX SPEED = %g ",
+                gCoordinator.GetComponent<COM::RigidBody>(cur_ent).velocity.x,
+                gCoordinator.GetComponent<COM::RigidBody>(cur_ent).velocity.y,
+                gCoordinator.GetComponent<COM::RigidBody>(cur_ent)._ACCELERATION,
+                gCoordinator.GetComponent<COM::RigidBody>(cur_ent)._MAXSPEED);
         }
-        if (ImGui::CollapsingHeader("COM position"))
+        if (ImGui::CollapsingHeader("COM Transform"))
         {
-            ImGui::Text("COM Position:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::Position>(cur_ent).x,
-                gCoordinator.GetComponent<COM::Position>(cur_ent).y);
+            ImGui::Text("COM Transform.position:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Transform>(cur_ent).position.x,
+                gCoordinator.GetComponent<COM::Transform>(cur_ent).position.y);
         }
 
-        if (ImGui::CollapsingHeader("COM view"))
+        if (ImGui::CollapsingHeader("COM View"))
         {
             ImGui::Text("COM View:  \n  x = %g \n  y = %g",
                 gCoordinator.GetComponent<COM::View>(cur_ent).view->getCenter().x,
                 gCoordinator.GetComponent<COM::View>(cur_ent).view->getCenter().y);
         }
 
-        if (ImGui::CollapsingHeader("COM hitbox"))
+        if (ImGui::CollapsingHeader("COM Hitbox"))
         {
             ImGui::Text("COM Hitbox position:  \n  x = %g \n  y = %g",
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getPosition().x,
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getPosition().y);
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getPosition().y);
 
             ImGui::Text("COM Hitbox size:  \n  x = %g \n  y = %g",
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getSize().x,
