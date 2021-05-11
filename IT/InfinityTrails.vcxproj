@@ -37,6 +37,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="MetaSprite.h" />
     <ClInclude Include="MultiTileObject.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="ResourceManager.h" />
     <ClInclude Include="Scene.h" />
     <ClInclude Include="Scene1.h" />
@@ -60,6 +61,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MetaSprite.cpp" />
     <ClCompile Include="MultiTileObject.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="Scene.cpp" />
     <ClCompile Include="Scene1.cpp" />

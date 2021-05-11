@@ -164,7 +164,7 @@ void SceneThree::init(Engine* engine)
 
     enemy = gCoordinator.CreateEntity();
     gCoordinator.AddComponent<COM::Position>(enemy, { 64.0f, 64.0f });
-    gCoordinator.AddComponent<COM::Velocity>(enemy, { 0.0f, 0.0f, 500.0f, 200.0f });
+    gCoordinator.AddComponent<COM::Velocity>(enemy, { 0.0f, 0.0f, 250.0f, 100.0f });
     gCoordinator.AddComponent<COM::Sprite>(enemy, { sprite });
     gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
@@ -184,6 +184,8 @@ void SceneThree::init(Engine* engine)
     anim_manager.load_animation("climf", sf::Vector2f(43, 60), 4, 6, 1);
 
     anim.init(0.1f);
+
+    cur_ent = player;
 }
 
 void SceneThree::processInput()
@@ -267,23 +269,23 @@ void SceneThree::processInput()
         }
     }
     // out poll event loop
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("runf")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("runf")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
+    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
     if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
             !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
             !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
             !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
     {
-        anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("idle"));
+        anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("idle"));
     }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("idle")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("run")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("jump")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("fall")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(player).sprite, anim_manager.getAnimation("clim")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("idle")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("jump")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("fall")); }
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("clim")); }
 
 }
 
@@ -320,19 +322,27 @@ void SceneThree::update(const float dt)
             eop = !eop;
             if (eop)
             {
-                gCoordinator.AddComponent<COM::View>(enemy, { &game_view });
-                gCoordinator.AddComponent<COM::InputComponent>(enemy, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+                cur_ent = enemy;
+                gCoordinator.AddComponent<COM::View>(cur_ent, { &game_view });
+                gCoordinator.AddComponent<COM::InputComponent>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
 
-                gCoordinator.RemoveComponent<COM::View>(player);
-                gCoordinator.RemoveComponent<COM::InputComponent>(player);
+                cur_ent = player;
+
+                gCoordinator.RemoveComponent<COM::View>(cur_ent);
+                gCoordinator.RemoveComponent<COM::InputComponent>(cur_ent);
+
+                cur_ent = enemy;
             }
             else
             {
-                gCoordinator.AddComponent<COM::View>(player, { &game_view });
-                gCoordinator.AddComponent<COM::InputComponent>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+                cur_ent = player;
+                gCoordinator.AddComponent<COM::View>(cur_ent, { &game_view });
+                gCoordinator.AddComponent<COM::InputComponent>(cur_ent, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
 
-                gCoordinator.RemoveComponent<COM::View>(enemy);
-                gCoordinator.RemoveComponent<COM::InputComponent>(enemy);
+                cur_ent = enemy;
+                gCoordinator.RemoveComponent<COM::View>(cur_ent);
+                gCoordinator.RemoveComponent<COM::InputComponent>(cur_ent);
+                cur_ent = player;
             }
         }ImGui::SameLine();
         ImGui::LabelText("Enemy control:", "%d", eop);
@@ -369,38 +379,38 @@ void SceneThree::update(const float dt)
         if (ImGui::CollapsingHeader("COM velocity"))
         {
             ImGui::Text("COM Velocity:  \n  x = %g \n  y = %g \n  ACCELERATION = %g \n  MAX SPEED = %g ",
-                gCoordinator.GetComponent<COM::Velocity>(player).x,
-                gCoordinator.GetComponent<COM::Velocity>(player).y,
-                gCoordinator.GetComponent<COM::Velocity>(player)._ACCELERATION,
-                gCoordinator.GetComponent<COM::Velocity>(player)._MAXSPEED);
+                gCoordinator.GetComponent<COM::Velocity>(cur_ent).x,
+                gCoordinator.GetComponent<COM::Velocity>(cur_ent).y,
+                gCoordinator.GetComponent<COM::Velocity>(cur_ent)._ACCELERATION,
+                gCoordinator.GetComponent<COM::Velocity>(cur_ent)._MAXSPEED);
         }
         if (ImGui::CollapsingHeader("COM position"))
         {
             ImGui::Text("COM Position:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::Position>(player).x,
-                gCoordinator.GetComponent<COM::Position>(player).y);
+                gCoordinator.GetComponent<COM::Position>(cur_ent).x,
+                gCoordinator.GetComponent<COM::Position>(cur_ent).y);
         }
 
         if (ImGui::CollapsingHeader("COM view"))
         {
             ImGui::Text("COM View:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::View>(player).view->getCenter().x,
-                gCoordinator.GetComponent<COM::View>(player).view->getCenter().y);
+                gCoordinator.GetComponent<COM::View>(cur_ent).view->getCenter().x,
+                gCoordinator.GetComponent<COM::View>(cur_ent).view->getCenter().y);
         }
 
         if (ImGui::CollapsingHeader("COM hitbox"))
         {
             ImGui::Text("COM Hitbox position:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getPosition().x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getPosition().x,
                 gCoordinator.GetComponent<COM::Hitbox>(player).shape.getPosition().y);
 
             ImGui::Text("COM Hitbox size:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getSize().x,
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getSize().y);
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getSize().x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getSize().y);
 
             ImGui::Text("COM Hitbox origin:  \n  x = %g \n  y = %g",
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getOrigin().x,
-                gCoordinator.GetComponent<COM::Hitbox>(player).shape.getOrigin().y);
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().y);
         }
         ImGui::End();
     }

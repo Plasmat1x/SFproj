@@ -61,6 +61,7 @@ private:
 
     ECS::Entity player;
     ECS::Entity enemy;
+    ECS::Entity cur_ent;
 
     AnimationManager anim_manager;
     Animation anim;
