@@ -117,6 +117,8 @@ void SceneThree::init(Engine* engine)
     gCoordinator.RegisterComponent<COM::View>();
     gCoordinator.RegisterComponent<COM::Input>();
     gCoordinator.RegisterComponent<COM::Hitbox>();
+    gCoordinator.RegisterComponent<COM::Anim>();
+    gCoordinator.RegisterComponent<COM::States>();
 
     physicsSystem = gCoordinator.RegisterSystem<SYS::PhysicsSystem>();
     renderSystem = gCoordinator.RegisterSystem<SYS::RenderSystem>();
@@ -129,6 +131,7 @@ void SceneThree::init(Engine* engine)
     signature.set(gCoordinator.GetComponentType<COM::Transform>());
     signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
     signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
+    signature.set(gCoordinator.GetComponentType<COM::States>());
     gCoordinator.SetSystemSignature<SYS::PhysicsSystem>(signature);
 
     //Render
@@ -136,6 +139,8 @@ void SceneThree::init(Engine* engine)
     signature.set(gCoordinator.GetComponentType<COM::Transform>());
     signature.set(gCoordinator.GetComponentType<COM::Sprite>());
     signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
+    signature.set(gCoordinator.GetComponentType<COM::Anim>());
+    signature.set(gCoordinator.GetComponentType<COM::States>());
     gCoordinator.SetSystemSignature<SYS::RenderSystem>(signature);
 
     //View
@@ -148,6 +153,7 @@ void SceneThree::init(Engine* engine)
     signature = 0;
     signature.set(gCoordinator.GetComponentType<COM::Input>());
     signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
+    signature.set(gCoordinator.GetComponentType<COM::States>());
     gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
 
     sf::RectangleShape rect;
@@ -162,6 +168,19 @@ void SceneThree::init(Engine* engine)
     gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
     gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
+    gCoordinator.AddComponent<COM::States>(enemy, {
+          { {"direction", true},
+            {"idle", false},
+            {"run", false},
+            {"jump", false},
+            {"fall", false},
+            {"clim", false},
+            {"move_left", false},
+            {"move_right", false},
+            {"move_up", false},
+            {"move_down", false},
+            {"on_ground", false} }});
+    gCoordinator.AddComponent<COM::Anim>(enemy, { nullptr, nullptr, 0.1f });
 
     //Animation load
     anim_manager.load_animation("idle", sf::Vector2f(43, 60), 0, 6);
@@ -181,8 +200,9 @@ void SceneThree::init(Engine* engine)
     player.SetView(&game_view);
     player.SetRect(rect);
     player.SetTexture(texture);
+    player.SetAnimation(anim);
+    player.SetAnimMgr(&anim_manager);
     player.Init(sf::Vector2f(0, 0));
-
 
     cur_ent = player.getEntity();
 }
@@ -239,6 +259,7 @@ void SceneThree::processInput()
 
             if ((event->key.code == sf::Keyboard::Num1))
             {
+
                 break;
             }
 
@@ -268,6 +289,7 @@ void SceneThree::processInput()
         }
     }
     // out poll event loop
+    /*/
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
     else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
@@ -285,7 +307,7 @@ void SceneThree::processInput()
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("jump")); }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("fall")); }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("clim")); }
-
+    //*/
 }
 
 void SceneThree::update(const float dt)
@@ -294,6 +316,9 @@ void SceneThree::update(const float dt)
     inputSystem->input(dt);
     physicsSystem->update(dt);
     cameraSystem->update();
+    renderSystem->updateAnim();
+
+    player.update(dt);
 
     ImGui::SFML::Update(this->engine->window, this->engine->clock.restart());
 
@@ -410,6 +435,14 @@ void SceneThree::update(const float dt)
             ImGui::Text("COM Hitbox origin:  \n  x = %g \n  y = %g",
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().x,
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().y);
+        }
+        if (ImGui::CollapsingHeader("COM States"))
+        {
+            for (const auto& [com, val] : gCoordinator.GetComponent<COM::States>(cur_ent).states)
+            {
+                std::string name = "  COM States." + com + ": %d";
+                ImGui::Text(name.c_str(), val);
+            }
         }
         ImGui::End();
     }

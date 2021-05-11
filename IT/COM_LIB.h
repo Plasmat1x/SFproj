@@ -5,3 +5,5 @@
 #include "COM_View.h"
 #include "COM_Sprite.h"
 #include "COM_Input.h"
+#include "COM_Animation.h"
+#include "COM_States.h"

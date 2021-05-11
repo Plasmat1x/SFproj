@@ -31,6 +31,11 @@ AnimationPlaylist AnimationManager::getAnimation(std::string anim_name)
 	return animations.at(anim_name);
 }
 
+const std::map<std::string, AnimationPlaylist>& AnimationManager::getAnimMap()
+{
+	return animations;
+}
+
 void Animation::init(float speed)
 {
 	this->speed = speed;

@@ -25,5 +25,11 @@ public:
     void SetView(sf::View* view);
     void SetRect(sf::RectangleShape rect);
     void SetTexture(sf::Texture texture);
+    void SetAnimation(Animation animation);
+    void SetAnimMgr(AnimationManager* mgr);
+
+    void update(float dt);
+
+    void input(float dt);
 };
 

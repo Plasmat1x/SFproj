@@ -32,11 +32,13 @@
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ComponentArray.h" />
     <ClInclude Include="ComponentManager.h" />
+    <ClInclude Include="COM_Animation.h" />
     <ClInclude Include="COM_Hitbox.h" />
     <ClInclude Include="COM_Input.h" />
     <ClInclude Include="COM_LIB.h" />
     <ClInclude Include="COM_RigidBody.h" />
     <ClInclude Include="COM_Sprite.h" />
+    <ClInclude Include="COM_States.h" />
     <ClInclude Include="COM_Transform.h" />
     <ClInclude Include="COM_View.h" />
     <ClInclude Include="Coordinator.h" />
@@ -70,12 +72,6 @@
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
-    <ClCompile Include="COM_Hitbox.cpp" />
-    <ClCompile Include="COM_Input.cpp" />
-    <ClCompile Include="COM_RigidBody.cpp" />
-    <ClCompile Include="COM_Sprite.cpp" />
-    <ClCompile Include="COM_Transform.cpp" />
-    <ClCompile Include="COM_View.cpp" />
     <ClCompile Include="dGrid.cpp" />
     <ClCompile Include="ECS.md" />
     <ClCompile Include="Engine.cpp" />

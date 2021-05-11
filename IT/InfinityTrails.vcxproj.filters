@@ -30,6 +30,8 @@
     </Filter>
     <Filter Include="COMPONENTS">
       <UniqueIdentifier>{651847b1-a905-409b-a510-93e7d4381eb9}</UniqueIdentifier>
+      <Extensions>
+      </Extensions>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -159,6 +161,12 @@
     <ClInclude Include="COM_View.h">
       <Filter>COMPONENTS</Filter>
     </ClInclude>
+    <ClInclude Include="COM_Animation.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
+    <ClInclude Include="COM_States.h">
+      <Filter>COMPONENTS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -233,26 +241,8 @@
     <ClCompile Include="RenderSystem.cpp">
       <Filter>SYSTEMS</Filter>
     </ClCompile>
-    <ClCompile Include="COM_Hitbox.cpp">
-      <Filter>COMPONENTS</Filter>
-    </ClCompile>
-    <ClCompile Include="COM_Input.cpp">
-      <Filter>COMPONENTS</Filter>
-    </ClCompile>
-    <ClCompile Include="COM_RigidBody.cpp">
-      <Filter>COMPONENTS</Filter>
-    </ClCompile>
-    <ClCompile Include="COM_Sprite.cpp">
-      <Filter>COMPONENTS</Filter>
-    </ClCompile>
-    <ClCompile Include="COM_Transform.cpp">
-      <Filter>COMPONENTS</Filter>
-    </ClCompile>
     <ClCompile Include="MultiTileObject.cpp">
       <Filter>Исходные файлы</Filter>
-    </ClCompile>
-    <ClCompile Include="COM_View.cpp">
-      <Filter>COMPONENTS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
