@@ -12,18 +12,23 @@ struct AnimationPlaylist
 class AnimationManager
 {
 public:
+    AnimationManager(){}
+
     void load_animation(std::string anim_name, sf::Vector2f size, int line, int frames, bool flipp = false);
-    AnimationPlaylist getAnimation(std::string anim_name);
+    AnimationPlaylist* getAnimation(std::string anim_name);
 
 private:
-    std::map<std::string, AnimationPlaylist> animations;
+    std::map<std::string, AnimationPlaylist> animations{};
 };
 
 class Animation
 {
 public:
+    Animation(float speed) { init(speed); }
+    Animation(){}
+
     void init(float speed);
-    void play(sf::Sprite* sprite, AnimationPlaylist animation);
+    void play(sf::Sprite* sprite, AnimationPlaylist* animation);
     void reset();
 
 private:

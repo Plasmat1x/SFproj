@@ -10,10 +10,23 @@
 #include<array>
 #include<memory>
 #include<set>
+#include<any>
+#include<functional>
 
 namespace ECS
 {
+    //types
+     
+    constexpr std::uint32_t fnv1a_32(char const* s, size_t count)
+    {
+        return ((count ? fnv1a_32(s, count - 1) : 2166136261u) ^ s[count]) * 16777619u;
+    }
 
+    constexpr std::uint32_t operator "" _hash(char const* s, size_t count)
+    {
+        return fnv1a_32(s, count);
+    }
+        //ecs
     using Entity = uint64_t;
     const Entity MAX_ENTITIES = 5000;
 
@@ -22,6 +35,41 @@ namespace ECS
 
     using Signature = std::bitset<MAX_COMS>;
 
+        //input
+    enum class InputButtons
+    {
+        W,
+        A,
+        S,
+        D,
+        Q,
+        E
+    };
+        //events
+    using EventId = uint32_t;
+    using ParamId = uint32_t;
+
+#define METHOD_LISTENER(EventType, listener) EventType, std::bind(&listener, this, std::placeholders::_1)
+#define FUNCTION_LISTENER(EventType, listener) EventType, std::bind(&listener, std::placeholders::_1)
+
+    namespace Events::Window {
+        const EventId QUIT = "Events::Window::QUIT"_hash;
+        const EventId RESIZED = "Events::Window::RESIZED"_hash;
+        const EventId INPUT = "Events::Window::INPUT"_hash;
+    }
+
+    namespace Events::Window::Input {
+        const ParamId INPUT = "Events::Window::Input::INPUT"_hash;
+    }
+
+    namespace Events::Window::Resized {
+        const ParamId WIDTH = "Events::Window::Resized::WIDTH"_hash;
+        const ParamId HEIGHT = "Events::Window::Resized::HEIGHT"_hash;
+    }
+
+    //end types
+
+    //Entity Manager
     class EntityManager
     {
     private:
@@ -75,7 +123,9 @@ namespace ECS
         }
 
     };
+    //end entity manager
 
+    //component array
     class IComponentArray
     {
     public:
@@ -138,7 +188,9 @@ namespace ECS
             }
         }
     };
+    //end component array
 
+    //component manager
     class ComponentManager
     {
     private:
@@ -211,12 +263,17 @@ namespace ECS
             }
         }
     };
+    //end component manager
 
+    //system
     class System
     {
     public:
         std::set<Entity> mEntities;
     };
+    //end system
+
+    //system manager
 
     class SystemManager
     {
@@ -277,19 +334,91 @@ namespace ECS
             }
         }
     };
+    //end system manager
 
+    //event
+    class Event
+    {
+    private:
+        EventId mType{};
+        std::unordered_map<EventId, std::any> mData{};
+    public:
+        Event() = delete;
+
+        explicit Event(EventId type) 
+            : mType(type)
+        {}
+
+        template<typename T>
+        void SetParam(EventId id, T value)
+        {
+            mData[id] = value;
+        }
+
+        template<typename T>
+        T GetParam(EventId id)
+        {
+            return std::any_cast<T>(mData[id]);
+        }
+
+        EventId GetType() const
+        {
+            return mType;
+        }
+            
+    };
+    //end event
+
+    //event manager
+    class EventManager
+    {
+    private:   
+        std::unordered_map<EventId, std::list<std::function<void(Event&)>>> listeners;
+
+    public:
+        void AddListener(EventId eventId, std::function<void(Event&)> const& listener)
+        {
+            listeners[eventId].push_back(listener);
+        }
+
+        void SendEvent(Event& event)
+        {
+            uint32_t type = event.GetType();
+
+            for (auto const& listener: listeners[type])
+            {
+                listener(event);
+            }
+        }
+
+        void SendEvent(EventId eventId) 
+        {
+            Event event(eventId);
+
+            for (auto const& listener : listeners[eventId])
+            {
+                listener(event);
+            }
+        }
+
+    };
+    //end event manager
+
+    //coordinator
     class Coordinator
     {
     private:
         std::unique_ptr<ComponentManager> mComponentManager;
         std::unique_ptr<EntityManager> mEntityManager;
         std::unique_ptr<SystemManager> mSystemManager;
+        std::unique_ptr<EventManager> mEventManager;
 
     public:
         void Init()
         {
             mComponentManager = std::make_unique<ComponentManager>();
             mEntityManager = std::make_unique<EntityManager>();
+            mEventManager = std::make_unique<EventManager>();
             mSystemManager = std::make_unique<SystemManager>();
         }
 
@@ -361,5 +490,22 @@ namespace ECS
         {
             mSystemManager->SetSignature<T>(signature);
         }
+
+        //EVENT METHODS
+        void AddEventListener(EventId eventId, std::function<void(Event&)> const& listener)
+        {
+            mEventManager->AddListener(eventId, listener);
+        }
+
+        void SendEvent(Event event)
+        {
+            mEventManager->SendEvent(event);
+        }
+
+        void SendEvent(EventId eventId)
+        {
+            mEventManager->SendEvent(eventId);
+        }
     };
+    //end coordinator
 }
