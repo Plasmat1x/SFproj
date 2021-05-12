@@ -23,10 +23,9 @@ namespace SYS
         {
             for (auto const& entity : mEntities)
             {
-                auto& Position = gCoordinator.GetComponent<COM::c_position>(entity);
-                auto& Velocity = gCoordinator.GetComponent<COM::c_velocity>(entity);
-                auto& Rect = gCoordinator.GetComponent<COM::c_hitbox>(entity);
-                auto& State = gCoordinator.GetComponent<COM::c_state>(entity);
+                auto& Position = gCoordinator.GetComponent<COM::Position>(entity);
+                auto& Velocity = gCoordinator.GetComponent<COM::Velocity>(entity);
+                auto& Rect = gCoordinator.GetComponent<COM::Hitbox>(entity);
                 //*/
                 float mass = 3.0f;
 
@@ -63,9 +62,9 @@ namespace SYS
         {
             for (auto const& entity : mEntities)
             {
-                auto& Sprite = gCoordinator.GetComponent<COM::c_sprite>(entity);
-                auto& Position = gCoordinator.GetComponent<COM::c_position>(entity);
-                auto& Rect = gCoordinator.GetComponent<COM::c_hitbox>(entity);
+                auto& Sprite = gCoordinator.GetComponent<COM::Sprite>(entity);
+                auto& Position = gCoordinator.GetComponent<COM::Position>(entity);
+                auto& Rect = gCoordinator.GetComponent<COM::Hitbox>(entity);
 
                 Sprite.sprite.setPosition(Position.x, Position.y);
              
@@ -80,28 +79,6 @@ namespace SYS
         }
     };
 
-    class AnimationSystem : public ECS::System
-    {
-    public:
-        void update()
-        {
-            for (auto const& entity : mEntities)
-            {
-                auto& Anim = gCoordinator.GetComponent<COM::c_animation>(entity);
-                auto& State = gCoordinator.GetComponent<COM::c_state>(entity);
-
-                for (auto const& [name, s] : State.anim_states)
-                {
-                    if (s)
-                    {
-                        Anim._animation.play(Anim.sprite, gCoordinator.GetComponent<COM::c_animation>(entity).anim_mgr.getAnimation(name));
-                    }           
-                }
-            }
-        }
-
-    };
-
     class CameraSystem : public ECS::System
     {
     public: 
@@ -109,8 +86,8 @@ namespace SYS
         {
             for (auto const& entity : mEntities)
             {
-                auto& View = gCoordinator.GetComponent<COM::c_view>(entity);
-                auto& Position = gCoordinator.GetComponent<COM::c_position>(entity);
+                auto& View = gCoordinator.GetComponent<COM::View>(entity);
+                auto& Position = gCoordinator.GetComponent<COM::Position>(entity);
 
                 View.view->setCenter(Position.x, Position.y);
             }
@@ -136,10 +113,8 @@ namespace SYS
         {
             for (auto const& entity : mEntities)
             {
-                auto& Input = gCoordinator.GetComponent<COM::c_input>(entity);
-                auto& Velocity = gCoordinator.GetComponent<COM::c_velocity>(entity);
-                auto& State = gCoordinator.GetComponent<COM::c_state>(entity);
-                auto& Animation = gCoordinator.GetComponent<COM::c_animation>(entity);
+                auto& Input = gCoordinator.GetComponent<COM::InputComponent>(entity);
+                auto& Velocity = gCoordinator.GetComponent<COM::Velocity>(entity);
                 //*/
                 for (auto& key : Input.KeyList)
                 {
@@ -179,14 +154,12 @@ namespace SYS
                 {
                     if (Velocity.y > 0.0f) { Velocity.y = std::fmin(Velocity.y - Velocity._ACCELERATION * dt, 0.0f); }
                     else { Velocity.y = std::fmax(Velocity.y - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
-                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
                 }
 
                 else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::S)))
                 {
                     if (Velocity.y < 0.0f) { Velocity.y = std::fmax(Velocity.y + Velocity._ACCELERATION * dt, 0.0f); }
                     else { Velocity.y = std::fmin(Velocity.y + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
-                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
                 }
 
 
@@ -205,14 +178,12 @@ namespace SYS
                 {
                     if (Velocity.x > 0.0f) { Velocity.x = std::fmin(Velocity.x - Velocity._ACCELERATION * dt, 0.0f); }
                     else { Velocity.x = std::fmax(Velocity.x - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
-                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("runf"));
                 }
 
                 else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::D)))
                 {
                     if (Velocity.x < 0.0f) { Velocity.x = std::fmax(Velocity.x + Velocity._ACCELERATION * dt, 0.0f); }
                     else { Velocity.x = std::fmin(Velocity.x + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
-                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
                 }
             }
         }
