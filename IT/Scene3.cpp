@@ -120,41 +120,47 @@ void SceneThree::init(Engine* engine)
     gCoordinator.RegisterComponent<COM::Anim>();
     gCoordinator.RegisterComponent<COM::States>();
 
-    physicsSystem = gCoordinator.RegisterSystem<SYS::PhysicsSystem>();
-    renderSystem = gCoordinator.RegisterSystem<SYS::RenderSystem>();
-    cameraSystem = gCoordinator.RegisterSystem<SYS::CameraSystem>();
-    inputSystem = gCoordinator.RegisterSystem<SYS::InputSystem>();
-
-
     //Physic
-    ECS::Signature signature;
-    signature.set(gCoordinator.GetComponentType<COM::Transform>());
-    signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
-    signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
-    signature.set(gCoordinator.GetComponentType<COM::States>());
-    gCoordinator.SetSystemSignature<SYS::PhysicsSystem>(signature);
+    physicsSystem = gCoordinator.RegisterSystem<SYS::PhysicsSystem>();
+    {
+        ECS::Signature signature;
+        signature.set(gCoordinator.GetComponentType<COM::Transform>());
+        signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
+        signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
+        signature.set(gCoordinator.GetComponentType<COM::States>());
+        gCoordinator.SetSystemSignature<SYS::PhysicsSystem>(signature);
+    }
 
     //Render
-    signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::Transform>());
-    signature.set(gCoordinator.GetComponentType<COM::Sprite>());
-    signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
-    signature.set(gCoordinator.GetComponentType<COM::Anim>());
-    signature.set(gCoordinator.GetComponentType<COM::States>());
-    gCoordinator.SetSystemSignature<SYS::RenderSystem>(signature);
+    renderSystem = gCoordinator.RegisterSystem<SYS::RenderSystem>();
+    {
+        ECS::Signature signature;
+        signature.set(gCoordinator.GetComponentType<COM::Transform>());
+        signature.set(gCoordinator.GetComponentType<COM::Sprite>());
+        signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
+        signature.set(gCoordinator.GetComponentType<COM::Anim>());
+        signature.set(gCoordinator.GetComponentType<COM::States>());
+        gCoordinator.SetSystemSignature<SYS::RenderSystem>(signature);
+    }
 
     //View
-    signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::Transform>());
-    signature.set(gCoordinator.GetComponentType<COM::View>());
-    gCoordinator.SetSystemSignature<SYS::CameraSystem>(signature);
+    cameraSystem = gCoordinator.RegisterSystem<SYS::CameraSystem>();
+    {
+        ECS::Signature signature;
+        signature.set(gCoordinator.GetComponentType<COM::Transform>());
+        signature.set(gCoordinator.GetComponentType<COM::View>());
+        gCoordinator.SetSystemSignature<SYS::CameraSystem>(signature);
+    }
 
     //Control
-    signature = 0;
-    signature.set(gCoordinator.GetComponentType<COM::Input>());
-    signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
-    signature.set(gCoordinator.GetComponentType<COM::States>());
-    gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
+    inputSystem = gCoordinator.RegisterSystem<SYS::InputSystem>();
+    {
+        ECS::Signature signature;
+        signature.set(gCoordinator.GetComponentType<COM::Input>());
+        signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
+        signature.set(gCoordinator.GetComponentType<COM::States>());
+        gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
+    } inputSystem->init();
 
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
@@ -248,6 +254,43 @@ void SceneThree::processInput()
                 return;
             }
 
+            bool buttonStateChanged = true;
+            if (event->key.code == sf::Keyboard::W)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::W));
+            }
+            else if (event->key.code == sf::Keyboard::A)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::A));
+            }
+            else if (event->key.code == sf::Keyboard::S)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::S));
+            }
+            else if (event->key.code == sf::Keyboard::D)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::D));
+            }
+            else if (event->key.code == sf::Keyboard::Q)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::Q));
+            }
+            else if (event->key.code == sf::Keyboard::E)
+            {
+                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::E));
+            }
+            else
+            {
+                buttonStateChanged = false;
+            }
+            if (buttonStateChanged)
+            {
+                ECS::Event _event(ECS::Events::INPUT);
+                _event.SetParam(ECS::Events::Input::INPUT, mButtons);
+                gCoordinator.SendEvent(_event);
+            }
+
+
             break;
         }
         case sf::Event::KeyReleased:
@@ -257,10 +300,40 @@ void SceneThree::processInput()
                 this->engine->_debug_ = !this->engine->_debug_;
             }
 
-            if ((event->key.code == sf::Keyboard::Num1))
+            bool buttonStateChanged = true;
+            if (event->key.code == sf::Keyboard::W)
             {
-
-                break;
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::W));
+            }
+            else if (event->key.code == sf::Keyboard::A)
+            {
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::A));
+            }
+            else if (event->key.code == sf::Keyboard::S)
+            {
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::S));
+            }
+            else if (event->key.code == sf::Keyboard::D)
+            {
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::D));
+            }
+            else if (event->key.code == sf::Keyboard::Q)
+            {
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::Q));
+            }
+            else if (event->key.code == sf::Keyboard::E)
+            {
+                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::E));
+            }
+            else
+            {
+                buttonStateChanged = false;
+            }
+            if (buttonStateChanged)
+            {
+                ECS::Event _event(ECS::Events::INPUT);
+                _event.SetParam(ECS::Events::Input::INPUT, mButtons);
+                gCoordinator.SendEvent(_event);
             }
 
             break;

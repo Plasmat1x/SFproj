@@ -28,6 +28,9 @@ public:
     void cleanup();
 
 private:
+    //ECS Event
+    std::bitset<8> mButtons;
+
     //imgui flags
     bool _debugtile_ = false;
     bool _debugui_ = false;

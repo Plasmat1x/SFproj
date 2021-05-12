@@ -45,6 +45,8 @@
     <ClInclude Include="dGrid.h" />
     <ClInclude Include="Engine.h" />
     <ClInclude Include="EntityManager.h" />
+    <ClInclude Include="Event.h" />
+    <ClInclude Include="EventManager.h" />
     <ClInclude Include="Gui.h" />
     <ClInclude Include="InputSystem.h" />
     <ClInclude Include="Level.h" />

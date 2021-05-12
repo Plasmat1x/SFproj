@@ -13,12 +13,6 @@
       <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
       <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
     </Filter>
-    <Filter Include="Dear Imgui">
-      <UniqueIdentifier>{7670c087-1763-47fa-85e4-90a1ed34af36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="imgui-sfml">
-      <UniqueIdentifier>{16b7618a-28a8-4967-9bbb-1de81e69dd4d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ECS">
       <UniqueIdentifier>{93bd5529-57e2-441b-b142-e5c2d7602f19}</UniqueIdentifier>
     </Filter>
@@ -33,34 +27,43 @@
       <Extensions>
       </Extensions>
     </Filter>
+    <Filter Include="ADDITIONAL">
+      <UniqueIdentifier>{13e50667-63aa-4daf-a9cf-2ccb42060348}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ADDITIONAL\imgui-sfml">
+      <UniqueIdentifier>{16b7618a-28a8-4967-9bbb-1de81e69dd4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ADDITIONAL\Dear Imgui">
+      <UniqueIdentifier>{7670c087-1763-47fa-85e4-90a1ed34af36}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\imgui\imconfig.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui\imgui.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui\imgui_internal.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui\imstb_rectpack.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui\imstb_textedit.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui\imstb_truetype.h">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui-sfml\imconfig-SFML.h">
-      <Filter>imgui-sfml</Filter>
+      <Filter>ADDITIONAL\imgui-sfml</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui-sfml\imgui-SFML.h">
-      <Filter>imgui-sfml</Filter>
+      <Filter>ADDITIONAL\imgui-sfml</Filter>
     </ClInclude>
     <ClInclude Include="..\include\imgui-sfml\imgui-SFML_export.h">
-      <Filter>imgui-sfml</Filter>
+      <Filter>ADDITIONAL\imgui-sfml</Filter>
     </ClInclude>
     <ClInclude Include="Engine.h">
       <Filter>Файлы заголовков</Filter>
@@ -167,22 +170,28 @@
     <ClInclude Include="COM_States.h">
       <Filter>COMPONENTS</Filter>
     </ClInclude>
+    <ClInclude Include="Event.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
+    <ClInclude Include="EventManager.h">
+      <Filter>ECS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\imgui\imgui_demo.cpp">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\imgui\imgui_draw.cpp">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp">
-      <Filter>Dear Imgui</Filter>
+      <Filter>ADDITIONAL\Dear Imgui</Filter>
     </ClCompile>
     <ClCompile Include="..\include\imgui-sfml\imgui-SFML.cpp">
-      <Filter>imgui-sfml</Filter>
+      <Filter>ADDITIONAL\imgui-sfml</Filter>
     </ClCompile>
     <ClCompile Include="Engine.cpp">
       <Filter>Исходные файлы</Filter>

@@ -4,6 +4,7 @@
 #include "SystemManager.h"
 #include "EntityManager.h"
 #include "ComponentManager.h"
+#include "EventManager.h"
 
 namespace ECS
 {
@@ -13,12 +14,14 @@ namespace ECS
         std::unique_ptr<ComponentManager> mComponentManager;
         std::unique_ptr<EntityManager> mEntityManager;
         std::unique_ptr<SystemManager> mSystemManager;
+        std::unique_ptr<EventManager> mEventManager;
 
     public:
         void Init()
         {
             mComponentManager = std::make_unique<ComponentManager>();
             mEntityManager = std::make_unique<EntityManager>();
+            mEventManager = std::make_unique<EventManager>();
             mSystemManager = std::make_unique<SystemManager>();
         }
 
@@ -89,6 +92,22 @@ namespace ECS
         void SetSystemSignature(Signature signature)
         {
             mSystemManager->SetSignature<T>(signature);
+        }
+
+        //EVENT METHODS
+        void AddEventListener(EventId eventId, std::function<void(Event&)> const& listener)
+        {
+            mEventManager->AddListener(eventId, listener);
+        }
+
+        void SendEvent(Event& event)
+        {
+            mEventManager->SendEvent(event);
+        }
+
+        void SendEvent(EventId eventId)
+        {
+            mEventManager->SendEvent(eventId);
         }
     };
 }
