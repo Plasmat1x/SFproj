@@ -1,6 +1,5 @@
 #pragma once
 #include <vector>
-#include <bitset>
 
 #include "Engine.h"
 #include "Scene.h"
@@ -28,8 +27,6 @@ public:
     void cleanup();
 
 private:
-    std::bitset<8> mButtons;
-
     //imgui flags
     bool _debugtile_ = false;
     bool _debugui_ = false;

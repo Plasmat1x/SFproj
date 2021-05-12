@@ -146,6 +146,9 @@
     <ClCompile Include="dGrid.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="ECS.md">
+      <Filter>ECS</Filter>
+    </ClCompile>
     <ClCompile Include="Scene.cpp">
       <Filter>SCENES</Filter>
     </ClCompile>
@@ -167,9 +170,6 @@
     <None Include="..\.gitignore" />
     <None Include="..\res\map\test_level.tmx">
       <Filter>Файлы ресурсов</Filter>
-    </None>
-    <None Include="ECS.md">
-      <Filter>ECS</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

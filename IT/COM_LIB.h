@@ -1,20 +1,16 @@
 #pragma once
 #include <SFML/Graphics.hpp>
 
-#include "Animation.h"
-
 namespace COM
 {
-    class c_position
+    struct Position
     {
-    public:
         float x;
         float y;
     };
 
-    class c_velocity
+    struct Velocity
     {
-    public:
         float x;
         float y;
 
@@ -22,34 +18,29 @@ namespace COM
         float _MAXSPEED;
     };
 
-    class c_sprite
+    struct Sprite
     {
-    public:
         sf::Sprite sprite;
     };
 
-    class c_view
+    struct View
     {
-    public:
         sf::View* view;
     };
 
-    class c_input
+    struct InputComponent 
     {
-    public:
         std::vector<sf::Keyboard::Key> KeyList{};
     };
 
-    class c_size
+    struct Size
     {
-    public:
         float x;
         float y;
     };
 
-    class c_hitbox
+    struct Hitbox
     {
-    public:
         sf::Vector2f size;
         sf::Vector2f offset;
         sf::RectangleShape shape;
@@ -67,20 +58,5 @@ namespace COM
             //shape.setPosition(sf::Vector2f(x + offset.x, y + offset.y));
             shape.setPosition(sf::Vector2f(x, y));
         }
-    };
-
-    class c_animation
-    {
-    public:
-        sf::Sprite* sprite;
-        Animation _animation;
-        AnimationManager anim_mgr;
-    };
-
-    class c_state
-    {
-    public:
-        std::map<const char*, bool> anim_states{};
-        std::map<const char*, bool> states{};
     };
 }
