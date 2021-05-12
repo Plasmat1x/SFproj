@@ -24,7 +24,7 @@ void SYS::InputSystem::input(float dt)
                 States.states.at("move_up") = true;
                 break;
             }
-            if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::A)
+            else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::A)
             {
                 States.states.at("run") = true;
                 States.states.at("idle") = false;
@@ -32,14 +32,14 @@ void SYS::InputSystem::input(float dt)
                 States.states.at("move_left") = true;
                 break;
             }
-            if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::S)
+            else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::S)
             {
                 States.states.at("run") = true;
                 States.states.at("idle") = false;
                 States.states.at("move_down") = true;
                 break;
             }
-            if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::D)
+            else if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::D)
             {
                 States.states.at("run") = true;
                 States.states.at("idle") = false;
