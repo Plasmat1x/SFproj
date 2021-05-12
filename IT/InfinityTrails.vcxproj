@@ -53,6 +53,7 @@
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Animation.cpp" />
     <ClCompile Include="dGrid.cpp" />
+    <ClCompile Include="ECS.md" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="Gui.cpp" />
     <ClCompile Include="Level.cpp" />
@@ -70,7 +71,6 @@
     <None Include="..\.gitignore" />
     <None Include="..\res\map\test_level.tmx" />
     <None Include="ClassDiagram.cd" />
-    <None Include="ECS.md" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Config.xml" />

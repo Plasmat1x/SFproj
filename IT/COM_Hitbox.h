@@ -3,44 +3,9 @@
 
 namespace COM
 {
-    struct Position
+    class Hitbox
     {
-        float x;
-        float y;
-    };
-
-    struct Velocity
-    {
-        float x;
-        float y;
-
-        float _ACCELERATION;
-        float _MAXSPEED;
-    };
-
-    struct Sprite
-    {
-        sf::Sprite sprite;
-    };
-
-    struct View
-    {
-        sf::View* view;
-    };
-
-    struct InputComponent 
-    {
-        std::vector<sf::Keyboard::Key> KeyList{};
-    };
-
-    struct Size
-    {
-        float x;
-        float y;
-    };
-
-    struct Hitbox
-    {
+    public:
         sf::Vector2f size;
         sf::Vector2f offset;
         sf::RectangleShape shape;
@@ -60,3 +25,5 @@ namespace COM
         }
     };
 }
+
+

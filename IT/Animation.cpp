@@ -26,9 +26,9 @@ void AnimationManager::load_animation(std::string anim_name, sf::Vector2f size, 
 	animations.emplace(anim_name, playlist);
 }
 
-AnimationPlaylist* AnimationManager::getAnimation(std::string anim_name)
+AnimationPlaylist AnimationManager::getAnimation(std::string anim_name)
 {
-	return &animations.at(anim_name);
+	return animations.at(anim_name);
 }
 
 void Animation::init(float speed)
@@ -37,14 +37,14 @@ void Animation::init(float speed)
 	this->frame = 0;
 }
 
-void Animation::play(sf::Sprite* sprite, AnimationPlaylist* animation)
+void Animation::play(sf::Sprite* sprite, AnimationPlaylist animation)
 {
-	if (frame >= animation->frames.size() - 1)
+	if (frame >= animation.frames.size() - 1)
 	{
 		frame = 0;
 	}
 	frame += speed;
-	sprite->setTextureRect(animation->frames[int(frame)]);
+	sprite->setTextureRect(animation.frames[int(frame)]);
 }
 
 void Animation::reset()
