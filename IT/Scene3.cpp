@@ -151,6 +151,7 @@ void SceneThree::init(Engine* engine)
         gCoordinator.SetSystemSignature<SYS::RenderSystem>(signature);
     }
 
+
     //View
     cameraSystem = gCoordinator.RegisterSystem<SYS::CameraSystem>();
     {
@@ -169,8 +170,7 @@ void SceneThree::init(Engine* engine)
         signature.set(gCoordinator.GetComponentType<COM::c_state>());
         signature.set(gCoordinator.GetComponentType<COM::c_animation>());
         gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
-    }
-    inputSystem->init();
+    }inputSystem->init();
 
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
@@ -421,6 +421,28 @@ void SceneThree::update(const float dt)
             gCoordinator.GetComponent<COM::c_hitbox>(player).draw = check_hitb;
             gCoordinator.GetComponent<COM::c_hitbox>(enemy).draw = check_hitb;
         }
+
+        if(ImGui::Button("Change entity"))
+        {
+            eop = !eop;
+            if (eop)
+            {
+                gCoordinator.AddComponent<COM::c_view>(enemy, { &game_view });
+                gCoordinator.AddComponent<COM::c_input>(enemy, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::c_view>(player);
+                gCoordinator.RemoveComponent<COM::c_input>(player);
+            }
+            else
+            {
+                gCoordinator.AddComponent<COM::c_view>(player, { &game_view });
+                gCoordinator.AddComponent<COM::c_input>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::c_view>(enemy);
+                gCoordinator.RemoveComponent<COM::c_input>(enemy);
+            }
+        }ImGui::SameLine();
+        ImGui::LabelText("Enemy control:", "%d", eop);
 
         ImGui::End();
     }

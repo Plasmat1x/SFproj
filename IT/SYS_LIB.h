@@ -173,50 +173,47 @@ namespace SYS
                         Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("idle"));
                     }
                     //*/
-
-                    if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::W)))
-                    {
-                        if (Velocity.y > 0.0f) { Velocity.y = std::fmin(Velocity.y - Velocity._ACCELERATION * dt, 0.0f); }
-                        else { Velocity.y = std::fmax(Velocity.y - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
-                        Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
-                    }
-
-                    else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::S)))
-                    {
-                        if (Velocity.y < 0.0f) { Velocity.y = std::fmax(Velocity.y + Velocity._ACCELERATION * dt, 0.0f); }
-                        else { Velocity.y = std::fmin(Velocity.y + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
-                        Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
-                    }
-
-
-                    if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::Q)))
-                    {
-                        
-                    }
-
-                    else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::E)))
-                    {
-                        
-                    }
-
-
-                    if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::A)))
-                    {
-                        if (Velocity.x > 0.0f) { Velocity.x = std::fmin(Velocity.x - Velocity._ACCELERATION * dt, 0.0f); }
-                        else { Velocity.x = std::fmax(Velocity.x - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
-                        Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("runf"));
-                    }
-
-                    else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::D)))
-                    {
-                        if (Velocity.x < 0.0f) { Velocity.x = std::fmax(Velocity.x + Velocity._ACCELERATION * dt, 0.0f); }
-                        else { Velocity.x = std::fmin(Velocity.x + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
-                        Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
-                    }
-
                 }
                 //*/
+                if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::W)))
+                {
+                    if (Velocity.y > 0.0f) { Velocity.y = std::fmin(Velocity.y - Velocity._ACCELERATION * dt, 0.0f); }
+                    else { Velocity.y = std::fmax(Velocity.y - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
+                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
+                }
 
+                else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::S)))
+                {
+                    if (Velocity.y < 0.0f) { Velocity.y = std::fmax(Velocity.y + Velocity._ACCELERATION * dt, 0.0f); }
+                    else { Velocity.y = std::fmin(Velocity.y + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
+                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
+                }
+
+
+                if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::Q)))
+                {
+
+                }
+
+                else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::E)))
+                {
+
+                }
+
+
+                if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::A)))
+                {
+                    if (Velocity.x > 0.0f) { Velocity.x = std::fmin(Velocity.x - Velocity._ACCELERATION * dt, 0.0f); }
+                    else { Velocity.x = std::fmax(Velocity.x - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
+                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("runf"));
+                }
+
+                else if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::D)))
+                {
+                    if (Velocity.x < 0.0f) { Velocity.x = std::fmax(Velocity.x + Velocity._ACCELERATION * dt, 0.0f); }
+                    else { Velocity.x = std::fmin(Velocity.x + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
+                    Animation._animation.play(Animation.sprite, Animation.anim_mgr.getAnimation("run"));
+                }
             }
         }
     };
