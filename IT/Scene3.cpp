@@ -170,7 +170,6 @@ void SceneThree::init(Engine* engine)
         signature.set(gCoordinator.GetComponentType<COM::c_animation>());
         gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
     }
-    inputSystem->init();
 
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
@@ -256,47 +255,12 @@ void SceneThree::processInput()
         }
         case sf::Event::KeyPressed:
         {
+
+
             if (event->key.code == sf::Keyboard::Escape)
             {
                 this->engine->_pop();
                 return;
-            }
-
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-
-            if (buttonStateChanged)
-            {
-                ECS::Event ev(ECS::Events::Window::INPUT);
-                ev.SetParam(ECS::Events::Window::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(ev);
             }
 
             break;
@@ -308,41 +272,9 @@ void SceneThree::processInput()
                 this->engine->_debug_ = !this->engine->_debug_;
             }
 
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
+            if ((event->key.code == sf::Keyboard::Num1))
             {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-
-            if (buttonStateChanged)
-            {
-                ECS::Event ev(ECS::Events::Window::INPUT);
-                ev.SetParam(ECS::Events::Window::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(ev);
+                break;
             }
 
             break;
@@ -421,6 +353,28 @@ void SceneThree::update(const float dt)
             gCoordinator.GetComponent<COM::c_hitbox>(player).draw = check_hitb;
             gCoordinator.GetComponent<COM::c_hitbox>(enemy).draw = check_hitb;
         }
+
+        if(ImGui::Button("Change entity"))
+        {
+            eop = !eop;
+            if (eop)
+            {
+                gCoordinator.AddComponent<COM::c_view>(enemy, { &game_view });
+                gCoordinator.AddComponent<COM::c_input>(enemy, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::c_view>(player);
+                gCoordinator.RemoveComponent<COM::c_input>(player);
+            }
+            else
+            {
+                gCoordinator.AddComponent<COM::c_view>(player, { &game_view });
+                gCoordinator.AddComponent<COM::c_input>(player, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
+
+                gCoordinator.RemoveComponent<COM::c_view>(enemy);
+                gCoordinator.RemoveComponent<COM::c_input>(enemy);
+            }
+        }ImGui::SameLine();
+        ImGui::LabelText("Enemy control:", "%d", eop);
 
         ImGui::End();
     }
