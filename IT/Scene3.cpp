@@ -256,47 +256,12 @@ void SceneThree::processInput()
         }
         case sf::Event::KeyPressed:
         {
+
+
             if (event->key.code == sf::Keyboard::Escape)
             {
                 this->engine->_pop();
                 return;
-            }
-
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.set(static_cast<size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-
-            if (buttonStateChanged)
-            {
-                ECS::Event ev(ECS::Events::Window::INPUT);
-                ev.SetParam(ECS::Events::Window::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(ev);
             }
 
             break;
@@ -308,41 +273,9 @@ void SceneThree::processInput()
                 this->engine->_debug_ = !this->engine->_debug_;
             }
 
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
+            if ((event->key.code == sf::Keyboard::Num1))
             {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.reset(static_cast<size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-
-            if (buttonStateChanged)
-            {
-                ECS::Event ev(ECS::Events::Window::INPUT);
-                ev.SetParam(ECS::Events::Window::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(ev);
+                break;
             }
 
             break;
