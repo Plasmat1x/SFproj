@@ -29,7 +29,7 @@ public:
 
 private:
     //ECS Event
-    std::bitset<8> mButtons;
+    //std::bitset<8> mButtons;
 
     //imgui flags
     bool _debugtile_ = false;

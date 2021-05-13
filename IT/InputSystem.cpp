@@ -19,52 +19,41 @@ void SYS::InputSystem::input(float dt)
         auto& Velocity = gCoordinator.GetComponent<COM::RigidBody>(entity);
         auto& States = gCoordinator.GetComponent<COM::States>(entity);
 
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::W)))
+        if (sf::Keyboard::isKeyPressed(Input.KeyList[0])) //W
         {
-            States.states.at("run") = true;
-            States.states.at("idle") = false;
             States.states.at("move_up") = true;
         }
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::S)))
+        else
         {
-            States.states.at("run") = true;
-            States.states.at("idle") = false;
+            States.states.at("move_up") = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(Input.KeyList[1])) //A
+        {
+            States.states.at("move_left") = true;
+            States.states.at("direction") = false;
+        }
+        else
+        {
+            States.states.at("move_left") = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(Input.KeyList[2])) //S
+        {
             States.states.at("move_down") = true;
         }
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::Q)))
+        else
         {
-
-        }
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::E)))
-        {
-
-        }
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::A)))
-        {
-            States.states.at("run") = true;
-            States.states.at("idle") = false;
-            States.states.at("direction") = false;
-            States.states.at("move_left") = true;
-        }
-        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::D)))
-        {
-            States.states.at("run") = true;
-            States.states.at("idle") = false;
-            States.states.at("direction") = true;
-            States.states.at("move_right") = true;
-        }
-        if (!mButtons.test(static_cast<size_t>(ECS::InputButtons::W)) && 
-            !mButtons.test(static_cast<size_t>(ECS::InputButtons::A)) &&
-            !mButtons.test(static_cast<size_t>(ECS::InputButtons::S)) &&
-            !mButtons.test(static_cast<size_t>(ECS::InputButtons::D)) &&
-            !mButtons.test(static_cast<size_t>(ECS::InputButtons::Q)) &&
-            !mButtons.test(static_cast<size_t>(ECS::InputButtons::E)))
-        {
-            States.states.at("run") = false;
-            States.states.at("idle") = true;
-            States.states.at("move_up") = false;
-            States.states.at("move_left") = false;
             States.states.at("move_down") = false;
+        }
+
+        if (sf::Keyboard::isKeyPressed(Input.KeyList[3])) //D
+        {
+            States.states.at("move_right") = true;
+            States.states.at("direction") = true;
+        }
+        else
+        {
             States.states.at("move_right") = false;
         }
     }
@@ -75,9 +64,9 @@ void SYS::InputSystem::InputListener(ECS::Event& event)
     mButtons = event.GetParam<std::bitset<8>>(ECS::Events::Input::INPUT);
 }
 
-/*
+/* by Keylist with cycle for
  
- if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::W)
+            if (sf::Keyboard::isKeyPressed(key) && key == sf::Keyboard::W)
             {
                 if (Velocity.velocity.y > 0.0f) { Velocity.velocity.y = std::fmin(Velocity.velocity.y - Velocity._ACCELERATION * dt, 0.0f); }
                 else { Velocity.velocity.y = std::fmax(Velocity.velocity.y - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
@@ -98,3 +87,63 @@ void SYS::InputSystem::InputListener(ECS::Event& event)
                 else { Velocity.velocity.x = std::fmin(Velocity.velocity.x + Velocity._ACCELERATION * dt, Velocity._MAXSPEED); }
             }
 */
+
+/*/ by bitset
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::W)))
+        {
+            States.states.at("run") = true;
+            States.states.at("idle") = false;
+            States.states.at("move_up") = true;
+        }
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::S)))
+        {
+            States.states.at("run") = true;
+            States.states.at("idle") = false;
+            States.states.at("move_down") = true;
+        }
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::Q)))
+        {
+            States.states.at("roll") = true;
+            States.states.at("run") = false;
+            States.states.at("idle") = false;
+            States.states.at("direction") = false;
+            States.states.at("move_left") = true;
+        }
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::E)))
+        {
+            States.states.at("roll") = true;
+            States.states.at("run") = false;
+            States.states.at("idle") = false;
+            States.states.at("direction") = true;
+            States.states.at("move_right") = true;
+        }
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::A)))
+        {
+            States.states.at("run") = true;
+            States.states.at("idle") = false;
+            States.states.at("direction") = false;
+            States.states.at("move_left") = true;
+        }
+        if (mButtons.test(static_cast<std::size_t>(ECS::InputButtons::D)))
+        {
+            States.states.at("run") = true;
+            States.states.at("idle") = false;
+            States.states.at("direction") = true;
+            States.states.at("move_right") = true;
+        }
+        if (!mButtons.test(static_cast<size_t>(ECS::InputButtons::W)) &&
+            !mButtons.test(static_cast<size_t>(ECS::InputButtons::A)) &&
+            !mButtons.test(static_cast<size_t>(ECS::InputButtons::S)) &&
+            !mButtons.test(static_cast<size_t>(ECS::InputButtons::D)) &&
+            !mButtons.test(static_cast<size_t>(ECS::InputButtons::Q)) &&
+            !mButtons.test(static_cast<size_t>(ECS::InputButtons::E)))
+        {
+            States.states.at("run") = false;
+            States.states.at("idle") = true;
+            States.states.at("roll") = false;
+            States.states.at("move_up") = false;
+            States.states.at("move_left") = false;
+            States.states.at("move_down") = false;
+            States.states.at("move_right") = false;
+        }
+        //*/

@@ -32,6 +32,7 @@ void Player::Init(sf::Vector2f pos)
             {"jump", false},
             {"fall", false},
             {"clim", false},
+            {"roll", false},
             {"move_left", false},
             {"move_right", false},
             {"move_up", false},

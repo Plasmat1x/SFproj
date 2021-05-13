@@ -160,7 +160,7 @@ void SceneThree::init(Engine* engine)
         signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
         signature.set(gCoordinator.GetComponentType<COM::States>());
         gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
-    } inputSystem->init();
+    } //inputSystem->init();
 
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
@@ -199,6 +199,8 @@ void SceneThree::init(Engine* engine)
     anim_manager.load_animation("fallf", sf::Vector2f(43, 60), 3, 4, 1);
     anim_manager.load_animation("clim", sf::Vector2f(43, 60), 4, 6);
     anim_manager.load_animation("climf", sf::Vector2f(43, 60), 4, 6, 1);
+    anim_manager.load_animation("roll", sf::Vector2f(43, 60), 5, 7);
+    anim_manager.load_animation("rollf", sf::Vector2f(43, 60), 5, 7, 1);
 
     anim.init(0.1f);
 
@@ -254,6 +256,7 @@ void SceneThree::processInput()
                 return;
             }
 
+            /*/bitset style
             bool buttonStateChanged = true;
             if (event->key.code == sf::Keyboard::W)
             {
@@ -289,8 +292,7 @@ void SceneThree::processInput()
                 _event.SetParam(ECS::Events::Input::INPUT, mButtons);
                 gCoordinator.SendEvent(_event);
             }
-
-
+            //*/
             break;
         }
         case sf::Event::KeyReleased:
@@ -299,7 +301,7 @@ void SceneThree::processInput()
             {
                 this->engine->_debug_ = !this->engine->_debug_;
             }
-
+            /*/bitset style
             bool buttonStateChanged = true;
             if (event->key.code == sf::Keyboard::W)
             {
@@ -335,7 +337,7 @@ void SceneThree::processInput()
                 _event.SetParam(ECS::Events::Input::INPUT, mButtons);
                 gCoordinator.SendEvent(_event);
             }
-
+            //*/
             break;
         }
         case sf::Event::MouseButtonReleased:

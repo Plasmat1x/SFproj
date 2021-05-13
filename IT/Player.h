@@ -16,6 +16,13 @@ private:
     sf::View* view;
     sf::RectangleShape rect;
 
+    enum class _state
+    {
+
+    };
+
+
+
 public:
 
     ECS::Entity getEntity();
