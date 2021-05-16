@@ -58,6 +58,11 @@ namespace ECS
             return mSignatures[entity];
         }
 
+        //-debug--func
+        uint32_t getLivingEntity()
+        {
+            return mLivingEntityCount;
+        }
     };
 }
 

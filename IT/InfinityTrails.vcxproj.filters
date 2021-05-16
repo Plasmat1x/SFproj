@@ -176,6 +176,9 @@
     <ClInclude Include="EventManager.h">
       <Filter>ECS</Filter>
     </ClInclude>
+    <ClInclude Include="AnimationSystem.h">
+      <Filter>SYSTEMS</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -252,6 +255,9 @@
     </ClCompile>
     <ClCompile Include="MultiTileObject.cpp">
       <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="AnimationSystem.cpp">
+      <Filter>SYSTEMS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

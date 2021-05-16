@@ -16,13 +16,20 @@ private:
     sf::View* view;
     sf::RectangleShape rect;
 
-    enum class _state
-    {
 
-    };
+    COM::States* state_com;
+    COM::Anim* anim_com;
+    COM::Sprite* sprite_com;
+    COM::RigidBody* Velocity;
+    sf::Sprite* spriteptr;
+
+    float mass;
 
 
-
+    void moveL(float dt);
+    void moveR(float dt);
+    void jump(float dt);
+    
 public:
 
     ECS::Entity getEntity();

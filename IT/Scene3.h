@@ -40,6 +40,7 @@ private:
     bool eop = false;
     bool check_comt = true;
     bool check_hitb = true;
+    bool check_ecs = false;
     //
 
     sf::View game_view;

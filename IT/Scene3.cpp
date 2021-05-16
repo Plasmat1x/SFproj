@@ -26,9 +26,6 @@ void SceneThree::init(Engine* engine)
     this->engine = engine;
     this->event = &engine->events;
     this->view = &engine->view;
-    //this->game_view = sf::View(sf::FloatRect(0, 0, 683, 384));
-    //this->game_view = sf::View(sf::FloatRect(0, 0, 1366, 768));
-    //this->hud_view = sf::View(sf::FloatRect(0, 0, 1366, 768));
     this->game_view = engine->view;
     this->hud_view = engine->view;
 
@@ -174,7 +171,7 @@ void SceneThree::init(Engine* engine)
     gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
     gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
-    gCoordinator.AddComponent<COM::States>(enemy, {
+    gCoordinator.AddComponent<COM::States>(enemy, { COM::_state::IDLE, COM::_state::IDLE,
           { {"direction", true},
             {"idle", false},
             {"run", false},
@@ -220,9 +217,6 @@ void SceneThree::processInput()
     sf::Vector2f mousePos = this->engine->window.mapPixelToCoords(sf::Mouse::getPosition(this->engine->window), *this->view);
     mouse_p = mousePos;
 
-
-    //ImGui::SFML::ProcessEvent(*event);
-
     while (this->engine->window.pollEvent(*event))
     {
         ImGui::SFML::ProcessEvent(*event);
@@ -255,44 +249,6 @@ void SceneThree::processInput()
                 this->engine->_pop();
                 return;
             }
-
-            /*/bitset style
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.set(static_cast<std::size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-            if (buttonStateChanged)
-            {
-                ECS::Event _event(ECS::Events::INPUT);
-                _event.SetParam(ECS::Events::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(_event);
-            }
-            //*/
             break;
         }
         case sf::Event::KeyReleased:
@@ -301,43 +257,6 @@ void SceneThree::processInput()
             {
                 this->engine->_debug_ = !this->engine->_debug_;
             }
-            /*/bitset style
-            bool buttonStateChanged = true;
-            if (event->key.code == sf::Keyboard::W)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::W));
-            }
-            else if (event->key.code == sf::Keyboard::A)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::A));
-            }
-            else if (event->key.code == sf::Keyboard::S)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::S));
-            }
-            else if (event->key.code == sf::Keyboard::D)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::D));
-            }
-            else if (event->key.code == sf::Keyboard::Q)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::Q));
-            }
-            else if (event->key.code == sf::Keyboard::E)
-            {
-                mButtons.reset(static_cast<std::size_t>(ECS::InputButtons::E));
-            }
-            else
-            {
-                buttonStateChanged = false;
-            }
-            if (buttonStateChanged)
-            {
-                ECS::Event _event(ECS::Events::INPUT);
-                _event.SetParam(ECS::Events::Input::INPUT, mButtons);
-                gCoordinator.SendEvent(_event);
-            }
-            //*/
             break;
         }
         case sf::Event::MouseButtonReleased:
@@ -364,25 +283,7 @@ void SceneThree::processInput()
         }
     }
     // out poll event loop
-    /*/
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("runf")); }
-    else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
-    if (!sf::Keyboard::isKeyPressed(sf::Keyboard::W) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::S) &&
-            !sf::Keyboard::isKeyPressed(sf::Keyboard::D))
-    {
-        anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("idle"));
-    }
 
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("idle")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num2)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("run")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num3)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("jump")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("fall")); }
-    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num5)) { anim.play(&gCoordinator.GetComponent<COM::Sprite>(cur_ent).sprite, anim_manager.getAnimation("clim")); }
-    //*/
 }
 
 void SceneThree::update(const float dt)
@@ -391,7 +292,6 @@ void SceneThree::update(const float dt)
     inputSystem->input(dt);
     physicsSystem->update(dt);
     cameraSystem->update();
-    renderSystem->updateAnim();
 
     player.update(dt);
 
@@ -410,6 +310,7 @@ void SceneThree::update(const float dt)
         ImGui::Checkbox("Ui grid", &_debugui_);
         ImGui::Checkbox("Tile grid", &_debugtile_);
         ImGui::Checkbox("COM test", &check_comt);
+        ImGui::Checkbox("ECS test", &check_ecs);
         if (ImGui::Checkbox("Hitbox view", &check_hitb)) 
         {
             gCoordinator.GetComponent<COM::Hitbox>(player.getEntity()).draw = check_hitb;
@@ -513,11 +414,27 @@ void SceneThree::update(const float dt)
         }
         if (ImGui::CollapsingHeader("COM States"))
         {
-            for (const auto& [com, val] : gCoordinator.GetComponent<COM::States>(cur_ent).states)
+            for (auto& [com, val] : gCoordinator.GetComponent<COM::States>(cur_ent).states)
             {
                 std::string name = "  COM States." + com + ": %d";
-                ImGui::Text(name.c_str(), val);
+                ImGui::Text(name.c_str(), val); 
+                ImGui::SameLine();
+                if (ImGui::Button(com.c_str()))
+                {
+                    val = !val;
+                }
             }
+        }
+        ImGui::End();
+    }
+
+    if (check_ecs)
+    {
+        ImGui::Begin("ecs test");
+        if (ImGui::CollapsingHeader("Available Entity:"))
+        {
+            ImGui::Text("Entitys:  \n%d / %d",
+                gCoordinator.getLivingEntity(), ECS::MAX_ENTITIES);
         }
         ImGui::End();
     }

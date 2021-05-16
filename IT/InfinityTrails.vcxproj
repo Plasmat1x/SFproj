@@ -29,6 +29,7 @@
     <ClInclude Include="..\include\imgui\imstb_textedit.h" />
     <ClInclude Include="..\include\imgui\imstb_truetype.h" />
     <ClInclude Include="Animation.h" />
+    <ClInclude Include="AnimationSystem.h" />
     <ClInclude Include="CameraSystem.h" />
     <ClInclude Include="ComponentArray.h" />
     <ClInclude Include="ComponentManager.h" />
@@ -73,6 +74,7 @@
     <ClCompile Include="..\include\imgui\imgui_draw.cpp" />
     <ClCompile Include="..\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Animation.cpp" />
+    <ClCompile Include="AnimationSystem.cpp" />
     <ClCompile Include="CameraSystem.cpp" />
     <ClCompile Include="dGrid.cpp" />
     <ClCompile Include="ECS.md" />

@@ -109,6 +109,12 @@ namespace ECS
         {
             mEventManager->SendEvent(eventId);
         }
+
+        //DEBUG
+        uint32_t getLivingEntity()
+        {
+            return mEntityManager->getLivingEntity();
+        }
     };
 }
 
