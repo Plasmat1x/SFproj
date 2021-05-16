@@ -25,11 +25,6 @@ private:
 
     float mass;
 
-
-    void moveL(float dt);
-    void moveR(float dt);
-    void jump(float dt);
-    
 public:
 
     ECS::Entity getEntity();

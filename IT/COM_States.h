@@ -25,7 +25,7 @@ namespace COM
         { "move_right", false },
         { "move_up", false },
         { "move_down", false },
-        { "on_ground", true },
+        { "on_ground", false },
         { "was_ground", false },
         { "push_right", false },
         { "push_left", false },

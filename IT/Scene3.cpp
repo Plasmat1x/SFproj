@@ -157,7 +157,7 @@ void SceneThree::init(Engine* engine)
         signature.set(gCoordinator.GetComponentType<COM::RigidBody>());
         signature.set(gCoordinator.GetComponentType<COM::States>());
         gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
-    } //inputSystem->init();
+    }
 
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
@@ -171,18 +171,7 @@ void SceneThree::init(Engine* engine)
     gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
     gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
-    gCoordinator.AddComponent<COM::States>(enemy, { COM::_state::IDLE, COM::_state::IDLE,
-          { {"direction", true},
-            {"idle", false},
-            {"run", false},
-            {"jump", false},
-            {"fall", false},
-            {"clim", false},
-            {"move_left", false},
-            {"move_right", false},
-            {"move_up", false},
-            {"move_down", false},
-            {"on_ground", false} }});
+    gCoordinator.AddComponent<COM::States>(enemy, {});
     gCoordinator.AddComponent<COM::Anim>(enemy, { nullptr, nullptr, 0.1f });
 
     //Animation load
