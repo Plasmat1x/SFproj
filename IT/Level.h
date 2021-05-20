@@ -5,6 +5,13 @@
 
 //https://github.com/Izaron/Platformer
 
+enum class TileType
+{
+    EMPTY,
+    BLOCK,
+    PLATFORM,
+};
+
 struct Layer
 {
     int opacity;
@@ -14,18 +21,17 @@ struct Layer
 class Level : public sf::Drawable
 {
 private:
-    int tileWidth;
-    int tileHeight;
-    int width;
-    int height;
     int firstTileID;
 
-    int row;
-    int col;
+    sf::Vector2f tileSize;
+    sf::Vector2f mapTiles;
+    sf::Vector2i tilesetArray;
 
     sf::Rect<float> drawingBounds;
     sf::Texture* tileSet;
     std::vector<Layer> layers;
+    std::vector<std::vector<TileType>> tiles;
+    sf::Vector3f mapPosition;
 
     sf::Texture* texture;
 
@@ -35,6 +41,22 @@ public:
         init(path, texture, arr_size);
     }
     Level() {}
+
+    sf::Vector2i getMapAtPoint(sf::Vector2f point);
+    int getMapTileYAtPoint(float y);
+    int getMapTileXAtPoint(float x);
+    sf::Vector2f getMapTilePosition(sf::Vector2i tileCoords);
+    sf::Vector2f getMapTilePosition(int tIndexX, int tIndexY);
+    sf::Vector2f getTileSize();
+    sf::Vector3f getMapPos();
+
+    TileType getTile(int x, int y);
+    bool isObstacle(int x, int y);
+    bool isGround(int x, int y);
+    bool isPlatform(int x, int y);
+    bool isEmpty(int x, int y);
+
+
 
     void init(std::string path, sf::Texture* texture, sf::Vector2i arr_size);
     virtual void draw(sf::RenderTarget& target, sf::RenderStates state) const;

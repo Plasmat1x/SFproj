@@ -15,8 +15,13 @@ void Player::Init(sf::Vector2f pos)
 {
     mass = 3.0f;
 
+    rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
+    rect.setOutlineColor(sf::Color(0xff, 0xff, 0x88, 0xff));
+    rect.setOutlineThickness(1.0f);
+    rect.setSize(sf::Vector2f(43, 60));
+    rect.setPosition(pos);
+
     sprite.setTextureRect(sf::IntRect(0, 0, 43, 60));
-    sprite.setOrigin(44 * 0.5f, 60 * 0.5f);
 
     this->entity = gCoordinator.CreateEntity();
     gCoordinator.AddComponent<COM::Transform>(entity, { pos, sf::Vector2f(1,1), 0 });
@@ -24,7 +29,12 @@ void Player::Init(sf::Vector2f pos)
     gCoordinator.AddComponent<COM::Sprite>(entity, { sprite });
     gCoordinator.AddComponent<COM::Input>(entity, { std::vector<sf::Keyboard::Key>{sf::Keyboard::W,sf::Keyboard::A,sf::Keyboard::S,sf::Keyboard::D} });
     gCoordinator.AddComponent<COM::View>(entity, { view });
-    gCoordinator.AddComponent<COM::Hitbox>(entity, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , true });
+    gCoordinator.AddComponent<COM::Hitbox>(entity, { 
+        pos, 
+        sf::Vector2f(21,40), 
+        sf::Vector2f(0,0), 
+        rect , 
+        true });
     gCoordinator.GetComponent<COM::Hitbox>(entity).initHitbox();
     /*/
     gCoordinator.AddComponent<COM::States>(entity, { COM::_state::IDLE, COM::_state::IDLE, 
@@ -105,7 +115,7 @@ void Player::update(float dt)
 
         if (state_com->states.at("move_up"))
         {
-            Velocity->velocity.y = -Velocity->_ACCELERATION;
+            Velocity->velocity.y = -Velocity->_ACCELERATION * 1.0f;
             state_com->states.at("on_ground") = false;
             state_com->prev_state = state_com->cur_state;
             state_com->cur_state = COM::_state::JUMP;
@@ -138,7 +148,7 @@ void Player::update(float dt)
         }
         if (state_com->states.at("move_up"))
         {
-            Velocity->velocity.y = -Velocity->_ACCELERATION;
+            Velocity->velocity.y = -Velocity->_ACCELERATION * 1.0f;
             state_com->states.at("on_ground") = false;
             state_com->prev_state = state_com->cur_state;
             state_com->cur_state = COM::_state::JUMP;

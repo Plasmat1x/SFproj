@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <box2d/box2d.h>
 
 #include "Engine.h"
 #include "Scene.h"

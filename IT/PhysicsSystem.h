@@ -3,30 +3,38 @@
 
 #include "System.h"
 #include "COM_LIB.h"
+#include "Level.h"
 
 namespace SYS
 {
     class PhysicsSystem : public ECS::System
     {
     public:
+        void init(Level* level);
         void update(float dt);
 
     private:
         sf::Vector2f oldPos;
         sf::Vector2f oldVel;
 
-        float groundY;
-        float lwallX;
-        float rwallX;
-        float ceil;
-        float threshold;
+        Level* level;
+
+        //float groundY = 0;
 
         void moveR(float dt, COM::RigidBody& Velocity);
         void moveL(float dt, COM::RigidBody& Velocity);
+        void friction(float dt, COM::RigidBody& Velocity);
 
-        bool hasGround(sf::Vector2f oldpos, sf::Vector2f pos, sf::Vector2f speed);
-        bool hasLwall();
-        bool hasRwall();
-        bool hasCeil();
+        // test physics
+        bool hasGround(const sf::Vector2f& oldPos,
+            const COM::Transform& tr,
+            const COM::RigidBody& rb,
+            const COM::Hitbox& hb,
+            float& groundY);
+
+        //tools
+        float clamp01(float value);
+        sf::Vector2f lerpvec2(sf::Vector2f a, sf::Vector2f b, float t);
+
     };
 }

@@ -40,11 +40,10 @@ void SceneThree::init(Engine* engine)
     texture.loadFromFile("../res/img/elf.png");
     sprite.setTexture(texture);
     sprite.setTextureRect(sf::IntRect(0, 0, 43, 60));
-    sprite.setOrigin(44 * 0.5f, 60 * 0.5f);
 
     texture_bg.loadFromFile("../res/img/map.png");
 
-    level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(2, 3));
+    level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(3, 3));
 
     mto_index = _MTO_texture_indexes({
         sf::Vector2i(3,0),
@@ -126,7 +125,7 @@ void SceneThree::init(Engine* engine)
         signature.set(gCoordinator.GetComponentType<COM::Hitbox>());
         signature.set(gCoordinator.GetComponentType<COM::States>());
         gCoordinator.SetSystemSignature<SYS::PhysicsSystem>(signature);
-    }
+    } physicsSystem->init(&level);
 
     //Render
     renderSystem = gCoordinator.RegisterSystem<SYS::RenderSystem>();
@@ -163,12 +162,19 @@ void SceneThree::init(Engine* engine)
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
     rect.setOutlineColor(sf::Color(0xff, 0xff, 0x88, 0xff));
     rect.setOutlineThickness(1.0f);
+    rect.setSize(sf::Vector2f(43, 60));
+    rect.setPosition(sf::Vector2f(64,64));
 
     enemy = gCoordinator.CreateEntity();
     gCoordinator.AddComponent<COM::Transform>(enemy, { sf::Vector2f(64,64), sf::Vector2f(1,1), 0 });
     gCoordinator.AddComponent<COM::RigidBody>(enemy, { sf::Vector2f(0,0), 250.0f, 100.0f });
     gCoordinator.AddComponent<COM::Sprite>(enemy, { sprite });
-    gCoordinator.AddComponent<COM::Hitbox>(enemy, { sf::Vector2f(43,60), sf::Vector2f(0.0f, 22.0f), rect , check_hitb });
+    gCoordinator.AddComponent<COM::Hitbox>(enemy, { 
+        sf::Vector2f(64.0f, 64.0f),
+        sf::Vector2f(43.0f, 60.0f),
+        sf::Vector2f(0,0), 
+        rect , 
+        check_hitb });
     gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
     gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
     gCoordinator.AddComponent<COM::States>(enemy, {});
@@ -192,11 +198,10 @@ void SceneThree::init(Engine* engine)
 
 
     player.SetView(&game_view);
-    player.SetRect(rect);
     player.SetTexture(texture);
     player.SetAnimation(anim);
     player.SetAnimMgr(&anim_manager);
-    player.Init(sf::Vector2f(0, 0));
+    player.Init(sf::Vector2f(100, 100));
 
     cur_ent = player.getEntity();
 }
@@ -400,6 +405,44 @@ void SceneThree::update(const float dt)
             ImGui::Text("COM Hitbox origin:  \n  x = %g \n  y = %g",
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().x,
                 gCoordinator.GetComponent<COM::Hitbox>(cur_ent).shape.getOrigin().y);
+
+            ImGui::Spacing();
+
+            ImGui::Text("COM Hitbox param.position:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).position.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).position.y);
+            ImGui::Text("COM Hitbox param.size:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).size.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).size.y);
+            ImGui::Text("COM Hitbox param.center:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).center.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).center.y);
+            ImGui::Text("COM Hitbox param.offset:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).offset.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).offset.y);
+
+            ImGui::Text("COM Hitbox param.half:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).half.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).half.y);
+
+            ImGui::Text("COM Hitbox param.TL:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).TL.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).TL.y);
+            ImGui::Text("COM Hitbox param.ML:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).ML.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).ML.y);
+            ImGui::Text("COM Hitbox param.BL:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.y);
+            ImGui::Text("COM Hitbox param.TR:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).TR.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).TR.y);
+            ImGui::Text("COM Hitbox param.MR:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).MR.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).MR.y);
+            ImGui::Text("COM Hitbox param.BR:  \n  x = %g \n  y = %g",
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BR.x,
+                gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BR.y);
         }
         if (ImGui::CollapsingHeader("COM States"))
         {
@@ -424,6 +467,11 @@ void SceneThree::update(const float dt)
         {
             ImGui::Text("Entitys:  \n%d / %d",
                 gCoordinator.getLivingEntity(), ECS::MAX_ENTITIES);
+        }
+        if (ImGui::CollapsingHeader("Physics:"))
+        {
+            ImGui::Text("Tile X at point: %d", level.getMapTileXAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.x));
+            ImGui::Text("Tile Y at point: %d", level.getMapTileYAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.y));       
         }
         ImGui::End();
     }

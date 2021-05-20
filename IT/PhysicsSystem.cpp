@@ -3,7 +3,20 @@
 
 #include "COM_LIB.h"
 
+#include <iostream>
+
 extern ECS::Coordinator gCoordinator;
+
+void SYS::PhysicsSystem::init(Level* level)
+{
+    /*/
+    groundY = 0;
+    ceil = 0;
+    lwallX = 0;
+    rwallX = 0;
+    //*/
+    this->level = level;
+}
 
 void SYS::PhysicsSystem::update(float dt)
 {
@@ -14,6 +27,7 @@ void SYS::PhysicsSystem::update(float dt)
         auto& Rect = gCoordinator.GetComponent<COM::Hitbox>(entity);
         auto& States = gCoordinator.GetComponent<COM::States>(entity);
 
+        //save prev frame data
         oldPos = Position.position;
         oldVel = Velocity.velocity;
 
@@ -42,30 +56,60 @@ void SYS::PhysicsSystem::update(float dt)
         States.states.at("pushed_right") = States.states.at("push_right");
         States.states.at("pushed_up") = States.states.at("push_up");
 
-        groundY = 0;
-        ceil = 0;
-        lwallX = 0;
-        rwallX = 0;
+        //update positions
+        Position.position.x += Velocity.velocity.x * dt;
+        Position.position.y += Velocity.velocity.y * dt;
 
-        if (Velocity.velocity.x > 0.0f)
-        {
-            Velocity.velocity.x = int(std::fmax(Velocity.velocity.x - std::abs(Velocity.velocity.x * dt * 3.0f), 0.0f));
-        }
-        else if (Velocity.velocity.x < 0.0f)
-        {
-            Velocity.velocity.x = int(std::fmin(Velocity.velocity.x + std::abs(Velocity.velocity.x * dt * 3.0f), 0.0f));
-        }
+        Rect.update(Position.position.x, Position.position.y);
 
+        //*/ Test physics
+        float groundY = 0;
+        if (Velocity.velocity.y >= 0.0f
+            && hasGround(oldPos, Position, Velocity, Rect, groundY))
+        {
+            Position.position.y = groundY - Rect.size.y - Rect.offset.y;
+            States.states.at("on_ground") = true;
+        }
+        else
+        {
+            States.states.at("on_ground") = false;
+        }
+        //*/
+        /*/
+        float groundY = 0;
+        if (Velocity.velocity.y >= 0.0f)
+        {
+            if (hasGround(oldPos, Position, Velocity, Rect, groundY))
+            {
+                //Position.position.y = groundY - Rect.half.y - Rect.offset.y;
+                Position.position.y = groundY - Rect.size.y * 2 - 36;
+                Velocity.velocity.y = 0.0f;
+                States.states.at("on_ground") = true;
+            }
+            else
+            {
+                States.states.at("on_ground") = false;
+            }
+        }
+        //*/
+
+
+
+
+        //*//gravity
         if (!States.states.at("on_ground"))
         {
-            Velocity.velocity.y += std::fmax(5.0f * dt, 20.0f);
+            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 25.0f, 1000.0f);
         }
         else if(States.states.at("on_ground"))
         {
             Velocity.velocity.y = 0.0f;
-        }
+            //friction(трение)
+            friction(dt, Velocity);
+        }       
+        //*/
         
-
+        //move entity x axis
         if (States.states.at("move_left"))
         {
             moveL(dt, Velocity);
@@ -75,15 +119,13 @@ void SYS::PhysicsSystem::update(float dt)
             moveR(dt, Velocity);
         }
 
-        if (Position.position.y + Velocity.velocity.y * dt >= 440)
+        //collision with end map"512"
+        if (Position.position.y + Velocity.velocity.y * dt >= 512 - 60)
         {
             States.states.at("on_ground") = true;
         }
 
-        Position.position.x += Velocity.velocity.x * dt;
-        Position.position.y += Velocity.velocity.y * dt;
-
-        Rect.update(Position.position.x, Position.position.y);
+        Rect.update(Position.position.x, Position.position.y); // chek
     }
 }
 
@@ -99,6 +141,77 @@ void SYS::PhysicsSystem::moveL(float dt, COM::RigidBody& Velocity)
     else { Velocity.velocity.x = std::fmax(Velocity.velocity.x - Velocity._ACCELERATION * dt, -Velocity._MAXSPEED); }
 }
 
+void SYS::PhysicsSystem::friction(float dt, COM::RigidBody& Velocity)
+{
+    if (Velocity.velocity.x > 0.0f)
+    {
+        Velocity.velocity.x = int(std::fmax(Velocity.velocity.x - std::abs(Velocity.velocity.x * dt * 3.0f), 0.0f));
+    }
+    else if (Velocity.velocity.x < 0.0f)
+    {
+        Velocity.velocity.x = int(std::fmin(Velocity.velocity.x + std::abs(Velocity.velocity.x * dt * 3.0f), 0.0f));
+    }
+}
+
+bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Transform& tr, const COM::RigidBody& rb, const COM::Hitbox& hb, float& groundY)
+{
+    sf::Vector2f oldCenter = oldPos + hb.half;
+    sf::Vector2f center = hb.center;
+
+    sf::Vector2f oldBL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y + hb.half.y) + sf::Vector2f(0,1) - sf::Vector2f(1,0);
+    sf::Vector2f newBL = sf::Vector2f(center.x - hb.half.x, center.y + hb.half.y) + sf::Vector2f(0, 1) - sf::Vector2f(1, 0);
+
+    int endY = level->getMapTileYAtPoint(newBL.y);
+    int begY = std::fmax(level->getMapTileYAtPoint(oldBL.y) - 1, endY);
+    int dist = std::fmax(std::abs(endY - begY), 1);
+
+    int TIX; //tile index x
+    for (int TIY = begY; TIY <= endY; ++TIY)
+    {
+        sf::Vector2f BL = lerpvec2(newBL, oldBL, float(std::abs(endY - TIY)));
+        sf::Vector2f BR = sf::Vector2f(BL.x + hb.size.x - 2.0f, BL.y);
+
+        for (sf::Vector2f chekedTile = BL; ; chekedTile.x += level->getTileSize().x)
+        {
+            chekedTile.x = std::fmin(chekedTile.x, BR.x);
+            TIX = level->getMapTileXAtPoint(chekedTile.x);
+            groundY = float(TIY * level->getTileSize().y);
+            
+            if (level->isGround(TIX, TIY))
+            {
+                return true;
+            }
+            else if (level->isObstacle(TIX, TIY))
+            {
+                return true;
+            }
+            else if (level->isPlatform(TIX, TIY))
+            {
+                return true;
+            }
+            if (chekedTile.x >= BR.x)
+                break;
+        }
+    }
+
+
+    return false;
+}
+
+float SYS::PhysicsSystem::clamp01(float value)
+{
+    if ((double)value < 0.0)
+        return 0.0f;
+    if ((double)value > 1.0)
+        return 1.f;
+    return value;
+}
+
+sf::Vector2f SYS::PhysicsSystem::lerpvec2(sf::Vector2f a, sf::Vector2f b, float t)
+{
+    t = clamp01(t);
+    return sf::Vector2f(a.x + (b.x - a.x) * t, a.y + (b.y - a.y) * t);
+}
 
 
 /*/
