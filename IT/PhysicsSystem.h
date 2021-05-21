@@ -27,10 +27,23 @@ namespace SYS
 
         // test physics
         bool hasGround(const sf::Vector2f& oldPos,
-            const COM::Transform& tr,
-            const COM::RigidBody& rb,
-            const COM::Hitbox& hb,
+            const COM::Hitbox& hb, const COM::RigidBody& rb,
             float& groundY);
+
+        bool hasCeil(const sf::Vector2f& oldPos,
+            const COM::Hitbox& hb,
+            const COM::RigidBody& rb,
+            float& ceilY);
+
+        bool hasLW(const sf::Vector2f& oldPos,
+            const COM::Hitbox& hb,
+            const COM::RigidBody& rb,
+            float& wallL);
+
+        bool hasRW(const sf::Vector2f& oldPos,
+            const COM::Hitbox& hb,
+            const COM::RigidBody& rb,
+            float& wallR);
 
         //tools
         float clamp01(float value);

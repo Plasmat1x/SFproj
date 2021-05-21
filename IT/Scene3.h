@@ -51,6 +51,8 @@ private:
     std::vector<sf::Sprite> sprite_bg;
     sf::Texture texture;
     sf::Texture texture_bg;
+    sf::Texture bg;
+    sf::Sprite sbg;
     sf::Vector2f mouse_p;
     sf::Vector2f view_pos;
 

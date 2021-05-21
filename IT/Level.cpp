@@ -76,15 +76,15 @@ void Level::init(std::string path, sf::Texture* texture, sf::Vector2i arr_size)
                 //Костыль
                 if (tileGID == 0)
                 {
-                    tiles[y][x] = (TileType::EMPTY);
+                    tiles[y][x] = (TileType::BLOCK);
                 }
                 else if (tileGID == 1)
                 {
-                    tiles[y][x] = (TileType::BLOCK);
+                    tiles[y][x] = (TileType::PLATFORM);
                 }
                 else if (tileGID == 2)
                 {
-                    tiles[y][x] = (TileType::EMPTY);
+                    tiles[y][x] = (TileType::BLOCK);
                 }
                 else if (tileGID == 3)
                 {
@@ -96,7 +96,7 @@ void Level::init(std::string path, sf::Texture* texture, sf::Vector2i arr_size)
                 }
                 else if (tileGID == 5)
                 {
-                    tiles[y][x] = (TileType::EMPTY);
+                    tiles[y][x] = (TileType::BLOCK);
                 }
                 else if (tileGID == 6)
                 {

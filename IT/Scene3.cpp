@@ -29,6 +29,8 @@ void SceneThree::init(Engine* engine)
     this->game_view = engine->view;
     this->hud_view = engine->view;
 
+    this->game_view.zoom(0.5f);
+
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
     this->view->setSize(pos);
@@ -42,6 +44,12 @@ void SceneThree::init(Engine* engine)
     sprite.setTextureRect(sf::IntRect(0, 0, 43, 60));
 
     texture_bg.loadFromFile("../res/img/map.png");
+    bg.loadFromFile("../res/img/bg.jpg");
+    bg.setRepeated(true);
+    sbg.setTexture(bg);
+    sbg.setTextureRect(sf::IntRect(0, 0, 32 * 64, 32 * 16));
+    sbg.setPosition(0, 0);
+
 
     level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(3, 3));
 
@@ -483,6 +491,8 @@ void SceneThree::render(const float dt)
     this->engine->window.setView(this->game_view);
     this->engine->window.clear(sf::Color::Cyan);
 
+    this->engine->window.draw(sbg);
+
     for (auto i : sprite_bg)
     {
         this->engine->window.draw(i);
@@ -508,7 +518,7 @@ void SceneThree::render(const float dt)
 
     this->engine->window.setView(game_view);
     if (_debugtile_) {
-        sfd::drawGrid(this->engine->window, sf::Vector2f(32, 32), sf::View(sf::FloatRect(-5000, -5000, 10000, 10000)), sf::Color(0xff, 0xff, 0xff, 0xff));
+        sfd::drawGrid(this->engine->window, level.getTileSize(), sf::View(sf::FloatRect(-5000, -5000, 10000, 10000)), sf::Color(0xff, 0xff, 0xff, 0xff));
     }
 
     ImGui::SFML::Render(this->engine->window);

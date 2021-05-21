@@ -62,10 +62,39 @@ void SYS::PhysicsSystem::update(float dt)
 
         Rect.update(Position.position.x, Position.position.y);
 
-        //*/ Test physics
+        // Test physics
         float groundY = 0;
+        float ceilY = 0;
+        float wallL = 0;
+        float wallR = 0;
+
+
+        if (Velocity.velocity.x <= 0.0f
+            && hasLW(oldPos, Rect, Velocity, wallL))
+        {
+            Position.position.x = wallL - Rect.offset.x;
+            States.states.at("push_left") = true;
+            Velocity.velocity.x = 0.0f;
+        }
+        else
+        {
+            States.states.at("push_left") = false;
+        }
+
+        if (Velocity.velocity.x >= 0.0f
+            && hasRW(oldPos, Rect, Velocity, wallR))
+        {
+            Position.position.x = wallR - Rect.size.x - Rect.offset.x;
+            States.states.at("push_right") = true;
+            Velocity.velocity.x = 0.0f;
+        }
+        else
+        {
+            States.states.at("push_right") = false;
+        }
+
         if (Velocity.velocity.y >= 0.0f
-            && hasGround(oldPos, Position, Velocity, Rect, groundY))
+            && hasGround(oldPos, Rect, Velocity, groundY))
         {
             Position.position.y = groundY - Rect.size.y - Rect.offset.y;
             States.states.at("on_ground") = true;
@@ -74,27 +103,18 @@ void SYS::PhysicsSystem::update(float dt)
         {
             States.states.at("on_ground") = false;
         }
-        //*/
-        /*/
-        float groundY = 0;
-        if (Velocity.velocity.y >= 0.0f)
+
+        if (Velocity.velocity.y <= 0.0f
+            && hasCeil(oldPos, Rect, Velocity, ceilY))
         {
-            if (hasGround(oldPos, Position, Velocity, Rect, groundY))
-            {
-                //Position.position.y = groundY - Rect.half.y - Rect.offset.y;
-                Position.position.y = groundY - Rect.size.y * 2 - 36;
-                Velocity.velocity.y = 0.0f;
-                States.states.at("on_ground") = true;
-            }
-            else
-            {
-                States.states.at("on_ground") = false;
-            }
+            Position.position.y = ceilY - Rect.offset.y;
+            States.states.at("push_up") = true;
+            Velocity.velocity.y = 0.0f;
         }
-        //*/
-
-
-
+        else
+        {
+            States.states.at("push_up") = false;
+        }
 
         //*//gravity
         if (!States.states.at("on_ground"))
@@ -119,12 +139,13 @@ void SYS::PhysicsSystem::update(float dt)
             moveR(dt, Velocity);
         }
 
+        /*/
         //collision with end map"512"
         if (Position.position.y + Velocity.velocity.y * dt >= 512 - 60)
         {
             States.states.at("on_ground") = true;
         }
-
+        //*/
         Rect.update(Position.position.x, Position.position.y); // chek
     }
 }
@@ -153,13 +174,13 @@ void SYS::PhysicsSystem::friction(float dt, COM::RigidBody& Velocity)
     }
 }
 
-bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Transform& tr, const COM::RigidBody& rb, const COM::Hitbox& hb, float& groundY)
+bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& groundY)
 {
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
 
-    sf::Vector2f oldBL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y + hb.half.y) + sf::Vector2f(0,1) - sf::Vector2f(1,0);
-    sf::Vector2f newBL = sf::Vector2f(center.x - hb.half.x, center.y + hb.half.y) + sf::Vector2f(0, 1) - sf::Vector2f(1, 0);
+    sf::Vector2f oldBL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y + hb.half.y) + sf::Vector2f(0,1) + sf::Vector2f(1,0);
+    sf::Vector2f newBL = sf::Vector2f(center.x - hb.half.x, center.y + hb.half.y) + sf::Vector2f(0, 1) + sf::Vector2f(1, 0);
 
     int endY = level->getMapTileYAtPoint(newBL.y);
     int begY = std::fmax(level->getMapTileYAtPoint(oldBL.y) - 1, endY);
@@ -195,6 +216,120 @@ bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Transf
     }
 
 
+    return false;
+}
+
+bool SYS::PhysicsSystem::hasCeil(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& ceilY)
+{
+
+    sf::Vector2f oldCenter = oldPos + hb.half;
+    sf::Vector2f center = hb.center;
+
+    sf::Vector2f oldTL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y - hb.half.y) - sf::Vector2f(0, 1) + sf::Vector2f(1, 0);
+    sf::Vector2f newTL = sf::Vector2f(center.x - hb.half.x, center.y - hb.half.y) - sf::Vector2f(0, 1) + sf::Vector2f(1, 0);
+
+    int endY = level->getMapTileYAtPoint(newTL.y);
+    int begY = std::fmin(level->getMapTileYAtPoint(oldTL.y) + 1, endY);
+    int dist = std::fmax(std::abs(endY - begY), 1);
+
+    int TIX; //tile index x
+    for (int TIY = begY; TIY >= endY; --TIY)
+    {
+        sf::Vector2f TL = lerpvec2(newTL, oldTL, float(std::abs(endY - TIY)));
+        sf::Vector2f TR = sf::Vector2f((TL.x + hb.size.x) - 2.0f, TL.y);
+
+        for (sf::Vector2f chekedTile = TL; ; chekedTile.x += level->getTileSize().x)
+        {
+            chekedTile.x = std::fmin(chekedTile.x, TR.x);
+            TIX = level->getMapTileXAtPoint(chekedTile.x);
+            if (level->isObstacle(TIX, TIY))
+            {
+                if (rb.velocity.y < 0)
+                {
+                    ceilY = float(TIY * level->getTileSize().y + level->getTileSize().y);
+                }
+                return true;
+            }
+            if (chekedTile.x >= TR.x)
+                break;
+        }
+    }
+
+
+    return false;
+}
+
+bool SYS::PhysicsSystem::hasLW(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& wallL)
+{
+    sf::Vector2f oldCenter = oldPos + hb.half;
+    sf::Vector2f center = hb.center;
+
+    sf::Vector2f oldBL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y + hb.half.y) - sf::Vector2f(1, 0);
+    sf::Vector2f newBL = sf::Vector2f(center.x - hb.half.x, center.y + hb.half.y) - sf::Vector2f(1, 0);
+
+    int endX = level->getMapTileXAtPoint(newBL.x);
+    int begX = std::fmax(level->getMapTileXAtPoint(oldBL.x) - 1, endX);
+    int dist = std::fmax(std::abs(endX - begX), 1);
+
+    int TIY;
+    for (int TIX = begX; TIX >= endX; --TIX)
+    {
+        sf::Vector2f BL = lerpvec2(newBL, oldBL, (float)std::abs(endX - TIX));
+        sf::Vector2f TL = sf::Vector2f(BL.x, BL.y - hb.size.y);
+
+        for (sf::Vector2f chekedTile = BL; ; chekedTile.y -= level->getTileSize().x)
+        {
+            chekedTile.y = std::fmin(chekedTile.y, TL.y);
+            TIY = level->getMapTileYAtPoint(chekedTile.y);
+
+            if (level->isObstacle(TIX, TIY))
+            {
+                wallL = float(TIX * level->getTileSize().x + level->getTileSize().x);
+                return true;
+            }
+            if (chekedTile.y >= TL.y)
+            {
+                break;
+            }
+        }
+    }
+    return false;
+}
+
+bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& wallR)
+{
+    sf::Vector2f oldCenter = oldPos + hb.half;
+    sf::Vector2f center = hb.center;
+
+    sf::Vector2f oldBR = sf::Vector2f(oldCenter.x + hb.half.x, oldCenter.y + hb.half.y) + sf::Vector2f(1, 0);
+    sf::Vector2f newBR = sf::Vector2f(center.x + hb.half.x, center.y + hb.half.y) + sf::Vector2f(1, 0);
+
+    int endX = level->getMapTileXAtPoint(newBR.x);
+    int begX = std::fmin(level->getMapTileXAtPoint(oldBR.x) + 1, endX);
+    int dist = std::fmax(std::abs(endX - begX), 1);
+
+    int TIY;
+    for (int TIX = begX; TIX <= endX; ++TIX)
+    {
+        sf::Vector2f BR = lerpvec2(newBR, oldBR, (float)std::abs(endX - TIX));
+        sf::Vector2f TR = sf::Vector2f(BR.x, BR.y - hb.size.y);
+
+        for (sf::Vector2f chekedTile = BR; ; chekedTile.y -= level->getTileSize().y)
+        {
+            chekedTile.y = std::fmin(chekedTile.y, TR.y);
+            TIY = level->getMapTileYAtPoint(chekedTile.y);
+
+            if (level->isObstacle(TIX, TIY))
+            {
+                wallR = float(TIX * level->getTileSize().x);
+                return true;
+            }
+            if (chekedTile.y >= TR.y)
+            {
+                break;
+            }
+        }
+    }
     return false;
 }
 
