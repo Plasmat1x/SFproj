@@ -16,6 +16,7 @@ namespace SYS
     private:
         sf::Vector2f oldPos;
         sf::Vector2f oldVel;
+        float treshold = 2.0f;
 
         Level* level;
 
@@ -27,7 +28,7 @@ namespace SYS
 
         // test physics
         bool hasGround(const sf::Vector2f& oldPos,
-            const COM::Hitbox& hb, const COM::RigidBody& rb,
+            const COM::Hitbox& hb, const COM::RigidBody& rb, COM::States& st,
             float& groundY);
 
         bool hasCeil(const sf::Vector2f& oldPos,

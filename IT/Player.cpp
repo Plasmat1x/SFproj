@@ -31,7 +31,7 @@ void Player::Init(sf::Vector2f pos)
     gCoordinator.AddComponent<COM::View>(entity, { view });
     gCoordinator.AddComponent<COM::Hitbox>(entity, { 
         pos, 
-        sf::Vector2f(21,40), 
+        sf::Vector2f(16,40), 
         sf::Vector2f(0,0), 
         rect , 
         true });

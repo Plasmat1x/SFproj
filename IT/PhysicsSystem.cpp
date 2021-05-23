@@ -28,7 +28,7 @@ void SYS::PhysicsSystem::update(float dt)
         auto& States = gCoordinator.GetComponent<COM::States>(entity);
 
         //save prev frame data
-        oldPos = Position.position;
+        oldPos = Rect.position;
         oldVel = Velocity.velocity;
 
         /*/
@@ -68,12 +68,15 @@ void SYS::PhysicsSystem::update(float dt)
         float wallL = 0;
         float wallR = 0;
 
-
+        //check leftwall
         if (Velocity.velocity.x <= 0.0f
             && hasLW(oldPos, Rect, Velocity, wallL))
         {
-            Position.position.x = wallL - Rect.offset.x;
-            States.states.at("push_left") = true;
+            if (oldPos.x - Rect.half.x + Rect.offset.x >= wallL)
+            {
+                Position.position.x = wallL - Rect.offset.x;
+                States.states.at("push_left") = true;
+            }
             Velocity.velocity.x = 0.0f;
         }
         else
@@ -81,11 +84,15 @@ void SYS::PhysicsSystem::update(float dt)
             States.states.at("push_left") = false;
         }
 
+        //check right wall
         if (Velocity.velocity.x >= 0.0f
             && hasRW(oldPos, Rect, Velocity, wallR))
         {
-            Position.position.x = wallR - Rect.size.x - Rect.offset.x;
-            States.states.at("push_right") = true;
+            if (oldPos.x + Rect.half.x - Rect.offset.x <= wallR)
+            {
+                Position.position.x = wallR - Rect.size.x - Rect.offset.x;
+                States.states.at("push_right") = true;
+            }
             Velocity.velocity.x = 0.0f;
         }
         else
@@ -93,8 +100,9 @@ void SYS::PhysicsSystem::update(float dt)
             States.states.at("push_right") = false;
         }
 
+        //check ground
         if (Velocity.velocity.y >= 0.0f
-            && hasGround(oldPos, Rect, Velocity, groundY))
+            && hasGround(oldPos, Rect, Velocity, States, groundY))
         {
             Position.position.y = groundY - Rect.size.y - Rect.offset.y;
             States.states.at("on_ground") = true;
@@ -102,8 +110,10 @@ void SYS::PhysicsSystem::update(float dt)
         else
         {
             States.states.at("on_ground") = false;
+            States.states.at("on_platform") = false;
         }
 
+        //check ceil
         if (Velocity.velocity.y <= 0.0f
             && hasCeil(oldPos, Rect, Velocity, ceilY))
         {
@@ -119,16 +129,16 @@ void SYS::PhysicsSystem::update(float dt)
         //*//gravity
         if (!States.states.at("on_ground"))
         {
-            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 25.0f, 1000.0f);
+            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 22.0f, 1000.0f);
         }
-        else if(States.states.at("on_ground"))
+        else if (States.states.at("on_ground"))
         {
             Velocity.velocity.y = 0.0f;
             //friction(трение)
             friction(dt, Velocity);
-        }       
+        }
         //*/
-        
+
         //move entity x axis
         if (States.states.at("move_left"))
         {
@@ -138,6 +148,13 @@ void SYS::PhysicsSystem::update(float dt)
         {
             moveR(dt, Velocity);
         }
+        if (States.states.at("move_down"))
+        {
+            if (States.states.at("on_platform") && States.states.at("on_ground"))
+            {
+                Position.position.y += level->getTileSize().y * 1;
+            }
+        }
 
         /*/
         //collision with end map"512"
@@ -146,7 +163,7 @@ void SYS::PhysicsSystem::update(float dt)
             States.states.at("on_ground") = true;
         }
         //*/
-        Rect.update(Position.position.x, Position.position.y); // chek
+        //Rect.update(Position.position.x, Position.position.y); // chek
     }
 }
 
@@ -174,7 +191,7 @@ void SYS::PhysicsSystem::friction(float dt, COM::RigidBody& Velocity)
     }
 }
 
-bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& groundY)
+bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, COM::States& st, float& groundY)
 {
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
@@ -200,18 +217,34 @@ bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Hitbox
             
             if (level->isGround(TIX, TIY))
             {
+                //*/
+                st.states.at("on_platform") = false;
+                if (level->isPlatform(TIX, TIY))
+                {
+                    st.states.at("on_platform") = true;
+                    return true;
+                }
+                //*/
                 return true;
             }
-            else if (level->isObstacle(TIX, TIY))
+            /*/ dont work
+            else if (level->isPlatform(TIX, TIY) &&
+                std::abs(chekedTile.y + groundY) <= treshold + (oldPos.y + hb.position.y))
             {
-                return true;
+                st.states.at("on_platform") = true;
             }
-            else if (level->isPlatform(TIX, TIY))
-            {
-                return true;
-            }
+            //*/
             if (chekedTile.x >= BR.x)
+            {
+                /*/
+                if (st.states.at("on_platform"))
+                {
+                    return true;
+                }
+                //*/
                 break;
+            }
+                
         }
     }
 
@@ -258,28 +291,28 @@ bool SYS::PhysicsSystem::hasCeil(const sf::Vector2f& oldPos, const COM::Hitbox& 
 
     return false;
 }
-
+//*/
 bool SYS::PhysicsSystem::hasLW(const sf::Vector2f& oldPos, const COM::Hitbox& hb, const COM::RigidBody& rb, float& wallL)
 {
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
 
-    sf::Vector2f oldBL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y + hb.half.y) - sf::Vector2f(1, 0);
-    sf::Vector2f newBL = sf::Vector2f(center.x - hb.half.x, center.y + hb.half.y) - sf::Vector2f(1, 0);
+    sf::Vector2f oldTL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
+    sf::Vector2f newTL = sf::Vector2f(center.x - hb.half.x, center.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
 
-    int endX = level->getMapTileXAtPoint(newBL.x);
-    int begX = std::fmax(level->getMapTileXAtPoint(oldBL.x) - 1, endX);
+    int endX = level->getMapTileXAtPoint(newTL.x);
+    int begX = std::fmax(level->getMapTileXAtPoint(oldTL.x) - 1, endX);
     int dist = std::fmax(std::abs(endX - begX), 1);
 
     int TIY;
     for (int TIX = begX; TIX >= endX; --TIX)
     {
-        sf::Vector2f BL = lerpvec2(newBL, oldBL, (float)std::abs(endX - TIX));
-        sf::Vector2f TL = sf::Vector2f(BL.x, BL.y - hb.size.y);
+        sf::Vector2f TL = lerpvec2(newTL, oldTL, (float)std::abs(endX - TIX));
+        sf::Vector2f BL = sf::Vector2f(TL.x, TL.y + hb.size.y - 2);
 
-        for (sf::Vector2f chekedTile = BL; ; chekedTile.y -= level->getTileSize().x)
+        for (sf::Vector2f chekedTile = TL; ; chekedTile.y += level->getTileSize().y)
         {
-            chekedTile.y = std::fmin(chekedTile.y, TL.y);
+            chekedTile.y = std::fmin(chekedTile.y, BL.y);
             TIY = level->getMapTileYAtPoint(chekedTile.y);
 
             if (level->isObstacle(TIX, TIY))
@@ -287,7 +320,7 @@ bool SYS::PhysicsSystem::hasLW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
                 wallL = float(TIX * level->getTileSize().x + level->getTileSize().x);
                 return true;
             }
-            if (chekedTile.y >= TL.y)
+            if (chekedTile.y >= BL.y)
             {
                 break;
             }
@@ -301,22 +334,22 @@ bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
 
-    sf::Vector2f oldBR = sf::Vector2f(oldCenter.x + hb.half.x, oldCenter.y + hb.half.y) + sf::Vector2f(1, 0);
-    sf::Vector2f newBR = sf::Vector2f(center.x + hb.half.x, center.y + hb.half.y) + sf::Vector2f(1, 0);
+    sf::Vector2f oldTR = sf::Vector2f(oldCenter.x + hb.half.x, oldCenter.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
+    sf::Vector2f newTR = sf::Vector2f(center.x + hb.half.x, center.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
 
-    int endX = level->getMapTileXAtPoint(newBR.x);
-    int begX = std::fmin(level->getMapTileXAtPoint(oldBR.x) + 1, endX);
+    int endX = level->getMapTileXAtPoint(newTR.x);
+    int begX = std::fmin(level->getMapTileXAtPoint(oldTR.x) + 1, endX);
     int dist = std::fmax(std::abs(endX - begX), 1);
 
     int TIY;
     for (int TIX = begX; TIX <= endX; ++TIX)
     {
-        sf::Vector2f BR = lerpvec2(newBR, oldBR, (float)std::abs(endX - TIX));
-        sf::Vector2f TR = sf::Vector2f(BR.x, BR.y - hb.size.y);
+        sf::Vector2f TR = lerpvec2(newTR, oldTR, (float)std::abs(endX - TIX));
+        sf::Vector2f BR = sf::Vector2f(TR.x, TR.y + hb.size.y - 2);
 
-        for (sf::Vector2f chekedTile = BR; ; chekedTile.y -= level->getTileSize().y)
+        for (sf::Vector2f chekedTile = TR; ; chekedTile.y += level->getTileSize().y)
         {
-            chekedTile.y = std::fmin(chekedTile.y, TR.y);
+            chekedTile.y = std::fmin(chekedTile.y, BR.y);
             TIY = level->getMapTileYAtPoint(chekedTile.y);
 
             if (level->isObstacle(TIX, TIY))
@@ -324,7 +357,7 @@ bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
                 wallR = float(TIX * level->getTileSize().x);
                 return true;
             }
-            if (chekedTile.y >= TR.y)
+            if (chekedTile.y >= BR.y)
             {
                 break;
             }
@@ -332,6 +365,7 @@ bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     }
     return false;
 }
+//*/
 
 float SYS::PhysicsSystem::clamp01(float value)
 {
