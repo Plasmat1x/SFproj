@@ -82,6 +82,6 @@ private:
 
     Player player;
 
-    void updateUi(sf::Vector2f pos);
+    void updateUi(const float dt);
 };
 

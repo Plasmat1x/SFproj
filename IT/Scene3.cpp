@@ -50,14 +50,16 @@ void SceneThree::init(Engine* engine)
     sprite.setTextureRect(sf::IntRect(0, 0, 43, 60));
 
     texture_bg.loadFromFile("../res/img/map.png");
-    bg.loadFromFile("../res/img/bg.jpg");
-    bg.setRepeated(true);
+    bg.loadFromFile("../res/img/sky.png");
+    bg.setRepeated(false);
     sbg.setTexture(bg);
     sbg.setTextureRect(sf::IntRect(0, 32 * 10, 32 * 64, 32 * 26));
     sbg.setPosition(0, 0);
 
+    //level load
     level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(3, 3));
 
+    // setup multitile
     mto_index = _MTO_texture_indexes({
         sf::Vector2i(3,0),
         sf::Vector2i(4,0),
@@ -171,6 +173,7 @@ void SceneThree::init(Engine* engine)
         gCoordinator.SetSystemSignature<SYS::InputSystem>(signature);
     }
 
+    //debug rect for hitbox
     sf::RectangleShape rect;
     rect.setFillColor(sf::Color(0xff, 0xff, 0xff, 0x00));
     rect.setOutlineColor(sf::Color(0xff, 0xff, 0x88, 0xff));
@@ -178,6 +181,7 @@ void SceneThree::init(Engine* engine)
     rect.setSize(sf::Vector2f(43, 60));
     rect.setPosition(sf::Vector2f(64,64));
 
+    //create entity 
     enemy = gCoordinator.CreateEntity();
     gCoordinator.AddComponent<COM::Transform>(enemy, { sf::Vector2f(64,64), sf::Vector2f(1,1), 0 });
     gCoordinator.AddComponent<COM::RigidBody>(enemy, { sf::Vector2f(0,0), 250.0f, 100.0f });
@@ -209,14 +213,14 @@ void SceneThree::init(Engine* engine)
 
     anim.init(0.1f);
 
-
+    //player create
     player.SetView(&game_view);
     player.SetTexture(texture);
     player.SetAnimation(anim);
     player.SetAnimMgr(&anim_manager);
-    player.Init(sf::Vector2f(100, 100));
+    player.Init(sf::Vector2f(32 * 15, 32 * 16));
 
-    cur_ent = player.getEntity();
+    cur_ent = player.getEntity(); // for debug
 
 
     //parallax setup
@@ -241,7 +245,7 @@ void SceneThree::init(Engine* engine)
     parallax_layer bg_ground;
     bg_ground.parallax = 0.5f;
     bg_ground.texture = ResourceManager::getTexture("bg_far-grounds");
-    bg_ground.position = sf::Vector2f(level.getMapSize().x * 0.25f,level.getMapSize().y * 0.5f);
+    bg_ground.position = sf::Vector2f(level.getMapSize().x * 0.1f,level.getMapSize().y * 0.5f);
 
     back_ground.add_layer(bg_sky, true, false);
     back_ground.add_layer(bg_clouds, true, false);
@@ -337,6 +341,59 @@ void SceneThree::update(const float dt)
 
     view_pos = sf::Vector2f(game_view.getCenter().x, game_view.getCenter().y);
 
+    updateUi(dt);
+}
+
+void SceneThree::render(const float dt)
+{
+    //mapdraw
+    this->engine->window.setView(this->game_view);
+    this->engine->window.clear(sf::Color(161,242,236,255));
+
+    //parallax BG
+    back_ground.setTarget(gCoordinator.GetComponent<COM::Transform>(player.getEntity()).position);
+    this->engine->window.draw(back_ground);
+
+    this->engine->window.setView(this->game_view);
+    for (auto i : sprite_bg)
+    {
+        this->engine->window.draw(i);
+    }
+
+    this->engine->window.draw(level);
+
+    //render scene obj
+    renderSystem->draw(this->engine->window);
+
+    //render gui
+    this->engine->window.setView(this->hud_view);
+    this->engine->window.draw(mtocell1);
+    this->engine->window.draw(mtocell2);
+    this->engine->window.draw(mtocell3);
+    this->engine->window.draw(mtocell4);
+    //debug
+    if (_debugui_)
+    {
+        sfd::drawGrid(this->engine->window, 16, 9, sf::Color(0xff, 0x88, 0x88, 0xff));
+    }
+
+
+    this->engine->window.setView(game_view);
+    if (_debugtile_) {
+        sfd::drawGrid(this->engine->window, level.getTileSize(), sf::View(sf::FloatRect(-5000, -5000, 10000, 10000)), sf::Color(0xff, 0xff, 0xff, 0xff));
+    }
+
+    ImGui::SFML::Render(this->engine->window);
+
+    return;
+}
+
+void SceneThree::cleanup()
+{
+}
+
+void SceneThree::updateUi(const float dt)
+{
     //imgui creation
 
     if (this->engine->_debug_)
@@ -349,13 +406,13 @@ void SceneThree::update(const float dt)
         ImGui::Checkbox("Tile grid", &_debugtile_);
         ImGui::Checkbox("COM test", &check_comt);
         ImGui::Checkbox("ECS test", &check_ecs);
-        if (ImGui::Checkbox("Hitbox view", &check_hitb)) 
+        if (ImGui::Checkbox("Hitbox view", &check_hitb))
         {
             gCoordinator.GetComponent<COM::Hitbox>(player.getEntity()).draw = check_hitb;
             gCoordinator.GetComponent<COM::Hitbox>(enemy).draw = check_hitb;
         }
 
-        if(ImGui::Button("Change entity"))
+        if (ImGui::Button("Change entity"))
         {
             eop = !eop;
             if (eop)
@@ -493,7 +550,7 @@ void SceneThree::update(const float dt)
             for (auto& [com, val] : gCoordinator.GetComponent<COM::States>(cur_ent).states)
             {
                 std::string name = "  COM States." + com + ": %d";
-                ImGui::Text(name.c_str(), val); 
+                ImGui::Text(name.c_str(), val);
                 ImGui::SameLine();
                 if (ImGui::Button(com.c_str()))
                 {
@@ -515,63 +572,8 @@ void SceneThree::update(const float dt)
         if (ImGui::CollapsingHeader("Physics:"))
         {
             ImGui::Text("Tile X at point: %d", level.getMapTileXAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.x));
-            ImGui::Text("Tile Y at point: %d", level.getMapTileYAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.y));       
+            ImGui::Text("Tile Y at point: %d", level.getMapTileYAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.y));
         }
         ImGui::End();
     }
-}
-
-void SceneThree::render(const float dt)
-{
-    //mapdraw
-    this->engine->window.setView(this->game_view);
-    this->engine->window.clear(sf::Color::Cyan);
-
-    //parallax BG
-    //this->engine->window.draw(sbg);
-    back_ground.setTarget(gCoordinator.GetComponent<COM::Transform>(player.getEntity()).position);
-    //back_ground.setTarget(level.getMapSize() * 0.5f);
-    this->engine->window.draw(back_ground);
-
-    this->engine->window.setView(this->game_view);
-    for (auto i : sprite_bg)
-    {
-        this->engine->window.draw(i);
-    }
-
-    this->engine->window.draw(level);
-
-    //render scene obj
-    renderSystem->draw(this->engine->window);
-
-    //render gui
-    this->engine->window.setView(this->hud_view);
-    this->engine->window.draw(mtocell1);
-    this->engine->window.draw(mtocell2);
-    this->engine->window.draw(mtocell3);
-    this->engine->window.draw(mtocell4);
-    //debug
-    if (_debugui_)
-    {
-        sfd::drawGrid(this->engine->window, 16, 9, sf::Color(0xff, 0x88, 0x88, 0xff));
-    }
-
-
-    this->engine->window.setView(game_view);
-    if (_debugtile_) {
-        sfd::drawGrid(this->engine->window, level.getTileSize(), sf::View(sf::FloatRect(-5000, -5000, 10000, 10000)), sf::Color(0xff, 0xff, 0xff, 0xff));
-    }
-
-    ImGui::SFML::Render(this->engine->window);
-
-    return;
-}
-
-void SceneThree::cleanup()
-{
-}
-
-void SceneThree::updateUi(sf::Vector2f pos)
-{
-    
 }
