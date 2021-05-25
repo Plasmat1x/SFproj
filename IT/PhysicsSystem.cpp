@@ -77,7 +77,7 @@ void SYS::PhysicsSystem::update(float dt)
                 Position.position.x = wallL - Rect.offset.x;
                 States.states.at("push_left") = true;
             }
-            Velocity.velocity.x = 0.0f;
+            Velocity.velocity.x = std::fmax(Velocity.velocity.x, 0.0f);
         }
         else
         {
@@ -93,7 +93,7 @@ void SYS::PhysicsSystem::update(float dt)
                 Position.position.x = wallR - Rect.size.x - Rect.offset.x;
                 States.states.at("push_right") = true;
             }
-            Velocity.velocity.x = 0.0f;
+            Velocity.velocity.x = std::fmin(Velocity.velocity.x ,0.0f);
         }
         else
         {
@@ -129,7 +129,7 @@ void SYS::PhysicsSystem::update(float dt)
         //*//gravity
         if (!States.states.at("on_ground"))
         {
-            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 22.0f, 1000.0f);
+            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 23.0f, 1000.0f);
         }
         else if (States.states.at("on_ground"))
         {
@@ -217,31 +217,19 @@ bool SYS::PhysicsSystem::hasGround(const sf::Vector2f& oldPos, const COM::Hitbox
             
             if (level->isGround(TIX, TIY))
             {
-                //*/
+
                 st.states.at("on_platform") = false;
                 if (level->isPlatform(TIX, TIY))
                 {
                     st.states.at("on_platform") = true;
                     return true;
                 }
-                //*/
+
                 return true;
             }
-            /*/ dont work
-            else if (level->isPlatform(TIX, TIY) &&
-                std::abs(chekedTile.y + groundY) <= treshold + (oldPos.y + hb.position.y))
-            {
-                st.states.at("on_platform") = true;
-            }
-            //*/
+
             if (chekedTile.x >= BR.x)
             {
-                /*/
-                if (st.states.at("on_platform"))
-                {
-                    return true;
-                }
-                //*/
                 break;
             }
                 
@@ -297,8 +285,8 @@ bool SYS::PhysicsSystem::hasLW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
 
-    sf::Vector2f oldTL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
-    sf::Vector2f newTL = sf::Vector2f(center.x - hb.half.x, center.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
+    sf::Vector2f oldTL = sf::Vector2f(oldCenter.x - hb.half.x, oldCenter.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 5);
+    sf::Vector2f newTL = sf::Vector2f(center.x - hb.half.x, center.y - hb.half.y) - sf::Vector2f(1, 0) + sf::Vector2f(0, 5);
 
     int endX = level->getMapTileXAtPoint(newTL.x);
     int begX = std::fmax(level->getMapTileXAtPoint(oldTL.x) - 1, endX);
@@ -308,7 +296,7 @@ bool SYS::PhysicsSystem::hasLW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     for (int TIX = begX; TIX >= endX; --TIX)
     {
         sf::Vector2f TL = lerpvec2(newTL, oldTL, (float)std::abs(endX - TIX));
-        sf::Vector2f BL = sf::Vector2f(TL.x, TL.y + hb.size.y - 2);
+        sf::Vector2f BL = sf::Vector2f(TL.x, TL.y + hb.size.y - 10);
 
         for (sf::Vector2f chekedTile = TL; ; chekedTile.y += level->getTileSize().y)
         {
@@ -334,8 +322,8 @@ bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     sf::Vector2f oldCenter = oldPos + hb.half;
     sf::Vector2f center = hb.center;
 
-    sf::Vector2f oldTR = sf::Vector2f(oldCenter.x + hb.half.x, oldCenter.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
-    sf::Vector2f newTR = sf::Vector2f(center.x + hb.half.x, center.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 1);
+    sf::Vector2f oldTR = sf::Vector2f(oldCenter.x + hb.half.x, oldCenter.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 5);
+    sf::Vector2f newTR = sf::Vector2f(center.x + hb.half.x, center.y - hb.half.y) + sf::Vector2f(1, 0) + sf::Vector2f(0, 5);
 
     int endX = level->getMapTileXAtPoint(newTR.x);
     int begX = std::fmin(level->getMapTileXAtPoint(oldTR.x) + 1, endX);
@@ -345,7 +333,7 @@ bool SYS::PhysicsSystem::hasRW(const sf::Vector2f& oldPos, const COM::Hitbox& hb
     for (int TIX = begX; TIX <= endX; ++TIX)
     {
         sf::Vector2f TR = lerpvec2(newTR, oldTR, (float)std::abs(endX - TIX));
-        sf::Vector2f BR = sf::Vector2f(TR.x, TR.y + hb.size.y - 2);
+        sf::Vector2f BR = sf::Vector2f(TR.x, TR.y + hb.size.y - 10);
 
         for (sf::Vector2f chekedTile = TR; ; chekedTile.y += level->getTileSize().y)
         {

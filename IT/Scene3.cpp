@@ -47,7 +47,7 @@ void SceneThree::init(Engine* engine)
     bg.loadFromFile("../res/img/bg.jpg");
     bg.setRepeated(true);
     sbg.setTexture(bg);
-    sbg.setTextureRect(sf::IntRect(0, 0, 32 * 64, 32 * 16));
+    sbg.setTextureRect(sf::IntRect(0, 32 * 10, 32 * 64, 32 * 26));
     sbg.setPosition(0, 0);
 
 
