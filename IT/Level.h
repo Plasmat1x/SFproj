@@ -49,6 +49,7 @@ public:
     sf::Vector2f getMapTilePosition(int tIndexX, int tIndexY);
     sf::Vector2f getTileSize();
     sf::Vector3f getMapPos();
+    sf::Vector2f getMapSize();
 
     TileType getTile(int x, int y);
     bool isObstacle(int x, int y);

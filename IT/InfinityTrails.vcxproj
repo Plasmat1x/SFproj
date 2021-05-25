@@ -53,6 +53,7 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="MetaSprite.h" />
     <ClInclude Include="MultiTileObject.h" />
+    <ClInclude Include="ParallaxBackground.h" />
     <ClInclude Include="PhysicsSystem.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="RenderSystem.h" />
@@ -85,6 +86,7 @@
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MetaSprite.cpp" />
     <ClCompile Include="MultiTileObject.cpp" />
+    <ClCompile Include="ParallaxBackground.cpp" />
     <ClCompile Include="PhysicsSystem.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="RenderSystem.cpp" />

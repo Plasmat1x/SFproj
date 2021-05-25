@@ -14,6 +14,7 @@
 #include "Types.h"
 #include "Animation.h"
 #include "Player.h"
+#include "ParallaxBackground.h"
 
 class SceneThree :
     public Scene
@@ -57,6 +58,7 @@ private:
     sf::Vector2f view_pos;
 
     Level level;
+    ParallaxBackground back_ground;
 
     MultiTileObject mtocell1;
     MultiTileObject mtocell2;

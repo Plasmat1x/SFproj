@@ -179,6 +179,9 @@
     <ClInclude Include="AnimationSystem.h">
       <Filter>SYSTEMS</Filter>
     </ClInclude>
+    <ClInclude Include="ParallaxBackground.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\include\imgui\imgui.cpp">
@@ -258,6 +261,9 @@
     </ClCompile>
     <ClCompile Include="AnimationSystem.cpp">
       <Filter>SYSTEMS</Filter>
+    </ClCompile>
+    <ClCompile Include="ParallaxBackground.cpp">
+      <Filter>Исходные файлы</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

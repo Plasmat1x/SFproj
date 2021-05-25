@@ -29,7 +29,7 @@ void SceneThree::init(Engine* engine)
     this->game_view = engine->view;
     this->hud_view = engine->view;
 
-    this->game_view.zoom(0.5f);
+    //this->game_view.zoom(0.5f);
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
@@ -38,6 +38,12 @@ void SceneThree::init(Engine* engine)
     this->view->setCenter(pos);
 
     this->hud_view.setCenter(pos);
+
+    ResourceManager::loadTexture("tile_set", "map.png");
+    ResourceManager::loadTexture("bg_sky", "sky.png");
+    ResourceManager::loadTexture("bg_clouds", "clouds.png");
+    ResourceManager::loadTexture("bg_sea", "sea.png");
+    ResourceManager::loadTexture("bg_far-grounds", "far-grounds.png");
 
     texture.loadFromFile("../res/img/elf.png");
     sprite.setTexture(texture);
@@ -49,7 +55,6 @@ void SceneThree::init(Engine* engine)
     sbg.setTexture(bg);
     sbg.setTextureRect(sf::IntRect(0, 32 * 10, 32 * 64, 32 * 26));
     sbg.setPosition(0, 0);
-
 
     level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(3, 3));
 
@@ -212,6 +217,32 @@ void SceneThree::init(Engine* engine)
     player.Init(sf::Vector2f(100, 100));
 
     cur_ent = player.getEntity();
+
+    parallax_layer bg_sky;
+    bg_sky.width = level.getMapSize().x;
+    bg_sky.parallax = 1.6f;
+    bg_sky.texture = ResourceManager::getTexture("bg_sky");
+
+    parallax_layer bg_clouds;
+    bg_clouds.width = level.getMapSize().x;
+    bg_clouds.parallax = 0.8f;
+    bg_clouds.texture = ResourceManager::getTexture("bg_clouds");
+
+    parallax_layer bg_sea;
+    bg_sea.width = level.getMapSize().x;
+    bg_sea.parallax = 0.4f;
+    bg_sea.texture = ResourceManager::getTexture("bg_sea");
+
+    parallax_layer bg_ground;
+    bg_ground.width = level.getMapSize().x;
+    bg_ground.parallax = 0.1f;
+    bg_ground.texture = ResourceManager::getTexture("bg_far-grounds");
+
+    back_ground.add_layer(bg_sky, true, false);
+    back_ground.add_layer(bg_clouds, true, false);
+    back_ground.add_layer(bg_sea, true, true);
+    back_ground.add_layer(bg_ground, false, true);
+
 }
 
 void SceneThree::processInput()
@@ -491,8 +522,12 @@ void SceneThree::render(const float dt)
     this->engine->window.setView(this->game_view);
     this->engine->window.clear(sf::Color::Cyan);
 
-    this->engine->window.draw(sbg);
+    //this->engine->window.draw(sbg);
+    back_ground.setTarget(gCoordinator.GetComponent<COM::Transform>(player.getEntity()).position);
+    //back_ground.setTarget(level.getMapSize() * 0.5f);
+    this->engine->window.draw(back_ground);
 
+    this->engine->window.setView(this->game_view);
     for (auto i : sprite_bg)
     {
         this->engine->window.draw(i);

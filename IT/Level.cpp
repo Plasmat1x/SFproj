@@ -190,6 +190,11 @@ sf::Vector3f Level::getMapPos()
     return mapPosition;
 }
 
+sf::Vector2f Level::getMapSize()
+{
+    return sf::Vector2f(mapTiles.x * tileSize.x, mapTiles.y * tileSize.y);
+}
+
 TileType Level::getTile(int x, int y)
 {
     if (x < 0 || x >= mapTiles.x
