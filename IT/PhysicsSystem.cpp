@@ -156,14 +156,7 @@ void SYS::PhysicsSystem::update(float dt)
             }
         }
 
-        /*/
-        //collision with end map"512"
-        if (Position.position.y + Velocity.velocity.y * dt >= 512 - 60)
-        {
-            States.states.at("on_ground") = true;
-        }
-        //*/
-        //Rect.update(Position.position.x, Position.position.y); // chek
+        Rect.update(Position.position.x, Position.position.y); // chek
     }
 }
 

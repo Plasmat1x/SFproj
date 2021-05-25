@@ -35,6 +35,8 @@ private:
 
     sf::Texture* texture;
 
+    bool physic_layer = true;
+
 public:
     Level(std::string path, sf::Texture* texture, sf::Vector2i arr_size)
     {

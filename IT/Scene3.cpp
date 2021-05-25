@@ -57,7 +57,7 @@ void SceneThree::init(Engine* engine)
     sbg.setPosition(0, 0);
 
     //level load
-    level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(3, 3));
+    level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(10, 10));
 
     // setup multitile
     mto_index = _MTO_texture_indexes({

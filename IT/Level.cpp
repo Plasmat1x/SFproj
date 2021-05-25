@@ -73,45 +73,23 @@ void Level::init(std::string path, sf::Texture* texture, sf::Vector2i arr_size)
 
             if (subRectToUse >= 0)
             {
-                //Костыль
-                if (tileGID == 1)
+                if (physic_layer)
                 {
-                    tiles[y][x] = (TileType::PLATFORM);
+                    //Костыль
+                    if (tileGID == 1)
+                    {
+                        tiles[y][x] = (TileType::BLOCK);
+                    }
+                    else if (tileGID == 2)
+                    {
+                        tiles[y][x] = (TileType::PLATFORM);
+                    }
+                    else
+                    {
+                        tiles[y][x] = (TileType::EMPTY);
+                    }
+                    //конец костыля
                 }
-                else if (tileGID == 2)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 3)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 4)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 5)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 6)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 7)
-                {
-                    tiles[y][x] = (TileType::BLOCK);
-                }
-                else if (tileGID == 8)
-                {
-                    tiles[y][x] = (TileType::EMPTY);
-                }
-                else if (tileGID == 9)
-                {
-                    tiles[y][x] = (TileType::EMPTY);
-                }
-                //конец костыля
-
                 sf::Sprite sprite;
                 sprite.setTexture(*texture);
                 sprite.setTextureRect(subRects[subRectToUse]);
@@ -135,6 +113,7 @@ void Level::init(std::string path, sf::Texture* texture, sf::Vector2i arr_size)
         }
         layers.push_back(layer);
         elayer = elayer->NextSiblingElement("layer");
+        physic_layer = false;
     }
 }
 
