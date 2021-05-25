@@ -29,7 +29,7 @@ void SceneThree::init(Engine* engine)
     this->game_view = engine->view;
     this->hud_view = engine->view;
 
-    //this->game_view.zoom(0.5f);
+    this->game_view.zoom(0.5f);
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
@@ -218,25 +218,30 @@ void SceneThree::init(Engine* engine)
 
     cur_ent = player.getEntity();
 
+
+    //parallax setup
     parallax_layer bg_sky;
-    bg_sky.width = level.getMapSize().x;
-    bg_sky.parallax = 1.6f;
+    bg_sky.width = level.getMapSize().x * 2;
+    bg_sky.parallax = 0.2f;
     bg_sky.texture = ResourceManager::getTexture("bg_sky");
+    bg_sky.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_clouds;
-    bg_clouds.width = level.getMapSize().x;
-    bg_clouds.parallax = 0.8f;
+    bg_clouds.width = level.getMapSize().x * 2;
+    bg_clouds.parallax = 0.5f;
     bg_clouds.texture = ResourceManager::getTexture("bg_clouds");
+    bg_clouds.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_sea;
-    bg_sea.width = level.getMapSize().x;
-    bg_sea.parallax = 0.4f;
+    bg_sea.width = level.getMapSize().x * 2;
+    bg_sea.parallax = 0.2f;
     bg_sea.texture = ResourceManager::getTexture("bg_sea");
+    bg_sea.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_ground;
-    bg_ground.width = level.getMapSize().x;
-    bg_ground.parallax = 0.1f;
+    bg_ground.parallax = 0.5f;
     bg_ground.texture = ResourceManager::getTexture("bg_far-grounds");
+    bg_ground.position = sf::Vector2f(level.getMapSize().x * 0.25f,level.getMapSize().y * 0.5f);
 
     back_ground.add_layer(bg_sky, true, false);
     back_ground.add_layer(bg_clouds, true, false);
@@ -522,6 +527,7 @@ void SceneThree::render(const float dt)
     this->engine->window.setView(this->game_view);
     this->engine->window.clear(sf::Color::Cyan);
 
+    //parallax BG
     //this->engine->window.draw(sbg);
     back_ground.setTarget(gCoordinator.GetComponent<COM::Transform>(player.getEntity()).position);
     //back_ground.setTarget(level.getMapSize() * 0.5f);

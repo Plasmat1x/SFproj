@@ -15,7 +15,7 @@ void ParallaxBackground::add_layer(parallax_layer pBackground, bool tiled = fals
    }
    if (bottom)
    {
-       pBackground.position.y = maxSize.y - pBackground.size.y;
+       pBackground.position.y += maxSize.y - pBackground.size.y;
    }
    pBackground.sprite.setTexture(*pBackground.texture);
    pBackground.sprite.setPosition(pBackground.position);
@@ -38,6 +38,7 @@ void ParallaxBackground::draw(sf::RenderTarget& target, sf::RenderStates states)
     for (auto bg : layers)
     {
         sf::View v;
+        v.zoom(0.5f);
         v.setCenter(bg.parallax * current_target.x, current_target.y);
         target.setView(v);
         target.draw(bg.sprite);
