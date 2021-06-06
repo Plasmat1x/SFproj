@@ -21,7 +21,6 @@ SceneThree::SceneThree(Engine* engine)
 
 void SceneThree::init(Engine* engine)
 {
-    x = 0; x_vel = 0; x_acs = 2;
 
     this->engine = engine;
     this->event = &engine->events;
@@ -218,7 +217,7 @@ void SceneThree::init(Engine* engine)
     player.SetTexture(texture);
     player.SetAnimation(anim);
     player.SetAnimMgr(&anim_manager);
-    player.Init(sf::Vector2f(32 * 15, 32 * 16));
+    player.Init(sf::Vector2f(32 * 38, 32 * 29));
 
     cur_ent = player.getEntity(); // for debug
 
@@ -226,24 +225,24 @@ void SceneThree::init(Engine* engine)
     //parallax setup
     parallax_layer bg_sky;
     bg_sky.width = level.getMapSize().x * 2;
-    bg_sky.parallax = 0.2f;
+    bg_sky.parallax = 0.1f;
     bg_sky.texture = ResourceManager::getTexture("bg_sky");
     bg_sky.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_clouds;
     bg_clouds.width = level.getMapSize().x * 2;
-    bg_clouds.parallax = 0.5f;
+    bg_clouds.parallax = 0.2f;
     bg_clouds.texture = ResourceManager::getTexture("bg_clouds");
     bg_clouds.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_sea;
     bg_sea.width = level.getMapSize().x * 2;
-    bg_sea.parallax = 0.2f;
+    bg_sea.parallax = 0.3f;
     bg_sea.texture = ResourceManager::getTexture("bg_sea");
     bg_sea.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_ground;
-    bg_ground.parallax = 0.5f;
+    bg_ground.parallax = 0.4f;
     bg_ground.texture = ResourceManager::getTexture("bg_far-grounds");
     bg_ground.position = sf::Vector2f(level.getMapSize().x * 0.1f,level.getMapSize().y * 0.5f);
 
@@ -337,10 +336,10 @@ void SceneThree::update(const float dt)
 
     player.update(dt);
 
-    ImGui::SFML::Update(this->engine->window, this->engine->clock.restart());
-
     view_pos = sf::Vector2f(game_view.getCenter().x, game_view.getCenter().y);
 
+    //update imgui ui
+    ImGui::SFML::Update(this->engine->window, this->engine->clock.restart());
     updateUi(dt);
 }
 
@@ -575,5 +574,13 @@ void SceneThree::updateUi(const float dt)
             ImGui::Text("Tile Y at point: %d", level.getMapTileYAtPoint(gCoordinator.GetComponent<COM::Hitbox>(cur_ent).BL.y));
         }
         ImGui::End();
+    }
+    if (check_sum_info)
+    {
+        ImGui::Begin("Info");
+        ImGui::Text("delta time: %f", dt);
+        ImGui::Text("time: %f", time);
+        ImGui::End();
+        time += dt;
     }
 }

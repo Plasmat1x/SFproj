@@ -90,28 +90,22 @@ void Engine::cleanup()
 
 void Engine::core()
 {
-    float el_t = 0;
+    sf::Time time = sf::Time::Zero;
+    sf::Time tick = sf::seconds(1.f / 60.f);
     while (window.isOpen())
     {
-        sf::Time eleapsed = clock.restart();
-        float dt = eleapsed.asSeconds();
-        el_t += dt;
-        float tick = dt * 0.60f;
+        time = clock.restart();
+        float dt = tick.asSeconds();
         if (_peek() == nullptr) continue;
 
-        //processInput();
-        //update(dt);
-        while (el_t > tick)
+        while (time > tick)
         {
             processInput();
             update(dt);
             render(dt);
-            el_t = 0;
         }
-
-        //render(dt);
+        time += clock.restart();
     }
-
     ImGui::SFML::Shutdown();
 }
 

@@ -129,7 +129,7 @@ void SYS::PhysicsSystem::update(float dt)
         //*//gravity
         if (!States.states.at("on_ground"))
         {
-            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 23.0f, 1000.0f);
+            Velocity.velocity.y = std::fmin(Velocity.velocity.y + 46.0f, 1000.0f);
         }
         else if (States.states.at("on_ground"))
         {

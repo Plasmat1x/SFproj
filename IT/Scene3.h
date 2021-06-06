@@ -43,7 +43,9 @@ private:
     bool check_comt = true;
     bool check_hitb = true;
     bool check_ecs = false;
+    bool check_sum_info = true;
     //
+    float time = 0;
 
     sf::View game_view;
     sf::View hud_view;
@@ -75,10 +77,6 @@ private:
 
     AnimationManager anim_manager;
     Animation anim;
-
-    float x;
-    float x_vel;
-    float x_acs;
 
     Player player;
 
