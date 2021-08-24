@@ -272,6 +272,7 @@
     <None Include="..\res\map\test_level.tmx">
       <Filter>Файлы ресурсов</Filter>
     </None>
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Config.xml">

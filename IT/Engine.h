@@ -58,7 +58,7 @@ public:
     void update(const float dt);
     void render(const float dt);
 
-    //scenes
+    //scenes mgr
     void _change(Scene* scene);
     void _pop();
     void _push(Scene* scene);
