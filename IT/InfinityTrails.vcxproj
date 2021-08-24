@@ -101,7 +101,6 @@
     <None Include="..\.gitignore" />
     <None Include="..\res\map\test_level.tmx" />
     <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <ItemGroup>
     <Xml Include="Config.xml" />

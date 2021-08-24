@@ -92,7 +92,6 @@ void Engine::core()
 {
     sf::Time time = sf::Time::Zero;
     sf::Time tick = sf::seconds(1.f / 60.f);
-
     while (window.isOpen())
     {
         time = clock.restart();
