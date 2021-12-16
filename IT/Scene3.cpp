@@ -405,6 +405,7 @@ void SceneThree::updateUi(const float dt)
         ImGui::Checkbox("Tile grid", &_debugtile_);
         ImGui::Checkbox("COM test", &check_comt);
         ImGui::Checkbox("ECS test", &check_ecs);
+        ImGui::Checkbox("Timings", &check_sum_info);
         if (ImGui::Checkbox("Hitbox view", &check_hitb))
         {
             gCoordinator.GetComponent<COM::Hitbox>(player.getEntity()).draw = check_hitb;
