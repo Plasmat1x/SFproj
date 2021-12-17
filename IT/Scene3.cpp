@@ -2,6 +2,7 @@
 #include <cmath>
 #include "ResourceManager.h"
 #include "Scene3.h"
+#include "Scene2.h"
 #include "dGrid.h"
 
 #include "COM_LIB.h"
@@ -69,6 +70,17 @@ void SceneThree::init(Engine* engine)
         sf::Vector2i(3,2),
         sf::Vector2i(4,2),
         sf::Vector2i(5,2) });
+
+    mto_index_two = _MTO_texture_indexes({
+    sf::Vector2i(0,0),
+    sf::Vector2i(1,0),
+    sf::Vector2i(2,0),
+    sf::Vector2i(0,1),
+    sf::Vector2i(1,1),
+    sf::Vector2i(2,1),
+    sf::Vector2i(0,2),
+    sf::Vector2i(1,2),
+    sf::Vector2i(2,2) });
 
     tex_info = {
         ResourceManager::getTexture("test_ui"),                     // texture
@@ -251,6 +263,87 @@ void SceneThree::init(Engine* engine)
     back_ground.add_layer(bg_sea, true, true);
     back_ground.add_layer(bg_ground, false, true);
 
+
+    mto_index = _MTO_texture_indexes({
+        sf::Vector2i(3,0),
+        sf::Vector2i(4,0),
+        sf::Vector2i(5,0),
+        sf::Vector2i(3,1),
+        sf::Vector2i(4,1),
+        sf::Vector2i(5,1),
+        sf::Vector2i(3,2),
+        sf::Vector2i(4,2),
+        sf::Vector2i(5,2) });
+
+    mto_index_two = _MTO_texture_indexes({
+        sf::Vector2i(0,0),
+        sf::Vector2i(1,0),
+        sf::Vector2i(2,0),
+        sf::Vector2i(0,1),
+        sf::Vector2i(1,1),
+        sf::Vector2i(2,1),
+        sf::Vector2i(0,2),
+        sf::Vector2i(1,2),
+        sf::Vector2i(2,2) });
+
+    tex_info = {
+        ResourceManager::getTexture("test_ui"),                     // texture
+        sf::Vector2f(8.0f,8.0f),                                    // element size
+        sf::Vector2f(1.0f,1.0f),                                    // padding
+        sf::Vector2f(1.0f,1.0f),                                    // offset
+        sf::Vector2i(6,3)                                           // texture array size
+    };
+
+    spr_info = {
+        sf::Vector2f(pos.x, pos.y * 1.3f),                          // position
+        sf::Vector2f(200.0f, 200),                                  // size
+        sf::Vector2f(1.0f, 1.0f),                                   // scale
+        sf::Vector2f(100.0f, 100.0f),                               // origin
+        sf::Vector2f(1.0f, 1.0f),                                   // add_scale
+    };
+
+    spr_info_two = {
+        sf::Vector2f(400, 300.0f),                                  // position
+        sf::Vector2f(128.0f, 32.0f),                                // size
+        sf::Vector2f(1.0f, 1.0f),                                   // scale
+        sf::Vector2f(64.0f, 16.0f),                                 // origin
+        sf::Vector2f(1.0f, 1.0f),                                   // add_scale
+    };
+
+    mto_sprite = MultiTileObject(
+        &tex_info,
+        &spr_info,
+        &mto_index
+    );
+
+    mto_sprite_two = MultiTileObject(
+        &tex_info,
+        &spr_info_two,
+        &mto_index_two
+    );
+
+    //gui setup
+    this->guiSys.emplace("menu", Gui(
+        sf::Vector2f(128, 32), 14,
+        1, 8, false, true, *ResourceManager::getGuiStyle("button_mto"),
+        { std::make_pair("Continue", "game_state"),
+        std::make_pair("Options", "options_state"),
+        std::make_pair("Exit","exit_state") },
+        true,
+        mto_sprite_two));
+    this->guiSys.at("menu").setOrigin(this->guiSys.at("menu").gui_size.x * 0.5f,
+        this->guiSys.at("menu").gui_size.y * 0.5f);
+    this->guiSys.at("menu").setPosition(pos.x, pos.y * 1.3f);
+    this->guiSys.at("menu").show();
+
+    this->guiSys.emplace("text", Gui(
+        sf::Vector2f(192 * 3, 32 * 3), 100,
+        1, 5, false, true, *ResourceManager::getGuiStyle("header"),
+        { std::make_pair("Pause", "text") }));
+    this->guiSys.at("text").setPosition(view->getCenter().x, view->getCenter().y * 0.7f);
+    this->guiSys.at("text").setOrigin(192 * 3 * 0.5f, 32 * 3 * 0.5f);
+    this->guiSys.at("text").show();
+
 }
 
 void SceneThree::processInput()
@@ -287,8 +380,9 @@ void SceneThree::processInput()
         {
             if (event->key.code == sf::Keyboard::Escape)
             {
-                this->engine->_pop();
-                return;
+                //this->engine->_pop();
+                //return;
+                _pause = !_pause;
             }
             break;
         }
@@ -304,7 +398,24 @@ void SceneThree::processInput()
         {
             if (event->mouseButton.button == sf::Mouse::Left)
             {
+                for (auto const& [key, val] : guiSys)
+                {
+                    std::string msg = this->guiSys.at(key).activate(mousePos);
 
+                    if (msg == "game_state")
+                    {
+                        _pause = false;
+                    }
+                    if (msg == "options_state")
+                    {
+                        this->engine->_push(new SceneTwo(this->engine));
+                    }
+                    if (msg == "exit_state")
+                    {
+                        this->engine->_pop();
+                        return;
+                    }
+                }
             }
             break;
         }
@@ -312,7 +423,7 @@ void SceneThree::processInput()
         {
             if (event->mouseButton.button == sf::Mouse::Left)
             {
-
+   
             }
             break;
         }
@@ -382,6 +493,15 @@ void SceneThree::render(const float dt)
         sfd::drawGrid(this->engine->window, level.getTileSize(), sf::View(sf::FloatRect(-5000, -5000, 10000, 10000)), sf::Color(0xff, 0xff, 0xff, 0xff));
     }
 
+    //render gui
+    if (_pause)
+    {
+        this->engine->window.setView(this->hud_view);
+        for (auto gui : this->guiSys)
+        {
+            this->engine->window.draw(gui.second);
+        }
+    }
     ImGui::SFML::Render(this->engine->window);
 
     return;

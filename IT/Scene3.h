@@ -48,6 +48,8 @@ private:
     float time = 0;
     float view_zoom_factor = 0.5f;
 
+    bool _pause = false;
+
     sf::View game_view;
     sf::View hud_view;
 
@@ -68,9 +70,15 @@ private:
     MultiTileObject mtocell3;
     MultiTileObject mtocell4;
 
+    MultiTileObject mto_sprite;
+    MultiTileObject mto_sprite_two;
+
     _MTO_sprite_info spr_info;
+    _MTO_sprite_info spr_info_two;
     _MTO_texture_indexes mto_index;
+    _MTO_texture_indexes mto_index_two;
     _MTO_texture_info tex_info;
+
 
     //ECS::Entity player;
     ECS::Entity enemy;
@@ -81,6 +89,9 @@ private:
 
     Player player;
 
+    std::map<std::string, Gui> guiSys;
+
     void updateUi(const float dt);
+
 };
 

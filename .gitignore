@@ -2,7 +2,9 @@ bin/
 builder/
 inter/
 SFML-2.5.0/
+SFML-2.5.1/
 SFML-Callbacks/
+TGUI/
 .vs/
 res/.wip/
 res/ref/

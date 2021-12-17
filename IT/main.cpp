@@ -6,6 +6,9 @@
 
 #include <tinyxml/tinyxml.h>
 
+#include <iostream>
+#include <SFML/Main.hpp>
+
 int main()
 {
     Engine game;
