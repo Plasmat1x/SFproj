@@ -46,6 +46,7 @@ private:
     bool check_sum_info = true;
     //
     float time = 0;
+    float view_zoom_factor = 0.5f;
 
     sf::View game_view;
     sf::View hud_view;

@@ -28,7 +28,7 @@ void SceneThree::init(Engine* engine)
     this->game_view = engine->view;
     this->hud_view = engine->view;
 
-    this->game_view.zoom(0.5f);
+    this->game_view.zoom(view_zoom_factor);
 
     //view setup
     sf::Vector2f pos = sf::Vector2f(this->engine->window.getSize());
@@ -460,8 +460,8 @@ void SceneThree::updateUi(const float dt)
     {
         ImGui::BeginTooltip();
         ImGui::Text("%d x %d",
-            int((mouse_p.x + view_pos.x - game_view.getSize().x * 0.5f) / 32),
-            int((mouse_p.y + view_pos.y - game_view.getSize().y * 0.5f) / 32));
+            int((mouse_p.x + view_pos.x - game_view.getSize().x ) * view_zoom_factor/ 32),
+            int((mouse_p.y + view_pos.y - game_view.getSize().y ) * view_zoom_factor/ 32));
         ImGui::EndTooltip();
     }
 
