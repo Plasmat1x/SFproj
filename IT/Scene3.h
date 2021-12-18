@@ -47,6 +47,7 @@ private:
     //
     float time = 0;
     float view_zoom_factor = 0.5f;
+    //float view_zoom_factor = 10.5f;
 
     bool _pause = false;
 

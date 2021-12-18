@@ -39,7 +39,7 @@ void ParallaxBackground::draw(sf::RenderTarget& target, sf::RenderStates states)
     {
         sf::View v;
         v.zoom(0.5f);
-        v.setCenter(bg.parallax * current_target.x, current_target.y);
+        v.setCenter(bg.parallax * current_target.x, current_target.y * 0.92f);
         target.setView(v);
         target.draw(bg.sprite);
     }
