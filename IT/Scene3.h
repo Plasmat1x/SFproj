@@ -45,9 +45,9 @@ private:
     bool check_ecs = false;
     bool check_sum_info = true;
     //
-    float time = 0;
+    float time = 0.f;
     float view_zoom_factor = 0.5f;
-    //float view_zoom_factor = 10.5f;
+    //float view_zoom_factor = 2;
 
     bool _pause = false;
 

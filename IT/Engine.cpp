@@ -101,8 +101,8 @@ void Engine::core()
         while (time > tick)
         {
             processInput();
-            update(dt);
-            render(dt);
+            update(tick.asSeconds());
+            render(tick.asSeconds());
         }
         time += clock.restart();
     }

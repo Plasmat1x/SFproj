@@ -568,10 +568,11 @@ void SceneThree::updateUi(const float dt)
     if (check_inf)
     {
         ImGui::Begin("info win");
+        ImGui::Text("Game view: (%g, %g)", game_view.getSize().x, game_view.getSize().y);
         ImGui::Text("mouse pos: (%g, %g)", mouse_p.x, mouse_p.y);
         ImGui::Text("world mouse pos: (%g, %g)",
-            mouse_p.x + int(game_view.getCenter().x) - game_view.getSize().x * 0.5f,
-            mouse_p.y + int(game_view.getCenter().y) - game_view.getSize().y * 0.5f);
+            mouse_p.x + ((int(game_view.getCenter().x) - (game_view.getSize().x * 0.5f)) / view_zoom_factor),
+            mouse_p.y + ((int(game_view.getCenter().y) - (game_view.getSize().y * 0.5f)) / view_zoom_factor));
         ImGui::Text("view pos: (%g, %g)", view_pos.x, view_pos.y);
         ImGui::End();
     }
@@ -580,8 +581,8 @@ void SceneThree::updateUi(const float dt)
     {
         ImGui::BeginTooltip();
         ImGui::Text("%d x %d",
-            int((mouse_p.x + view_pos.x - game_view.getSize().x ) * view_zoom_factor/ 32),
-            int((mouse_p.y + view_pos.y - game_view.getSize().y ) * view_zoom_factor/ 32));
+           int((mouse_p.x + ((int(game_view.getCenter().x) - (game_view.getSize().x * 0.5f)) / view_zoom_factor)) / (32/view_zoom_factor)),
+           int((mouse_p.y + ((int(game_view.getCenter().y) - (game_view.getSize().y * 0.5f)) / view_zoom_factor)) / (32/view_zoom_factor)));
         ImGui::EndTooltip();
     }
 
