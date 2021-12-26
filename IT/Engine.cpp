@@ -91,20 +91,21 @@ void Engine::cleanup()
 void Engine::core()
 {
     sf::Time time = sf::Time::Zero;
-    sf::Time tick = sf::seconds(1.f / 60.f);
+    sf::Time tick = sf::seconds(1.f / 30.f);
     while (window.isOpen())
     {
-        time = clock.restart();
-        float dt = tick.asSeconds();
         if (_peek() == nullptr) continue;
 
+        processInput();
+
+        time = clock.restart();
         while (time > tick)
         {
-            processInput();
+            time -= tick;
             update(tick.asSeconds());
-            render(tick.asSeconds());
         }
-        time += clock.restart();
+        update(tick.asSeconds());
+        render(time.asSeconds());
     }
     ImGui::SFML::Shutdown();
 }

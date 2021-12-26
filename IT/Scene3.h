@@ -47,7 +47,7 @@ private:
     //
     float time = 0.f;
     float view_zoom_factor = 0.5f;
-    //float view_zoom_factor = 2;
+    //float view_zoom_factor = 10.0f; // test
 
     bool _pause = false;
 
@@ -65,11 +65,6 @@ private:
 
     Level level;
     ParallaxBackground back_ground;
-
-    MultiTileObject mtocell1;
-    MultiTileObject mtocell2;
-    MultiTileObject mtocell3;
-    MultiTileObject mtocell4;
 
     MultiTileObject mto_sprite;
     MultiTileObject mto_sprite_two;

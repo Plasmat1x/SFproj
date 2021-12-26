@@ -59,77 +59,6 @@ void SceneThree::init(Engine* engine)
     //level load
     level = Level("../res/map/test_level.tmx", &texture_bg, sf::Vector2i(10, 10));
 
-    // setup multitile
-    mto_index = _MTO_texture_indexes({
-        sf::Vector2i(3,0),
-        sf::Vector2i(4,0),
-        sf::Vector2i(5,0),
-        sf::Vector2i(3,1),
-        sf::Vector2i(4,1),
-        sf::Vector2i(5,1),
-        sf::Vector2i(3,2),
-        sf::Vector2i(4,2),
-        sf::Vector2i(5,2) });
-
-    mto_index_two = _MTO_texture_indexes({
-    sf::Vector2i(0,0),
-    sf::Vector2i(1,0),
-    sf::Vector2i(2,0),
-    sf::Vector2i(0,1),
-    sf::Vector2i(1,1),
-    sf::Vector2i(2,1),
-    sf::Vector2i(0,2),
-    sf::Vector2i(1,2),
-    sf::Vector2i(2,2) });
-
-    tex_info = {
-        ResourceManager::getTexture("test_ui"),                     // texture
-        sf::Vector2f(8.0f,8.0f),                                    // element size
-        sf::Vector2f(1.0f,1.0f),                                    // padding
-        sf::Vector2f(1.0f,1.0f),                                    // offset
-        sf::Vector2i(6,3)                                           // texture array size
-    };
-
-    spr_info = {
-        sf::Vector2f(pos.x, pos.y),                                 // position
-        sf::Vector2f(64, 64.0f),                                    // size
-        sf::Vector2f(1.0f, 1.0f),                                   // scale
-        sf::Vector2f(32.0f, 32.0f),                                 // origin
-        sf::Vector2f(1.0f, 1.0f),                                   // add_scale
-    };
-
-    mtocell1 = MultiTileObject(
-        &tex_info,
-        &spr_info,
-        &mto_index
-    );
-
-    mtocell2 = MultiTileObject(
-        &tex_info,
-        &spr_info,
-        &mto_index
-    );
-
-    mtocell3 = MultiTileObject(
-        &tex_info,
-        &spr_info,
-        &mto_index
-    );
-
-    mtocell4 = MultiTileObject(
-        &tex_info,
-        &spr_info,
-        &mto_index
-    );
-
-    //Бутафорный UI
-    sf::Vector2f uipos = pos;
-    mtocell1.setPosition(sf::Vector2f(uipos.x - 96, uipos.y * 1.9f));
-    mtocell2.setPosition(sf::Vector2f(uipos.x - 32, uipos.y * 1.9f));
-    mtocell3.setPosition(sf::Vector2f(uipos.x + 32, uipos.y * 1.9f));
-    mtocell4.setPosition(sf::Vector2f(uipos.x + 96, uipos.y * 1.9f));
-
-
     //ECS
     gCoordinator.Init();
 
@@ -192,22 +121,6 @@ void SceneThree::init(Engine* engine)
     rect.setSize(sf::Vector2f(43, 60));
     rect.setPosition(sf::Vector2f(64,64));
 
-    //create entity 
-    enemy = gCoordinator.CreateEntity();
-    gCoordinator.AddComponent<COM::Transform>(enemy, { sf::Vector2f(64,64), sf::Vector2f(1,1), 0 });
-    gCoordinator.AddComponent<COM::RigidBody>(enemy, { sf::Vector2f(0,0), 250.0f, 100.0f });
-    gCoordinator.AddComponent<COM::Sprite>(enemy, { sprite });
-    gCoordinator.AddComponent<COM::Hitbox>(enemy, { 
-        sf::Vector2f(64.0f, 64.0f),
-        sf::Vector2f(43.0f, 60.0f),
-        sf::Vector2f(0,0), 
-        rect , 
-        check_hitb });
-    gCoordinator.GetComponent<COM::Hitbox>(enemy).initHitbox();
-    gCoordinator.GetComponent<COM::Sprite>(enemy).sprite.setColor(sf::Color(0xff, 0x88, 0x88, 0xff));
-    gCoordinator.AddComponent<COM::States>(enemy, {});
-    gCoordinator.AddComponent<COM::Anim>(enemy, { nullptr, nullptr, 0.1f });
-
     //Animation load
     anim_manager.load_animation("idle", sf::Vector2f(43, 60), 0, 6);
     anim_manager.load_animation("idlef", sf::Vector2f(43, 60), 0, 6, 1);
@@ -229,7 +142,8 @@ void SceneThree::init(Engine* engine)
     player.SetTexture(texture);
     player.SetAnimation(anim);
     player.SetAnimMgr(&anim_manager);
-    player.Init(sf::Vector2f(32 * 38, 32 * 29));
+    player.Init(sf::Vector2f(32 * 34, 32 * 22));
+
 
     cur_ent = player.getEntity(); // for debug
 
@@ -237,24 +151,24 @@ void SceneThree::init(Engine* engine)
     //parallax setup
     parallax_layer bg_sky;
     bg_sky.width = level.getMapSize().x * 2;
-    bg_sky.parallax = 0.1f;
+    bg_sky.parallax = sf::Vector2f(0.1f, 1.1f);//0.1f;
     bg_sky.texture = ResourceManager::getTexture("bg_sky");
     bg_sky.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_clouds;
     bg_clouds.width = level.getMapSize().x * 2;
-    bg_clouds.parallax = 0.2f;
+    bg_clouds.parallax = sf::Vector2f(0.2f, 0.95f);//0.2f;
     bg_clouds.texture = ResourceManager::getTexture("bg_clouds");
     bg_clouds.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_sea;
     bg_sea.width = level.getMapSize().x * 2;
-    bg_sea.parallax = 0.3f;
+    bg_sea.parallax = sf::Vector2f(0.3f, 0.95f);//0.3f;
     bg_sea.texture = ResourceManager::getTexture("bg_sea");
     bg_sea.position = sf::Vector2f(-level.getMapSize().x * 0.5f,level.getMapSize().y * 0.5f);
 
     parallax_layer bg_ground;
-    bg_ground.parallax = 0.4f;
+    bg_ground.parallax = sf::Vector2f(0.4f, 0.95f);//0.4f;
     bg_ground.texture = ResourceManager::getTexture("bg_far-grounds");
     bg_ground.position = sf::Vector2f(level.getMapSize().x * 0.1f,level.getMapSize().y * 0.5f);
 
@@ -448,10 +362,6 @@ void SceneThree::update(const float dt)
     player.update(dt);
 
     view_pos = sf::Vector2f(game_view.getCenter().x, game_view.getCenter().y);
-
-    //update imgui ui
-    ImGui::SFML::Update(this->engine->window, this->engine->clock.restart());
-    updateUi(dt);
 }
 
 void SceneThree::render(const float dt)
@@ -477,10 +387,6 @@ void SceneThree::render(const float dt)
 
     //render gui
     this->engine->window.setView(this->hud_view);
-    this->engine->window.draw(mtocell1);
-    this->engine->window.draw(mtocell2);
-    this->engine->window.draw(mtocell3);
-    this->engine->window.draw(mtocell4);
     //debug
     if (_debugui_)
     {
@@ -502,6 +408,10 @@ void SceneThree::render(const float dt)
             this->engine->window.draw(gui.second);
         }
     }
+
+    //update imgui ui
+    ImGui::SFML::Update(this->engine->window, this->engine->clock.restart());
+    updateUi(dt);
     ImGui::SFML::Render(this->engine->window);
 
     return;
