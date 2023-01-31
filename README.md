@@ -7,6 +7,7 @@
 * VC++ 17
 * SFML 2.5.1
 * ImGui
+* tinyXML
 
 ## Результат
 
